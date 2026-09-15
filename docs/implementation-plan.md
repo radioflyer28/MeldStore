@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01 complete; S02 implemented and locally verified, awaiting cross-platform
-CI. S03-S08 remain planned. The MVP specification is authoritative.
+Status: S01 and S02 complete, with local and Windows/Linux CI verification.
+S03-S08 remain planned. The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
 ## Design gate: public contracts
@@ -74,6 +74,9 @@ Implemented: see [local-file contracts](local-files.md). Local Windows verificat
 passes 147 tests, including abrupt process exits and a 128 MiB bounded-memory
 file transfer through each adapter. Payload codecs, recovery maintenance, and S3
 are not included in this slice.
+All six Windows/Linux Python 3.12-3.14 jobs passed in
+[S02 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35028995579).
+See the [S02 verification record](s02-verification.md).
 
 Implement LocalStore integration, file passthrough, bounded-memory hash/size,
 staging, immutable keys, prepared tokens, catalog finalize/publish, stat/find and
@@ -157,4 +160,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: complete S02 cross-platform verification, then S03 metadata and evolution.
+Next action: S03 metadata and evolution.
