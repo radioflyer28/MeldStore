@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01 implemented and locally verified; Windows/Linux CI qualification is
-being established. S02-S08 remain planned. The MVP specification is authoritative.
+Status: S01 complete, with local and Windows/Linux CI verification.
+S02-S08 remain planned. The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
 ## Design gate: public contracts
@@ -52,6 +52,8 @@ These are responsibilities, not a requirement for one file/class per item.
 Implemented: see [public contracts](contracts.md). Local Windows Python 3.12.10
 verification passes 93 tests across MeldDB/sqlite3, Ruff, wheel/sdist builds, and
 fresh installs of both artifacts. CI covers Windows/Linux Python 3.12-3.14.
+All six jobs passed in [S01 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35025377982)
+for implementation commit `c5d7867`. See [verification record](s01-verification.md).
 This establishes a relational foundation, not payload storage or crash recovery.
 
 Implement generic declarations and basic schema installation against temporary
