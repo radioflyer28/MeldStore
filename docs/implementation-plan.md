@@ -1,6 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: planned; no slice is implemented. The MVP specification is authoritative.
+Status: S01 implemented and locally verified; Windows/Linux CI qualification is
+being established. S02-S08 remain planned. The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
 ## Design gate: public contracts
@@ -47,6 +48,11 @@ These are responsibilities, not a requirement for one file/class per item.
 | S08 Consumer and release qualification | S01-S07 | Domain-neutral and cUAS examples, representative workload, clean installs, Windows/Linux evidence |
 
 ### S01 — contracts and relational foundation
+
+Implemented: see [public contracts](contracts.md). Local Windows Python 3.12.10
+verification passes 93 tests across MeldDB/sqlite3, Ruff, wheel/sdist builds, and
+fresh installs of both artifacts. CI covers Windows/Linux Python 3.12-3.14.
+This establishes a relational foundation, not payload storage or crash recovery.
 
 Implement generic declarations and basic schema installation against temporary
 SQLite databases. Add MeldDB/direct sqlite3 adapters using application-owned SQL.
@@ -144,4 +150,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: implement S01 and then S02 as the first usable end-to-end checkpoint.
+Next action: S02, the first usable local file end-to-end checkpoint.

@@ -202,7 +202,10 @@ store.install_schema(dataset_schema)  # Explicit registration/migration
 prepared = store.prepare_file(path, handler="file")
 with catalog.transaction() as tx:
     blob = store.finalize(
-        prepared, tx=tx, schema="dataset", metadata=metadata,
+        prepared,
+        tx=tx,
+        schema="dataset",
+        metadata=metadata,
         id=blob_id,
     )
     insert_application_reference(tx, blob.id)  # Application-owned SQL

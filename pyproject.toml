@@ -8,14 +8,24 @@ version = "0.0.0.dev0"
 description = "Generic blob storage with portable relational metadata"
 readme = "README.md"
 requires-python = ">=3.12"
-# Runtime dependencies are established and locked in S01; this is a scaffold.
-dependencies = []
+dependencies = [
+    "melddb @ git+https://github.com/radioflyer28/melddb.git@8970099be98c6b4b6e0af30ac562ae65536e6403",
+    "obstore>=0.11,<0.12",
+    "xxhash>=3.5,<4",
+]
 
 [project.optional-dependencies]
+parquet = ["pandas>=2.2,<4", "pyarrow>=19,<24"]
+numpy = ["numpy>=2.2,<3"]
+blosc2 = ["numpy>=2.2,<3", "blosc2>=3,<4"]
 test = ["pytest>=8", "ruff>=0.12", "build>=1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-config --strict-markers"
 
 [tool.ruff]
 line-length = 100
