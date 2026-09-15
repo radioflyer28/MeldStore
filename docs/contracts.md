@@ -1,7 +1,8 @@
 # S01 public contracts
 
-Status: relational foundation implemented; not a usable blob store yet. S02 adds
-the first payload workflow. These contracts refine the illustrative MVP API.
+This is the S01 relational baseline. S02's current additive payload contract and
+implemented APIs are documented in [local file storage](local-files.md).
+Historical S01-only limitations below do not replace that S02 contract.
 
 ## Schema declarations
 

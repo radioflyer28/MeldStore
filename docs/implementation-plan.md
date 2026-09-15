@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01 complete, with local and Windows/Linux CI verification.
-S02-S08 remain planned. The MVP specification is authoritative.
+Status: S01 complete; S02 implemented and locally verified, awaiting cross-platform
+CI. S03-S08 remain planned. The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
 ## Design gate: public contracts
@@ -69,6 +69,11 @@ Resolve whether future concurrent writes need stronger guarantees before accepti
 the adapter contract. A contract decision is not a production-ready blob operation.
 
 ### S02 — local file vertical slice
+
+Implemented: see [local-file contracts](local-files.md). Local Windows verification
+passes 147 tests, including abrupt process exits and a 128 MiB bounded-memory
+file transfer through each adapter. Payload codecs, recovery maintenance, and S3
+are not included in this slice.
 
 Implement LocalStore integration, file passthrough, bounded-memory hash/size,
 staging, immutable keys, prepared tokens, catalog finalize/publish, stat/find and
@@ -152,4 +157,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S02, the first usable local file end-to-end checkpoint.
+Next action: complete S02 cross-platform verification, then S03 metadata and evolution.

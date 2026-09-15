@@ -80,6 +80,16 @@ class Transaction:
                 raise
             raise _translate(exc) from exc
 
+    @contextmanager
+    def operation(self):
+        """Compose library validation and SQL; any failure poisons this transaction."""
+        self._catalog.require_transaction(self)
+        try:
+            yield self
+        except BaseException:
+            self._failed = True
+            raise
+
 
 class Catalog:
     """Owns one connection. Opening does not install a schema or create managed tables."""
@@ -121,6 +131,13 @@ class Catalog:
                 self._active._failed = True
             raise TransactionError("Transaction is expired or failed")
         return tx
+
+    def require_idle(self):
+        """Reject storage work while this catalog owns an active SQL transaction."""
+        self._check()
+        if self._active is not None:
+            self._active._failed = True
+            raise TransactionError("Storage I/O must occur outside a catalog transaction")
 
     @contextmanager
     def transaction(self):

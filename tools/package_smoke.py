@@ -11,12 +11,19 @@ def main():
     if len(artifacts) != 2:
         raise RuntimeError("Expected exactly one wheel and one sdist in dist/")
     code = """
-from meldstore import BlobSchema, Catalog, Text
+from pathlib import Path
+from meldstore import BlobSchema, Catalog, LocalStorage, Store, Text
+Path('source.bin').write_bytes(b'installed artifact payload')
 for adapter in ('sqlite', 'melddb'):
     with Catalog(adapter + '.db', adapter=adapter) as catalog:
         schema = BlobSchema('smoke', {'title': Text(required=True)})
         assert catalog.install_schema(schema) == schema.table_name
         assert catalog.install_schema(schema) == schema.table_name
+        store = Store(catalog, LocalStorage(adapter + '-objects'))
+        store.install_schema(schema)
+        blob = store.import_file('source.bin', schema=schema, metadata={'title': 'smoke'})
+        with store.materialize(blob['id']) as payload:
+            assert payload.read_bytes() == b'installed artifact payload'
 print('Both adapters passed from installed artifact')
 """
     for artifact in artifacts:

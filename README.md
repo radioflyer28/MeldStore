@@ -3,47 +3,51 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S01 relational foundation implemented. Payload storage APIs are not implemented yet.
+Status: S02 local file workflow implemented; the full MVP is still in development.
 No package has been released or qualified for application data.
 
-MeldStore will store immutable files and structured values with user-defined
+MeldStore stores immutable local files with user-defined
 SQL metadata schemas. Applications own their domain tables and relationships.
 The library has no caching policies and no built-in cUAS concepts.
 
 - [MVP specification](docs/mvp.md)
 - [Implementation plan](docs/implementation-plan.md)
 - [Public schema and transaction contracts](docs/contracts.md)
+- [Local file API and guarantees](docs/local-files.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.
 MeldDB SQL and a direct SQLite adapter share the same relational schema.
-Local/S3 storage uses obstore; optional handlers cover Parquet, NPZ, and Blosc2.
+Local storage uses obstore; S3 and structured handlers remain planned.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
 fresh installation requires Git. Optional extras are `parquet`, `numpy`, and
 `blosc2`; codec implementation follows in S05.
 
-## Relational foundation
+## Local file workflow
 
 ```python
-from meldstore import BlobSchema, Catalog, Index, Text, Timestamp
+from meldstore import BlobSchema, Catalog, LocalStorage, Store, Text
 
 dataset = BlobSchema(
     "dataset",
-    {"title": Text(required=True), "captured_at": Timestamp()},
-    indexes=(Index("captured_at"),),
+    {"title": Text(required=True)},
 )
 with Catalog("catalog.sqlite", adapter="melddb") as catalog:
-    table_name = catalog.install_schema(dataset)
-    with catalog.transaction() as tx:
-        tx.sql(
-            "CREATE TABLE IF NOT EXISTS notes ("
-            "blob_id TEXT REFERENCES ms_blobs(id) ON DELETE RESTRICT, note TEXT)"
-        )
+    store = Store(catalog, LocalStorage("objects"))
+    store.install_schema(dataset)
+    record = store.import_file(
+        "existing.parquet", schema=dataset, metadata={"title": "example"}, id="sample"
+    )
+    with store.materialize(record["id"]) as verified_file:
+        print(verified_file)  # Use the verified temporary file within this block.
 ```
 
 Switch to `adapter="sqlite"` to use the same catalog without MeldDB APIs.
-S01 does not yet provide a safe blob creation API; do not manually populate
-the blob bookkeeping tables. S02 adds import, publication, and retrieval.
+Existing files are preserved byte-for-byte. `stat`/`find` query SQL without reading
+objects. Explicit `prepare_file`/`finalize`/`publish` compose blob creation with
+application SQL in one shared commit. See the API guide for retry semantics,
+temporary space requirements, and recovery limits. Do not manually populate or
+garbage-collect blob bookkeeping tables/objects.
 
 ## Development
 
@@ -56,7 +60,7 @@ uv run python tools/package_smoke.py
 ```
 
 The tests exercise both adapters. GitHub Actions runs Windows/Linux checks and
-fresh wheel/sdist installs. Examples in the MVP specification beyond S01 remain
+fresh wheel/sdist installs. Examples in the MVP specification beyond S02 remain
 proposed APIs, not implemented functionality.
 
 ## License
