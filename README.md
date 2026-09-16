@@ -3,8 +3,8 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S01-S06 and S06a implemented and verified on Windows/Linux. S07 is
-implemented and undergoing S3-compatible qualification; S08 follows verification.
+Status: S01-S07, including S06a, implemented and verified on Windows/Linux.
+S07 qualifies the pinned RustFS backend; S08 consumer/release qualification is next.
 The MVP remains in development.
 No package has been released or qualified for application data.
 
@@ -26,7 +26,7 @@ The library has no caching policies and no built-in cUAS concepts.
 - [SQLite settings, concurrency, and tuning](docs/sqlite.md)
 - [S06a verification evidence](docs/s06a-verification.md)
 - [S3 configuration, recovery, backup, and offline transfer](docs/s3.md)
-- [S07 verification record (forthcoming)](docs/s07-verification.md)
+- [S07 verification evidence](docs/s07-verification.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.

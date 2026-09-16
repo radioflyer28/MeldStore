@@ -66,8 +66,18 @@ disk amplification and 10–30 GB integrated workloads are not qualified here.
 
 A dedicated Linux Docker job executes the same pinned lab, all live tests, and
 fresh-process memory measurements. Existing Windows/Linux Python 3.12–3.14 jobs
-cover both adapters, core/all extras, lint, build and fresh installs. CI results
-will be recorded after the feature branch run completes.
+cover both adapters, core/all extras, lint, build and fresh installs.
+All seven jobs passed for implementation commit `382bed3` in
+[S07 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35161604054).
+Every matrix job passed 459 core tests (64 expected skips: 43 optional-format
+cases and 21 live S3 cases), then 502 all-extra tests (21 live S3 skips).
+The separate Linux RustFS job passed all 21 live tests with no skips and both
+capability/outage probes. All six matrix runtimes reported SQLite 3.53.1.
+
+Linux CI recorded a 72,712,192-byte peak RSS for both fresh-process payload
+sizes, with no increase over its initialization high-water mark. Zero additional
+peak RSS does not mean zero allocation. Import/materialize times were
+0.271/0.034 seconds for 32 MiB and 2.453/0.232 seconds for 256 MiB.
 
 Only this pinned RustFS single-node configuration is qualified by these tests.
 Garage was source-evaluated, not executed; RustFS 1.0.0 was discovered but not

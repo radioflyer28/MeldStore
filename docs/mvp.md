@@ -9,8 +9,8 @@ Acceptance amendment, September 16, 2026: the user approved a real Docker-local
 RustFS or Garage S3-compatible service for S07 qualification in place of the
 original AWS-only requirement. AWS-specific evidence is deferred; compatible
 service results do not qualify AWS or constitute AWS certification. S07 is
-implemented and undergoing qualification; S08 follows verification. See the
-[implemented S3 API](s3.md) and [forthcoming verification record](s07-verification.md).
+implemented and qualified on pinned RustFS; S08 is next. See the
+[implemented S3 API](s3.md) and [verification record](s07-verification.md).
 
 ## Project Description
 

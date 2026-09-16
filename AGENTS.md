@@ -15,9 +15,8 @@
   designated disposable bucket/prefix; local services use loopback endpoints and
   ephemeral credentials. Do not infer AWS qualification from compatible-service
   results. AWS-specific evidence is deferred and remains unqualified.
-- S07 is implemented and undergoing qualification; record final evidence in
-  docs/s07-verification.md before advancing to S08. Do not invent final counts
-  or CI results from preliminary live tests.
+- S07 qualification is recorded in docs/s07-verification.md. S08 is next;
+  preserve the distinction between tested RustFS behavior and unqualified AWS.
 - S3 participants must use one local catalog and the same persistent, path-bound
   coordination directory on one host. No distributed leases or marker adoption.
 - Keep S3 endpoint/bucket/prefix explicit, use canonical obstore config keys,

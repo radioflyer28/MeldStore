@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S06 and S06a complete, with local and Windows/Linux CI verification.
-S07 is implemented and undergoing qualification. S08 follows S07 verification.
+Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
+S07 qualifies pinned RustFS, not AWS. S08 consumer/release qualification is next.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -233,7 +233,7 @@ blanket performance claim follows from enabling WAL or passing one index test.
 
 ### S07 — S3
 
-Implemented and undergoing qualification: [S3 API and operational limits](s3.md).
+Implemented and qualified on pinned RustFS: [S3 API and operational limits](s3.md).
 S3Storage uses explicit endpoint/bucket/prefix configuration, path-bound local
 coordination, create-only publication, and verified whole-object reads. Offline
 backup/transfer supports S3 payloads while the catalog remains local; destination
@@ -252,8 +252,10 @@ publication, pending deletion, and offline fresh-destination transfer. Include
 S3-to-local backup and identity mismatch/no-adoption cases. Avoid relying on
 rename atomicity or ETags as content digests. Record the exact backend image,
 configuration and dependency versions, memory/disk behavior, and remaining gaps
-in the [forthcoming S07 verification record](s07-verification.md). Preliminary
-live checks do not establish final suite totals, CI success, or slice completion.
+in the [S07 verification record](s07-verification.md). All seven jobs passed in
+[S07 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35161604054):
+502 all-extra tests per Windows/Linux matrix job, 21 separate live RustFS tests,
+capability/outage probes, lint, builds and fresh artifact installs.
 
 ### S08 — consumers and release
 
@@ -277,6 +279,5 @@ No green unit suite substitutes for real S3-compatible service or process recove
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: finish and record S07 qualification on the designated disposable
-S3-compatible backend, then advance to S08 consumer/release verification.
+Next action: S08 consumer/release qualification.
 AWS-specific qualification remains deferred.
