@@ -1,7 +1,8 @@
 # MeldStore MVP implementation plan
 
 Status: S01 and S02 complete, with local and Windows/Linux CI verification.
-S03-S08 remain planned. The MVP specification is authoritative.
+S03 passes local verification; cross-platform CI is pending. S04-S08 remain planned.
+The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
 ## Design gate: public contracts
@@ -90,6 +91,12 @@ at most an orphan. Include an application-owned row in the same SQL transaction.
 
 ### S03 — metadata and migrations
 
+Implemented: [metadata API and evolution contracts](metadata.md). Includes typed
+keyset queries, guarded edits, explicit v1/v2 coexistence, SQL-preserving upgrades,
+dry-run and atomic resumable batches. Local Windows verification passes 188 tests,
+Ruff, builds, and fresh wheel/sdist installs through both adapters. Cross-platform
+CI is pending; see [S03 verification](s03-verification.md).
+
 Complete scalar predicates, bounded ordering/pagination, composite indexes,
 UTC timestamp normalization, reserved-field rejection, and versioned edits.
 Implement explicit metadata transformations with dry-run, batches, progress,
@@ -160,4 +167,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S03 metadata and evolution.
+Next action after S03 verification: S04 lifecycle and recovery.

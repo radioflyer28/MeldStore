@@ -72,6 +72,25 @@ class Field:
             raise ValidationError(f"Expected {self.kind}; implicit coercion is disabled")
         return value
 
+    def from_sql(self, value: Any) -> Any:
+        """Recover strict Python inputs for migration callbacks and SQL-valued cursors."""
+        if value is None:
+            return self.normalize(value)
+        if self.kind == "boolean":
+            if type(value) is not int or value not in (0, 1):
+                raise ValidationError("Invalid stored boolean")
+            return bool(value)
+        if self.kind == "timestamp":
+            try:
+                result = datetime.fromisoformat(value)
+                if self.normalize(result) != value:
+                    raise ValueError("noncanonical timestamp")
+                return result
+            except (TypeError, ValueError) as exc:
+                raise ValidationError("Invalid stored UTC timestamp") from exc
+        self.normalize(value)
+        return value
+
 
 def Text(*, required=False, immutable=False) -> Field:
     return Field("text", required, immutable)

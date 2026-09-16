@@ -42,7 +42,7 @@ DDL = {
 }
 
 
-def guard(schema):
+def guard(schema, *, evolved=False):
     name = schema.table_name + "_ready"
     sql = f"""CREATE TRIGGER {q(name)} BEFORE UPDATE OF state ON ms_blobs
         WHEN NEW.schema_name={_literal(schema.name)} AND NEW.state='ready'
@@ -50,7 +50,7 @@ def guard(schema):
             WHERE m.id=NEW.id AND m.schema_version=NEW.schema_version)
         OR NOT EXISTS (SELECT 1 FROM ms_objects o JOIN ms_prepared p ON o.token=p.token
             WHERE o.blob_id=NEW.id AND p.schema_name=NEW.schema_name
-                AND p.schema_version=NEW.schema_version))
+                AND p.schema_version{"<=" if evolved else "="}NEW.schema_version))
         BEGIN SELECT RAISE(ABORT, 'blob is not ready for publication'); END"""
     return name, sql
 
@@ -69,7 +69,9 @@ def install(schema, tx):
         _verify(objects, DDL)
         if tx.sql("SELECT version FROM ms_payload_format") != [{"version": 1}]:
             raise SchemaConflictError("Unsupported payload extension version")
-    name, sql = guard(schema)
+    from .migrations import evolved
+
+    name, sql = guard(schema, evolved=evolved(tx, schema.name))
     enrolled = tx.sql(
         "SELECT 1 FROM ms_payload_schemas WHERE schema_name=? AND schema_version=?",
         (schema.name, schema.version),

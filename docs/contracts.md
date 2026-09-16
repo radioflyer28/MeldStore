@@ -2,7 +2,8 @@
 
 This is the S01 relational baseline. S02's current additive payload contract and
 implemented APIs are documented in [local file storage](local-files.md).
-Historical S01-only limitations below do not replace that S02 contract.
+S03 adds [metadata queries, guarded edits, and explicit evolution](metadata.md).
+Historical S01-only limitations below do not replace those later contracts.
 
 ## Schema declarations
 

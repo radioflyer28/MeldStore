@@ -14,6 +14,8 @@ from .errors import (
     TransactionError,
     ValidationError,
 )
+from .migrations import MetadataMigration
+from .query import FindCursor, Order, Predicate
 from .schema import (
     BlobSchema,
     Boolean,
@@ -41,6 +43,7 @@ __all__ = [
     "Index",
     "Integer",
     "MeldStoreError",
+    "MetadataMigration",
     "IntegrityError",
     "NotFoundError",
     "SchemaConflictError",
@@ -54,4 +57,7 @@ __all__ = [
     "LocalStorage",
     "PreparedFile",
     "Store",
+    "Predicate",
+    "Order",
+    "FindCursor",
 ]

@@ -1,4 +1,4 @@
-"""Transactional format-1 installation. Evolution is explicit and deferred to S03."""
+"""Transactional format-1 installation; explicit evolution lives in migrations."""
 
 from .errors import SchemaConflictError, ValidationError
 from .schema import BlobSchema
@@ -116,8 +116,6 @@ def _schema_objects(schema):
 def install(schema, tx):
     if not isinstance(schema, BlobSchema):
         raise ValidationError("Expected a BlobSchema declaration")
-    if schema.version != 1:
-        raise SchemaConflictError("S01 installs version 1 only; explicit evolution arrives in S03")
     objects = _objects(tx)
     if "ms_format" not in objects:
         if any(name.lower().startswith("ms_") for name in objects):
@@ -132,14 +130,22 @@ def install(schema, tx):
         ]:
             raise SchemaConflictError("Unsupported or damaged catalog format")
     existing = tx.sql(
-        "SELECT definition, table_name FROM ms_schemas WHERE name = ?", (schema.name,)
+        "SELECT definition, table_name FROM ms_schemas WHERE name = ? AND version = ?",
+        (schema.name, schema.version),
     )
     expected = _schema_objects(schema)
     if existing:
         if existing != [{"definition": schema.definition, "table_name": schema.table_name}]:
             raise SchemaConflictError("Schema name/version already has a different definition")
-        _verify(objects, expected)
+        from . import migrations
+
+        if migrations.evolved(tx, schema.name):
+            migrations.verify(tx, schema.name)
+        else:
+            _verify(objects, expected)
         return schema.table_name
+    if schema.version != 1:
+        raise SchemaConflictError("Use an explicit MetadataMigration to install a new version")
     if any(name in objects for name in expected):
         raise SchemaConflictError("Schema SQL names already exist")
     tx.sql(

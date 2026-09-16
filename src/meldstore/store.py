@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from uuid import uuid4
 
-from . import payload_catalog
+from . import migrations, payload_catalog, query
 from .errors import (
     ConflictError,
     IntegrityError,
@@ -45,7 +45,7 @@ class Store:
             payload_catalog.install(schema, tx)
             return table
 
-    def _schema(self, schema, tx):
+    def _schema(self, schema, tx, *, write=False):
         if not isinstance(schema, BlobSchema):
             raise ValidationError("Supply the installed BlobSchema declaration")
         rows = tx.sql(
@@ -54,7 +54,9 @@ class Store:
         )
         if rows != [{"definition": schema.definition}]:
             raise SchemaConflictError("Schema is not installed or its definition differs")
-        name, sql = payload_catalog.guard(schema)
+        if write:
+            migrations.writable(tx, schema)
+        name, sql = payload_catalog.guard(schema, evolved=migrations.evolved(tx, schema.name))
         if tx.sql("SELECT sql FROM sqlite_master WHERE name=?", (name,)) != [{"sql": sql}]:
             raise SchemaConflictError("Call Store.install_schema before using payload APIs")
 
@@ -66,7 +68,7 @@ class Store:
 
     def _check_file_schema(self, schema, handler):
         with self.catalog.transaction() as tx:
-            self._schema(schema, tx)
+            self._schema(schema, tx, write=True)
             if handler != "file" or handler not in schema.handlers:
                 raise ValidationError("S02 requires the allowed 'file' passthrough handler")
 
@@ -95,6 +97,7 @@ class Store:
         self.storage.upload(staged, prepared.object_key)
         # Journal the completed upload in its own short transaction; it isn't a blob yet.
         with self.catalog.transaction() as tx:
+            self._schema(schema, tx, write=True)
             values = asdict(prepared)
             tx.sql(
                 "INSERT INTO ms_prepared ("
@@ -110,7 +113,7 @@ class Store:
         self.catalog.require_transaction(tx)
         with tx.operation():
             identifier(id)
-            self._schema(schema, tx)
+            self._schema(schema, tx, write=True)
             values = schema.normalize_metadata(metadata)
             if not isinstance(prepared, PreparedFile):
                 raise ValidationError("Expected a PreparedFile token")
@@ -130,14 +133,14 @@ class Store:
                 "INSERT INTO ms_blobs (id, schema_name, schema_version) VALUES (?, ?, ?)",
                 (id, schema.name, schema.version),
             )
-            columns = ["id", *values]
+            columns = ["id", "schema_version", *values]
             tx.sql(
                 f"INSERT INTO {q(schema.table_name)} ("
                 + ",".join(q(n) for n in columns)
                 + ") VALUES ("
                 + ",".join("?" for _ in columns)
                 + ")",
-                (id, *values.values()),
+                (id, schema.version, *values.values()),
             )
             tx.sql("INSERT INTO ms_objects VALUES (?, ?)", (id, prepared.token))
             return self._record(id, tx, ready_only=False)
@@ -166,20 +169,29 @@ class Store:
         if not rows:
             raise NotFoundError(f"No {'ready ' if ready_only else ''}blob: {id}")
         record = rows[0]
-        if record["token"] is None or (
-            record.pop("prepared_schema_name"),
-            record.pop("prepared_schema_version"),
-        ) != (record["schema_name"], record["schema_version"]):
+        prepared_name = record.pop("prepared_schema_name")
+        prepared_version = record.pop("prepared_schema_version")
+        if (
+            record["token"] is None
+            or prepared_name != record["schema_name"]
+            or prepared_version > record["schema_version"]
+        ):
             raise IntegrityError("Blob object association is missing or inconsistent")
         table = "ms_data_" + record["schema_name"].encode().hex()
         metadata = tx.sql(f"SELECT * FROM {q(table)} WHERE id=?", (id,))
         if not metadata:
             raise IntegrityError("Blob metadata is missing")
         fields = metadata[0]
+        if fields["schema_version"] != record["schema_version"]:
+            raise IntegrityError("Blob metadata version is inconsistent")
         record["version"] = fields.pop("version")
-        for name in ("id", "schema_name", "schema_version"):
-            fields.pop(name)
-        record["metadata"] = fields
+        declaration = migrations.decode(
+            tx.sql(
+                "SELECT definition FROM ms_schemas WHERE name=? AND version=?",
+                (record["schema_name"], record["schema_version"]),
+            )[0]["definition"]
+        )
+        record["metadata"] = {name: fields[name] for name in declaration.fields}
         return record
 
     def stat(self, id):
@@ -187,34 +199,76 @@ class Store:
         with self.catalog.transaction() as tx:
             return self._record(id, tx)
 
-    def find(self, *, schema, where=None, limit=100, after=None):
-        """Ready records with equality filters and bounded ID-keyset pagination."""
-        if type(limit) is not int or not 1 <= limit <= 1000:
-            raise ValidationError("limit must be an integer between 1 and 1000")
-        where = {} if where is None else where
-        if not isinstance(where, Mapping):
-            raise ValidationError("where must be a mapping of declared fields")
-        if after is not None:
-            identifier(after)
+    def find(self, *, schema, where=None, predicates=(), order_by=(), limit=100, after=None):
+        """Ready records with typed scalar predicates and stable keyset pagination."""
         with self.catalog.transaction() as tx:
             self._schema(schema, tx)
-            predicates = ["b.state='ready'", "b.schema_name=?", "b.schema_version=?"]
-            params = [schema.name, schema.version]
-            for name, value in where.items():
-                if name not in schema.fields:
-                    raise ValidationError("Filter references an undeclared field")
-                predicates.append(f"m.{q(name)} IS ?")
-                params.append(None if value is None else schema.fields[name].normalize(value))
-            if after is not None:
-                predicates.append("b.id > ?")
-                params.append(after)
-            params.append(limit)
-            rows = tx.sql(
-                f"SELECT b.id FROM ms_blobs b LEFT JOIN {q(schema.table_name)} m ON b.id=m.id "
-                "WHERE " + " AND ".join(predicates) + " ORDER BY b.id LIMIT ?",
-                params,
+            sql, params = query.compile_query(
+                schema,
+                where=where,
+                predicates=predicates,
+                order_by=order_by,
+                after=after,
+                limit=limit,
             )
+            rows = tx.sql(sql, params)
             return [self._record(row["id"], tx) for row in rows]
+
+    @staticmethod
+    def cursor(record, *, schema, order_by=()):
+        return query.cursor(record, schema, order_by)
+
+    def update_metadata(self, id, *, schema, changes, expected_version, tx=None):
+        if tx is None:
+            with self.catalog.transaction() as owned:
+                return self.update_metadata(
+                    id, schema=schema, changes=changes, expected_version=expected_version, tx=owned
+                )
+        self.catalog.require_transaction(tx)
+        with tx.operation():
+            identifier(id)
+            self._schema(schema, tx, write=True)
+            if type(expected_version) is not int or not 1 <= expected_version < 2**63 - 1:
+                raise ValidationError("expected_version must be a positive, incrementable int64")
+            if (
+                not isinstance(changes, Mapping)
+                or not changes
+                or changes.keys() - schema.fields.keys()
+            ):
+                raise ValidationError(
+                    "changes must be a nonempty mapping of declared metadata fields"
+                )
+            values = {}
+            for name, value in changes.items():
+                if schema.fields[name].immutable:
+                    raise ValidationError(f"Immutable metadata field: {name}")
+                values[name] = schema.fields[name].normalize(value)
+            current = self._record(id, tx)
+            if (current["schema_name"], current["schema_version"], current["version"]) != (
+                schema.name,
+                schema.version,
+                expected_version,
+            ):
+                raise ConflictError("Metadata schema or concurrency version is stale")
+            rows = tx.sql(
+                f"UPDATE {q(schema.table_name)} SET "
+                + ",".join(f"{q(name)}=?" for name in values)
+                + ", version=version+1 WHERE id=? AND schema_version=? AND version=? RETURNING id",
+                (*values.values(), id, schema.version, expected_version),
+            )
+            if not rows:
+                raise ConflictError("Metadata changed before the guarded update")
+            return self._record(id, tx)
+
+    def migrate(self, plan, *, batch_size=100, max_batches=None, dry_run=False):
+        return migrations.run(
+            self, plan, batch_size=batch_size, max_batches=max_batches, dry_run=dry_run
+        )
+
+    def migration_status(self, name):
+        identifier(name)
+        with self.catalog.transaction() as tx:
+            return migrations.status(tx, name)
 
     def import_file(self, source, *, schema, metadata, id=None, handler="file"):
         self.catalog.require_idle()
