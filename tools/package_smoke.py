@@ -31,6 +31,13 @@ for adapter in ('sqlite', 'melddb'):
         assert len(store.find(schema=target, predicates=(Predicate('number', 'gte', 2),))) == 1
         with store.materialize(blob['id']) as payload:
             assert payload.read_bytes() == b'installed artifact payload'
+        store.delete(blob['id'], expected_version=3)
+        assert store.deletion_status(blob['id'])['state'] == 'pending'
+    with Catalog(adapter + '.db', adapter=adapter, maintenance=True) as catalog:
+        store = Store(catalog, LocalStorage(adapter + '-objects'))
+        assert len(store.reconcile()['pending']) == 1
+        assert store.cleanup()[0]['state'] == 'done'
+        assert store.deletion_status(blob['id'])['state'] == 'done'
 print('Both adapters passed from installed artifact')
 """
     for artifact in artifacts:

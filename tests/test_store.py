@@ -85,6 +85,7 @@ def test_ready_catalog_damage_is_not_reported_as_absence(setup_store):
     store, schema, source = setup_store
     store.import_file(source, schema=schema, metadata={"label": "one"}, id="damaged")
     # Direct unauthorized bookkeeping edit simulates catalog damage.
+    store.catalog.sql("DROP TRIGGER ms_retire_object")
     store.catalog.sql("DELETE FROM ms_objects WHERE blob_id='damaged'")
     with pytest.raises(IntegrityError):
         store.stat("damaged")

@@ -17,6 +17,7 @@ from .errors import IntegrityError, StorageError, ValidationError
 
 CHUNK_SIZE = 1024 * 1024
 KEY_PATTERN = re.compile(r"objects/[0-9a-f]{32}")
+CLEANUP_PATTERN = re.compile(r"(?:objects|staging)/[0-9a-f]{32}")
 
 
 def hash_file(path):
@@ -96,6 +97,42 @@ class LocalStorage:
         except Exception as exc:
             # Do not delete an uncertain destination or attempt an overwrite retry.
             raise StorageError("Local upload failed; staging/orphan objects may remain") from exc
+
+    def inventory(self, *, max_entries):
+        result = {}
+        try:
+            for batch in obstore.list(self._store, chunk_size=100):
+                for item in batch:
+                    result[item["path"]] = item["size"]
+                    if len(result) > max_entries:
+                        raise ValidationError(
+                            "Inventory exceeds max_entries; increase the explicit bound"
+                        )
+        except ValidationError:
+            raise
+        except Exception as exc:
+            raise StorageError("Object inventory failed; no cleanup was performed") from exc
+        return result
+
+    def cleanup_key(self, key):
+        if not isinstance(key, str) or not CLEANUP_PATTERN.fullmatch(key):
+            raise ValidationError("Cleanup accepts only exact MeldStore object/staging keys")
+        path = self.root / key
+        if not path.resolve().is_relative_to(self.root) or any(
+            p.is_symlink() or p.is_junction() for p in (path.parent, path)
+        ):
+            raise ValidationError("Cleanup will not follow symlinks or junctions")
+        if path.exists() and not path.is_file():
+            raise ValidationError("Cleanup target must be a regular file")
+
+    def delete_object(self, key):
+        self.cleanup_key(key)
+        try:
+            obstore.delete(self._store, key)
+        except (FileNotFoundError, obstore.exceptions.NotFoundError):
+            pass
+        except Exception as exc:
+            raise StorageError("Object deletion failed; cleanup remains pending") from exc
 
     @staticmethod
     def _key(key):

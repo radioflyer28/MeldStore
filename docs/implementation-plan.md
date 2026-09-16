@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S03 complete, with local and Windows/Linux CI verification.
-S04-S08 remain planned.
+S04 passes local verification; cross-platform CI is pending. S05-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -112,6 +112,14 @@ rules. Run the same behavior suite through both adapters.
 
 ### S04 — lifecycle hardening
 
+Implemented: [lifecycle and recovery contracts](lifecycle.md). Retirement enforces
+application SQL references, queues cleanup durably, and retains retry tombstones.
+Prepared uploads require explicit discard. Exclusive leases cover catalog/root
+participants and materialization readers; standalone SQL uses the public access
+protocol. Local verification: 233 passed, 2 Windows symlink-permission skips;
+Ruff, builds and fresh artifact installs pass. Cross-platform CI is pending.
+See [S04 verification](s04-verification.md).
+
 Complete lifecycle guards, application transaction rollback, uncertain-commit
 resolution, restrictive references, pending deletion, reporting reconciliation,
 and explicit exclusive maintenance. Define how exclusivity includes materialize
@@ -169,4 +177,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S04 lifecycle and recovery.
+Next action after S04 verification: S05 format handlers.

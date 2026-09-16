@@ -1,5 +1,8 @@
 # S02: local file storage
 
+S04 extends this baseline with [retirement, recovery, and exclusive maintenance](lifecycle.md).
+Its access protocol and commit-failure rules supersede the historical limits below.
+
 S02 adds unchanged-file import, prepared tokens, SQL publication, metadata-only
 queries, and verified temporary materialization. S3 and structured codecs are not
 implemented here. Any file, including an existing Parquet/NPZ/Blosc2 file, can be

@@ -3,9 +3,10 @@
 from collections.abc import Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
+from functools import wraps
 from uuid import uuid4
 
-from . import migrations, payload_catalog, query
+from . import lifecycle, migrations, payload_catalog, query
 from .errors import (
     ConflictError,
     IntegrityError,
@@ -32,18 +33,41 @@ class PreparedFile:
     schema_version: int
 
 
+def _payload_operation(method):
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+        self.catalog.require_idle()
+        self.catalog._readers += 1
+        try:
+            return method(self, *args, **kwargs)
+        finally:
+            self.catalog._readers -= 1
+
+    return wrapped
+
+
 class Store:
     """Borrows a Catalog; the caller owns its lifetime. S02 supports local files only."""
 
     def __init__(self, catalog, storage: LocalStorage):
         self.catalog = catalog
         self.storage = storage
+        catalog.bind_storage(storage.root)
 
     def install_schema(self, schema):
         with self.catalog.transaction() as tx:
             table = self.catalog.install_schema(schema, tx=tx)
             payload_catalog.install(schema, tx)
+            lifecycle.install(tx)
+            lifecycle.install_schema(schema, tx)
             return table
+
+    def install_lifecycle(self):
+        """Explicit additive S04 upgrade for an existing S02/S03 catalog."""
+        with self.catalog.transaction() as tx:
+            lifecycle.install(tx)
+            for row in tx.sql("SELECT definition FROM ms_schemas ORDER BY name,version"):
+                lifecycle.install_schema(migrations.decode(row["definition"]), tx)
 
     def _schema(self, schema, tx, *, write=False):
         if not isinstance(schema, BlobSchema):
@@ -60,6 +84,7 @@ class Store:
         if tx.sql("SELECT sql FROM sqlite_master WHERE name=?", (name,)) != [{"sql": sql}]:
             raise SchemaConflictError("Call Store.install_schema before using payload APIs")
 
+    @_payload_operation
     def prepare_file(self, source, *, schema, handler="file"):
         self.catalog.require_idle()
         self._check_file_schema(schema, handler)
@@ -120,6 +145,10 @@ class Store:
             rows = tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,))
             if rows != [asdict(prepared)] or prepared.storage_id != self.storage.storage_id:
                 raise ValidationError("Unknown, altered or foreign prepared token")
+            if "ms_gc" in lifecycle._objects(tx) and tx.sql(
+                "SELECT 1 FROM ms_gc WHERE token=?", (prepared.token,)
+            ):
+                raise ConflictError("Prepared token has been revoked for cleanup")
             if (prepared.schema_name, prepared.schema_version) != (schema.name, schema.version):
                 raise ValidationError("Prepared token belongs to another schema")
             if tx.sql("SELECT id FROM ms_blobs WHERE id=?", (id,)):
@@ -270,6 +299,52 @@ class Store:
         with self.catalog.transaction() as tx:
             return migrations.status(tx, name)
 
+    def delete(self, id, *, expected_version, tx=None):
+        if tx is None:
+            with self.catalog.transaction() as owned:
+                return self.delete(id, expected_version=expected_version, tx=owned)
+        self.catalog.require_transaction(tx)
+        with tx.operation():
+            return lifecycle.delete(self, id, expected_version, tx)
+
+    def discard_prepared(self, prepared, *, tx=None):
+        if tx is None:
+            with self.catalog.transaction() as owned:
+                return self.discard_prepared(prepared, tx=owned)
+        self.catalog.require_transaction(tx)
+        with tx.operation():
+            return lifecycle.discard(self, prepared, tx)
+
+    def resolve(self, id, *, prepared, schema, metadata):
+        with self.catalog.transaction() as tx:
+            lifecycle.verify(tx)
+            return lifecycle.resolve(self, id, prepared, schema, metadata, tx)
+
+    def deletion_status(self, id):
+        identifier(id)
+        with self.catalog.transaction() as tx:
+            lifecycle.verify(tx)
+            result = lifecycle.retired(tx, id)
+            if result is None:
+                raise NotFoundError(f"No retirement: {id}")
+            return result
+
+    def reconcile(self, *, verify=False, max_entries=10000):
+        from .maintenance import reconcile
+
+        return reconcile(self, verify=verify, max_entries=max_entries)
+
+    def queue_orphans(self, keys):
+        from .maintenance import queue_orphans
+
+        return queue_orphans(self, keys)
+
+    def cleanup(self, *, limit=100):
+        from .maintenance import cleanup
+
+        return cleanup(self, limit=limit)
+
+    @_payload_operation
     def import_file(self, source, *, schema, metadata, id=None, handler="file"):
         self.catalog.require_idle()
         id = uuid4().hex if id is None else identifier(id)
@@ -291,6 +366,10 @@ class Store:
         return result
 
     def _retry(self, id, schema, values, size, digest, tx):
+        if "ms_retired" in lifecycle._objects(tx) and tx.sql(
+            "SELECT 1 FROM ms_retired WHERE blob_id=?", (id,)
+        ):
+            raise ConflictError("Retired blob IDs cannot be reused")
         if not tx.sql("SELECT id FROM ms_blobs WHERE id=?", (id,)):
             return None
         try:
@@ -324,10 +403,14 @@ class Store:
     @contextmanager
     def materialize(self, id):
         self.catalog.require_idle()
-        record = self.stat(id)
-        if record["storage_id"] != self.storage.storage_id:
-            raise ValidationError("Configured local storage identity does not match this blob")
-        with self.storage.materialize(
-            record["object_key"], byte_size=record["byte_size"], digest=record["digest"]
-        ) as path:
-            yield path
+        self.catalog._readers += 1
+        try:
+            record = self.stat(id)
+            if record["storage_id"] != self.storage.storage_id:
+                raise ValidationError("Configured local storage identity does not match this blob")
+            with self.storage.materialize(
+                record["object_key"], byte_size=record["byte_size"], digest=record["digest"]
+            ) as path:
+                yield path
+        finally:
+            self.catalog._readers -= 1

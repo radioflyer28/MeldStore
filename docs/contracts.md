@@ -3,6 +3,8 @@
 This is the S01 relational baseline. S02's current additive payload contract and
 implemented APIs are documented in [local file storage](local-files.md).
 S03 adds [metadata queries, guarded edits, and explicit evolution](metadata.md).
+S04 adds [lifecycle recovery and cooperative exclusive maintenance](lifecycle.md),
+including the requirement to reopen after a commit failure.
 Historical S01-only limitations below do not replace those later contracts.
 
 ## Schema declarations

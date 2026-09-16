@@ -226,7 +226,7 @@ def test_namespace_collision(catalog, schema):
     ]
 
 
-def test_commit_constraint_failure_and_reuse(catalog):
+def test_commit_constraint_failure_requires_fresh_connection(catalog):
     with catalog.transaction() as tx:
         tx.sql("CREATE TABLE parent (id INTEGER PRIMARY KEY)")
         tx.sql(
@@ -235,7 +235,10 @@ def test_commit_constraint_failure_and_reuse(catalog):
     with pytest.raises(CommitError):
         with catalog.transaction() as tx:
             tx.sql("INSERT INTO child VALUES (1)")
-    assert catalog.sql("SELECT * FROM child") == []
+    with pytest.raises(TransactionError):
+        catalog.sql("SELECT * FROM child")
+    with Catalog(catalog.path, adapter=catalog.adapter) as reopened:
+        assert reopened.sql("SELECT * FROM child") == []
 
 
 @pytest.mark.parametrize("first", ["sqlite", "melddb"])

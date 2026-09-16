@@ -1,5 +1,6 @@
 """Generic relational metadata and verified immutable local file storage."""
 
+from .access import catalog_access
 from .catalog import Catalog, Transaction
 from .errors import (
     BusyError,
@@ -31,6 +32,7 @@ from .storage import LocalStorage
 from .store import PreparedFile, Store
 
 __all__ = [
+    "catalog_access",
     "BlobSchema",
     "Boolean",
     "BusyError",

@@ -3,7 +3,7 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S03 metadata queries and evolution implemented; the full MVP is still in development.
+Status: S04 lifecycle and recovery implemented; the full MVP is still in development.
 No package has been released or qualified for application data.
 
 MeldStore stores immutable local files with user-defined
@@ -15,6 +15,7 @@ The library has no caching policies and no built-in cUAS concepts.
 - [Public schema and transaction contracts](docs/contracts.md)
 - [Local file API and guarantees](docs/local-files.md)
 - [Metadata queries, guarded edits, and migrations](docs/metadata.md)
+- [Lifecycle, recovery, and exclusive maintenance](docs/lifecycle.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.
@@ -61,7 +62,7 @@ uv run python tools/package_smoke.py
 ```
 
 The tests exercise both adapters. GitHub Actions runs Windows/Linux checks and
-fresh wheel/sdist installs. Examples in the MVP specification beyond S03 remain
+fresh wheel/sdist installs. Examples in the MVP specification beyond S04 remain
 proposed APIs, not implemented functionality.
 
 ## License
