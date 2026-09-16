@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S05 complete, with local and Windows/Linux CI verification.
-S06-S08 remain planned.
+S06 implemented, verification in progress. S07-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -155,6 +155,13 @@ versions. No implicit pickle, re-encoding on passthrough import, or SQL in handl
 
 ### S06 — operational portability
 
+Implemented: [offline backup/restore and local transfer](backup.md) preserve the
+whole shared catalog and verified ready payloads, including application SQL
+tables/constraints and retirement/encoding history. A logical SQLite SQL export
+and explicit application schema declaration accompany physical snapshots.
+Restoration and transfer require fresh destinations; all copying precedes final
+catalog publication. S06 requires one logical root and resolved lifecycle state.
+
 Snapshot the shared SQL catalog and referenced payloads under explicit quiescence.
 Specify a portable application/library metadata export, since MeldDB logical
 export excludes external tables. Define the application's contribution for its
@@ -192,4 +199,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S06 backup and offline transfer.
+Next action: finish S06 verification, then S07 real-S3 qualification.

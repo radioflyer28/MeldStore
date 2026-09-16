@@ -33,6 +33,22 @@ def hash_file(path):
 class LocalStorage:
     """One private object root, with an on-disk identity and bounded-memory transfers."""
 
+    @classmethod
+    def _replica(cls, root, storage_id):
+        """Create a new offline copy of a logical root; never overwrite its identity."""
+        if not isinstance(storage_id, str) or not re.fullmatch(r"[0-9a-f]{32}", storage_id):
+            raise ValidationError("Invalid replica identity")
+        root = Path(root)
+        root.mkdir()
+        backend = LocalStore(prefix=root)
+        obstore.put(
+            backend,
+            "meldstore-storage.json",
+            json.dumps({"version": 1, "id": storage_id}).encode(),
+            mode="create",
+        )
+        return cls(root)
+
     def __init__(self, root, *, staging_directory=None):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)

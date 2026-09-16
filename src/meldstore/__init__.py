@@ -1,6 +1,7 @@
 """Generic relational metadata and verified immutable local file storage."""
 
 from .access import catalog_access
+from .backup import restore_backup
 from .catalog import Catalog, Transaction
 from .errors import (
     BusyError,
@@ -33,6 +34,7 @@ from .storage import LocalStorage
 from .store import PreparedFile, PreparedValue, Store
 
 __all__ = [
+    "restore_backup",
     "Handler",
     "HandlerRegistry",
     "MissingDependencyError",

@@ -1,5 +1,6 @@
 """Thread-confined, explicit SQL transactions over public MeldDB or sqlite3 APIs."""
 
+import os
 import re
 import sqlite3
 import threading
@@ -258,6 +259,36 @@ class Catalog:
         """One owned transaction; use tx.sql to compose multiple operations."""
         with self.transaction() as tx:
             return tx.sql(statement, params)
+
+    def snapshot(self, destination):
+        """Standalone whole-database SQLite snapshot, under exclusive access.
+
+        Includes application SQL objects. This is not MeldDB's managed export.
+        Store.backup additionally coordinates and verifies payloads.
+        """
+        self.require_idle()
+        if not self._exclusive or self._readers or self.path is None:
+            raise TransactionError("Snapshot requires an idle exclusive file-backed catalog")
+        destination = Path(destination)
+        if self.adapter == "melddb":
+            self._connection.backup(destination)
+        else:
+            # Reserve a new file; never let sqlite3.connect overwrite a caller's DB.
+            with destination.open("xb"):
+                pass
+            target = sqlite3.connect(destination, autocommit=True)
+            try:
+                self._connection.backup(target)
+                if target.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
+                    raise ValidationError("Catalog snapshot integrity check failed")
+                if target.execute("PRAGMA foreign_key_check").fetchall():
+                    raise ValidationError("Catalog snapshot has invalid references")
+                target.execute("PRAGMA journal_mode=DELETE")
+            finally:
+                target.close()
+        with destination.open("r+b") as stream:
+            os.fsync(stream.fileno())
+        return destination
 
     def install_schema(self, schema, *, tx: Transaction | None = None) -> str:
         from .installation import install

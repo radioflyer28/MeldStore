@@ -448,6 +448,16 @@ class Store:
 
         return cleanup(self, limit=limit)
 
+    def backup(self, destination, *, application, max_entries=10000):
+        from .backup import backup
+
+        return backup(self, destination, application=application, max_entries=max_entries)
+
+    def transfer(self, destination, *, application, max_entries=10000):
+        from .backup import transfer
+
+        return transfer(self, destination, application=application, max_entries=max_entries)
+
     @_payload_operation
     def import_file(self, source, *, schema, metadata, id=None, handler="file"):
         self.catalog.require_idle()

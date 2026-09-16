@@ -16,7 +16,7 @@ def main():
         raise RuntimeError("Expected exactly one wheel and one sdist in dist/")
     code = """
 from pathlib import Path
-from meldstore import BlobSchema, Catalog, Integer, LocalStorage, MetadataMigration, Predicate, Store, Text
+from meldstore import BlobSchema, Catalog, Integer, LocalStorage, MetadataMigration, Predicate, Store, Text, restore_backup
 Path('source.bin').write_bytes(b'installed artifact payload')
 for adapter in ('sqlite', 'melddb'):
     with Catalog(adapter + '.db', adapter=adapter) as catalog:
@@ -42,6 +42,17 @@ for adapter in ('sqlite', 'melddb'):
         assert len(store.reconcile()['pending']) == 1
         assert store.cleanup()[0]['state'] == 'done'
         assert store.deletion_status(blob['id'])['state'] == 'done'
+        live = store.import_file('source.bin', schema=target, metadata={'title': 'backup', 'number': 4}, id='backup-live')
+        catalog.sql('CREATE TABLE app_links(id TEXT REFERENCES ms_blobs(id))')
+        catalog.sql("INSERT INTO app_links VALUES('backup-live')")
+        store.backup(adapter + '-backup', application={'id':'smoke','schema_revision':'1'})
+    restored = restore_backup(adapter + '-backup', adapter + '-restored')
+    with Catalog(restored['catalog'], adapter=adapter) as catalog:
+        store = Store(catalog, LocalStorage(restored['storage']))
+        assert store.stat('backup-live') == live
+        assert catalog.sql('SELECT id FROM app_links') == [{'id': 'backup-live'}]
+        with store.materialize('backup-live') as payload:
+            assert payload.read_bytes() == b'installed artifact payload'
 print('Both adapters passed from installed artifact')
 """
     if args.formats:
@@ -63,8 +74,12 @@ for adapter in ('sqlite', 'melddb'):
                   'pyarrow.parquet': pa.table({'x': [1, 2]})}
         for handler, value in values.items():
             store.put(value, schema=schema, metadata={}, handler=handler, id=handler)
-    with Catalog(adapter + '-formats.db', adapter=adapter) as catalog:
+    with Catalog(adapter + '-formats.db', adapter=adapter, maintenance=True) as catalog:
         store = Store(catalog, LocalStorage(adapter + '-formats-objects'))
+        store.backup(adapter + '-formats-backup', application={'id':'formats','schema_revision':'1'})
+    restored = restore_backup(adapter + '-formats-backup', adapter + '-formats-restored')
+    with Catalog(restored['catalog'], adapter=adapter) as catalog:
+        store = Store(catalog, LocalStorage(restored['storage']))
         for handler, value in values.items():
             result = store.get(handler)
             if handler.startswith('numpy.'):
