@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S03 complete, with local and Windows/Linux CI verification.
-S04 passes local verification; cross-platform CI is pending. S05-S08 remain planned.
+Status: S01-S04 complete, with local and Windows/Linux CI verification.
+S05-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -117,7 +117,9 @@ application SQL references, queues cleanup durably, and retains retry tombstones
 Prepared uploads require explicit discard. Exclusive leases cover catalog/root
 participants and materialization readers; standalone SQL uses the public access
 protocol. Local verification: 233 passed, 2 Windows symlink-permission skips;
-Ruff, builds and fresh artifact installs pass. Cross-platform CI is pending.
+Ruff, builds and fresh artifact installs pass. All six Windows/Linux Python
+3.12-3.14 jobs passed all 235 tests, including symlinks, in
+[S04 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35130497148).
 See [S04 verification](s04-verification.md).
 
 Complete lifecycle guards, application transaction rollback, uncertain-commit
@@ -177,4 +179,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action after S04 verification: S05 format handlers.
+Next action: S05 format handlers.

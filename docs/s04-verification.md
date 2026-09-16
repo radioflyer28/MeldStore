@@ -10,8 +10,14 @@ Local verification: Windows, Python 3.12.10, 2026-09-16.
 | `uv run python tools/package_smoke.py` | Both adapters passed from both fresh artifact installs |
 
 The two local skips require permission to create symlinks on Windows. All 235
-tests are collected; 47 lifecycle cases extend the S03 baseline. Cross-platform
-CI is pending, including Linux execution of the symlink tests.
+tests are collected; 47 lifecycle cases extend the S03 baseline.
+
+All six Windows/Linux Python 3.12–3.14 jobs passed **235 tests with no skips** in
+[S04 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35130497148), for
+implementation commit `0cee3170a7812cee16a419bc27a19a5164c843da`. The symlink
+cases executed on both CI platforms. Each job also passed lint, wheel/sdist
+builds, and both freshly installed artifact smoke tests. This final record-only
+update changes no runtime code or tests.
 
 Evidence covers:
 
