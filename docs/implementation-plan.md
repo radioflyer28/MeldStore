@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S04 complete, with local and Windows/Linux CI verification.
-S05 implemented, cross-platform qualification in progress. S06-S08 remain planned.
+Status: S01-S05 complete, with local and Windows/Linux CI verification.
+S06-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -141,6 +141,12 @@ single-array NPZ, dense Blosc2 arrays and custom registration. Narwhals was
 preservation controls. Optional dependencies remain lazy. Existing file bytes,
 catalog tables and application SQL foreign keys are preserved.
 
+Local verification: 296 passed, 2 Windows symlink-permission skips. All six
+Windows/Linux Python 3.12-3.14 jobs passed all 298 tests, lint/build, and fresh
+core/format artifact installations in
+[S05 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35134699759).
+See the [S05 verification record](s05-verification.md).
+
 Implement bytes, Pandas Parquet, NumPy NPZ, Blosc2 arrays, and custom registration.
 Keep optional imports lazy. Record format descriptors/encoding versions. Test
 DataFrame indexes, nullable columns, categories/time zones, array dtype/shape,
@@ -186,4 +192,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: complete S05 verification, then S06 backup and offline transfer.
+Next action: S06 backup and offline transfer.

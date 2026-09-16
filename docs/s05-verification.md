@@ -34,8 +34,13 @@ those cases; lossy numeric pandas categoricals are explicitly rejected.
 
 ## CI
 
-Pending: six Windows/Linux Python 3.12-3.14 jobs. Each runs the core suite, full
-all-extras suite, lint/build and fresh core/format wheel/sdist smoke tests.
+All six Windows/Linux Python 3.12-3.14 jobs passed for implementation commit
+`ba0ab6f1e255db7f3f6b267fcc12db1186e8e923` in
+[S05 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35134699759).
+Each core-only run passed 255 tests with 43 expected missing-extra skips; each
+all-extras run passed **all 298 tests with no skips**, including the Windows
+symlink cases. Every job also passed lint/build and fresh core/format wheel/sdist
+installation tests. The follow-up evidence commit changes documentation only.
 
 ## Limits
 
