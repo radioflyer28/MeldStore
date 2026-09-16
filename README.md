@@ -3,7 +3,7 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S01-S06 implemented and verified on Windows/Linux; the MVP remains in development.
+Status: S01-S06 and S06a implemented and verified on Windows/Linux; the MVP remains in development.
 No package has been released or qualified for application data.
 
 MeldStore stores immutable local files with user-defined
@@ -74,7 +74,7 @@ uv run python tools/package_smoke.py --formats
 ```
 
 The tests exercise both adapters. GitHub Actions runs Windows/Linux checks and
-fresh wheel/sdist installs. Examples in the MVP specification beyond S06 remain
+fresh wheel/sdist installs. Examples in the MVP specification beyond S06a remain
 proposed APIs, not implemented functionality.
 
 ## License

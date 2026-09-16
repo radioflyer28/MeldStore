@@ -1,7 +1,7 @@
 # S06a verification: SQLite tuning and concurrency
 
-2026-09-16. Implemented on `codex/s06a`; local final verification and remote CI
-status are recorded below. Main is not updated by this slice.
+2026-09-16. Implemented and qualified on `codex/s06a`, implementation commit
+`bbbc07e`. Main is not updated by this slice.
 
 ## Changes and behavioral evidence
 
@@ -94,8 +94,11 @@ uv run --frozen --no-sync python tools/package_smoke.py --formats
 
 Final local suite: **392 passed, 4 skipped** on Windows Python 3.12.13 / SQLite
 3.53.1. Ruff passed. Both wheel/sdist builds and clean core/all-format installs
-passed. CI qualification is pending. Four local Windows symlink
-permission skips must be covered in CI. Wheel/sdist clean
+passed. All six Windows/Linux Python 3.12-3.14 jobs passed in
+[S06a CI](https://github.com/radioflyer28/MeldStore/actions/runs/35158912896):
+353 core tests with 43 expected missing-extra skips, then **396 passed with all
+extras and no skips** per job. This covers the four local Windows symlink
+permission skips. CI lint, builds and fresh artifact checks also passed. Wheel/sdist clean
 installs exercise both adapters, index installation, SQLite maintenance, existing
 lifecycle/migrations, backup/restore and all optional formats.
 

@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S06 complete, with local and Windows/Linux CI verification.
-S06a is implemented with final qualification in progress; S07-S08 remain planned.
+Status: S01-S06 and S06a complete, with local and Windows/Linux CI verification.
+S07-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -181,7 +181,10 @@ Backup restore must cover application-owned SQL, not only library tables.
 ### S06a — SQLite tuning and concurrency
 
 Implemented: see [SQLite settings and concurrency contracts](sqlite.md) and
-[S06a verification](s06a-verification.md). Final qualification is in progress.
+[S06a verification](s06a-verification.md). Local verification: 392 passed with
+4 Windows symlink-permission skips. All six Windows/Linux Python 3.12-3.14 jobs
+passed 396 tests with all extras and no skips, lint/build and fresh installs in
+[S06a CI](https://github.com/radioflyer28/MeldStore/actions/runs/35158912896).
 The slice includes patched-runtime WAL enforcement, explicit read transactions,
 an opt-in pending-queue index, migration ID seeks, and exclusive statistics and
 checkpoint maintenance. It does not change the completed S06 acceptance record.
@@ -258,5 +261,5 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: finish S06a qualification. S07 real-S3 qualification remains
-planned and requires an explicitly designated disposable bucket/prefix.
+Next action: S07 real-S3 qualification, requiring an explicitly designated
+disposable bucket/prefix.
