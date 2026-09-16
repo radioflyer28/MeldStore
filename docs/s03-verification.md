@@ -28,8 +28,13 @@ S03 adds 41 tests to the 147-test S02 baseline. Evidence includes:
 - Fresh wheel/sdist imports, migration dry-run/live execution, guarded update,
   typed query, and verified materialization outside the source checkout.
 
-Cross-platform CI verification is pending. The existing workflow covers
-Windows/Linux Python 3.12–3.14 and runs both adapters in each job.
+All six Windows/Linux Python 3.12–3.14 jobs passed in
+[S03 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35119163433)
+for implementation commit `fe94e6302c59388b86d161d8b9ec8c6d5b29346a`.
+Each job runs both adapters, lint, builds, and fresh wheel/sdist installation
+checks. The accompanying
+[push run](https://github.com/radioflyer28/MeldStore/actions/runs/35119166301)
+also passed. This record-only update does not change runtime code or tests.
 
 These are SQLite metadata transaction and local-file results, not power-loss
 certification. DDL rebuild and dry-run hold a writer transaction; there is no
