@@ -1,12 +1,15 @@
 """Explicit file preparation, SQL publication and verified temporary materialization."""
 
+import json
 from collections.abc import Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from functools import wraps
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from uuid import uuid4
 
-from . import lifecycle, migrations, payload_catalog, query
+from . import encodings, lifecycle, migrations, payload_catalog, query
 from .errors import (
     ConflictError,
     IntegrityError,
@@ -14,6 +17,7 @@ from .errors import (
     SchemaConflictError,
     ValidationError,
 )
+from .handlers import HandlerRegistry, UnsupportedHandlerError, descriptor_json
 from .schema import BlobSchema, identifier
 from .schema import quote_identifier as q
 from .storage import LocalStorage, hash_file
@@ -33,6 +37,15 @@ class PreparedFile:
     schema_version: int
 
 
+@dataclass(frozen=True)
+class PreparedValue(PreparedFile):
+    """Physical-file token plus an immutable logical encoding declaration."""
+
+    encoding_id: str
+    encoding_version: int
+    descriptor: str
+
+
 def _payload_operation(method):
     @wraps(method)
     def wrapped(self, *args, **kwargs):
@@ -47,17 +60,21 @@ def _payload_operation(method):
 
 
 class Store:
-    """Borrows a Catalog; the caller owns its lifetime. S02 supports local files only."""
+    """Borrows a Catalog; the caller owns its lifetime. Storage is local in S05."""
 
-    def __init__(self, catalog, storage: LocalStorage):
+    def __init__(self, catalog, storage: LocalStorage, *, handlers=None):
         self.catalog = catalog
         self.storage = storage
+        self.handlers = HandlerRegistry() if handlers is None else handlers
+        if not isinstance(self.handlers, HandlerRegistry):
+            raise ValidationError("handlers must be a HandlerRegistry")
         catalog.bind_storage(storage.root)
 
     def install_schema(self, schema):
         with self.catalog.transaction() as tx:
             table = self.catalog.install_schema(schema, tx=tx)
             payload_catalog.install(schema, tx)
+            encodings.install(tx)
             lifecycle.install(tx)
             lifecycle.install_schema(schema, tx)
             return table
@@ -95,7 +112,7 @@ class Store:
         with self.catalog.transaction() as tx:
             self._schema(schema, tx, write=True)
             if handler != "file" or handler not in schema.handlers:
-                raise ValidationError("S02 requires the allowed 'file' passthrough handler")
+                raise ValidationError("File import requires the allowed 'file' passthrough handler")
 
     @contextmanager
     def _snapshot(self, source, schema):
@@ -106,7 +123,7 @@ class Store:
                 raise IntegrityError("Payload validator modified the passthrough file")
             yield staged, size, digest
 
-    def _prepare_snapshot(self, staged, schema, size, digest):
+    def _prepare_snapshot(self, staged, schema, size, digest, *, encoding=None):
         prepared = PreparedFile(
             uuid4().hex,
             self.storage.storage_id,
@@ -119,11 +136,24 @@ class Store:
             schema.name,
             schema.version,
         )
+        if encoding is not None:
+            prepared = PreparedValue(**asdict(prepared), **encoding)
         self.storage.upload(staged, prepared.object_key)
         # Journal the completed upload in its own short transaction; it isn't a blob yet.
         with self.catalog.transaction() as tx:
             self._schema(schema, tx, write=True)
-            values = asdict(prepared)
+            if encoding is not None:
+                encodings.verify(tx)
+                tx.sql(
+                    "INSERT INTO ms_encodings VALUES(?,?,?,?)",
+                    (
+                        prepared.token,
+                        prepared.encoding_id,
+                        prepared.encoding_version,
+                        prepared.descriptor,
+                    ),
+                )
+            values = encodings.physical(prepared)
             tx.sql(
                 "INSERT INTO ms_prepared ("
                 + ",".join(values)
@@ -142,8 +172,10 @@ class Store:
             values = schema.normalize_metadata(metadata)
             if not isinstance(prepared, PreparedFile):
                 raise ValidationError("Expected a PreparedFile token")
-            rows = tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,))
-            if rows != [asdict(prepared)] or prepared.storage_id != self.storage.storage_id:
+            if (
+                not encodings.matches(tx, prepared)
+                or prepared.storage_id != self.storage.storage_id
+            ):
                 raise ValidationError("Unknown, altered or foreign prepared token")
             if "ms_gc" in lifecycle._objects(tx) and tx.sql(
                 "SELECT 1 FROM ms_gc WHERE token=?", (prepared.token,)
@@ -221,7 +253,79 @@ class Store:
             )[0]["definition"]
         )
         record["metadata"] = {name: fields[name] for name in declaration.fields}
+        encoding = encodings.read(tx, record["token"])
+        if encoding is not None:
+            record["handler_id"] = encoding["encoding_id"]
+            record["handler_version"] = encoding["encoding_version"]
+            record["descriptor"] = json.loads(encoding["descriptor"])
         return record
+
+    @contextmanager
+    def _serialize(self, value, schema, handler, handler_version):
+        codec = self.handlers.get(handler, handler_version)
+        with self.catalog.transaction() as tx:
+            self._schema(schema, tx, write=True)
+            encodings.verify(tx)
+        if handler not in schema.handlers:
+            raise ValidationError("Handler is not allowed by this schema")
+        schema.validate_payload(value)
+        with TemporaryDirectory(prefix="meldstore-encode-") as directory:
+            path = Path(directory) / "payload"
+            descriptor = descriptor_json(codec.write(value, path))
+            # Writer has closed the file, including any header rewrites.
+            size, digest = hash_file(path)
+            yield (
+                path,
+                size,
+                digest,
+                {
+                    "encoding_id": handler,
+                    "encoding_version": handler_version,
+                    "descriptor": descriptor,
+                },
+            )
+
+    @_payload_operation
+    def prepare(self, value, *, schema, handler, handler_version=1):
+        with self._serialize(value, schema, handler, handler_version) as (
+            path,
+            size,
+            digest,
+            encoding,
+        ):
+            return self._prepare_snapshot(path, schema, size, digest, encoding=encoding)
+
+    @_payload_operation
+    def put(self, value, *, schema, metadata, handler, handler_version=1, id=None):
+        id = uuid4().hex if id is None else identifier(id)
+        values = schema.normalize_metadata(metadata)
+        metadata = dict(metadata)
+        with self._serialize(value, schema, handler, handler_version) as (
+            path,
+            size,
+            digest,
+            encoding,
+        ):
+            with self.catalog.transaction() as tx:
+                result = self._retry(id, schema, values, size, digest, tx, encoding=encoding)
+                if result is not None:
+                    return result
+            prepared = self._prepare_snapshot(path, schema, size, digest, encoding=encoding)
+        with self.catalog.transaction() as tx:
+            result = self._retry(id, schema, values, size, digest, tx, encoding=encoding)
+            if result is None:
+                self.finalize(prepared, tx=tx, schema=schema, metadata=metadata, id=id)
+                result = self.publish(id, tx=tx)
+        return result
+
+    @_payload_operation
+    def get(self, id):
+        record = self.stat(id)
+        if record["handler_id"] == "file":
+            raise UnsupportedHandlerError("File passthrough has no decoder; use materialize")
+        codec = self.handlers.get(record["handler_id"], record["handler_version"])
+        with self.materialize(id) as path:
+            return codec.read(path, record["descriptor"])
 
     def stat(self, id):
         identifier(id)
@@ -365,7 +469,7 @@ class Store:
                 result = self.publish(id, tx=tx)
         return result
 
-    def _retry(self, id, schema, values, size, digest, tx):
+    def _retry(self, id, schema, values, size, digest, tx, *, encoding=None):
         if "ms_retired" in lifecycle._objects(tx) and tx.sql(
             "SELECT 1 FROM ms_retired WHERE blob_id=?", (id,)
         ):
@@ -393,11 +497,15 @@ class Store:
             self.storage.storage_id,
             size,
             digest,
-            "file",
-            1,
+            "file" if encoding is None else encoding["encoding_id"],
+            1 if encoding is None else encoding["encoding_version"],
             "ready",
         ):
             raise ConflictError("Existing ID is different or unfinished; resolve explicitly")
+        if encoding is not None and existing.get("descriptor") != json.loads(
+            encoding["descriptor"]
+        ):
+            raise ConflictError("Existing ID has a different encoding descriptor")
         return existing
 
     @contextmanager

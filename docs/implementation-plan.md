@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S04 complete, with local and Windows/Linux CI verification.
-S05-S08 remain planned.
+S05 implemented, cross-platform qualification in progress. S06-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -134,6 +134,13 @@ power-loss guarantees. Make local durability assumptions explicit.
 
 ### S05 — handlers
 
+Implemented: [handler contracts](handlers.md) cover explicit `prepare`/`put`/`get`,
+sealed logical encoding descriptors, bytes, native pandas/Polars/PyArrow Parquet,
+single-array NPZ, dense Blosc2 arrays and custom registration. Narwhals was
+[evaluated](narwhals-evaluation.md) and deferred in favor of backend-specific
+preservation controls. Optional dependencies remain lazy. Existing file bytes,
+catalog tables and application SQL foreign keys are preserved.
+
 Implement bytes, Pandas Parquet, NumPy NPZ, Blosc2 arrays, and custom registration.
 Keep optional imports lazy. Record format descriptors/encoding versions. Test
 DataFrame indexes, nullable columns, categories/time zones, array dtype/shape,
@@ -179,4 +186,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S05 format handlers.
+Next action: complete S05 verification, then S06 backup and offline transfer.

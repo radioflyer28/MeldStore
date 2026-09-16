@@ -15,6 +15,7 @@ from .errors import (
     TransactionError,
     ValidationError,
 )
+from .handlers import Handler, HandlerRegistry, MissingDependencyError, UnsupportedHandlerError
 from .migrations import MetadataMigration
 from .query import FindCursor, Order, Predicate
 from .schema import (
@@ -29,9 +30,14 @@ from .schema import (
     quote_identifier,
 )
 from .storage import LocalStorage
-from .store import PreparedFile, Store
+from .store import PreparedFile, PreparedValue, Store
 
 __all__ = [
+    "Handler",
+    "HandlerRegistry",
+    "MissingDependencyError",
+    "UnsupportedHandlerError",
+    "PreparedValue",
     "catalog_access",
     "BlobSchema",
     "Boolean",

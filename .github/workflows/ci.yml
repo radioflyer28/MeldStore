@@ -35,9 +35,13 @@ jobs:
         run: uv run --frozen python -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
       - name: Both catalog adapters
         run: uv run --frozen --extra test pytest
+      - name: Every optional format handler
+        run: uv run --frozen --all-extras pytest
       - name: Lint
         run: uv run --frozen --extra test ruff check .
       - name: Build wheel and sdist
         run: uv build
       - name: Clean wheel and sdist installation smoke tests
         run: uv run --frozen python tools/package_smoke.py
+      - name: Clean wheel and sdist optional handler smoke tests
+        run: uv run --frozen python tools/package_smoke.py --formats

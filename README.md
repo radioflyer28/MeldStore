@@ -3,7 +3,7 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S04 lifecycle and recovery implemented; the full MVP is still in development.
+Status: S05 format handlers implemented; verification is in progress.
 No package has been released or qualified for application data.
 
 MeldStore stores immutable local files with user-defined
@@ -16,14 +16,16 @@ The library has no caching policies and no built-in cUAS concepts.
 - [Local file API and guarantees](docs/local-files.md)
 - [Metadata queries, guarded edits, and migrations](docs/metadata.md)
 - [Lifecycle, recovery, and exclusive maintenance](docs/lifecycle.md)
+- [Format handlers and dataframe compatibility](docs/handlers.md)
+- [Narwhals evaluation](docs/narwhals-evaluation.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.
 MeldDB SQL and a direct SQLite adapter share the same relational schema.
-Local storage uses obstore; S3 and structured handlers remain planned.
+Local storage uses obstore; S3 remains planned.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
-fresh installation requires Git. Optional extras are `parquet`, `numpy`, and
-`blosc2`; codec implementation follows in S05.
+fresh installation requires Git. Optional extras are `parquet` (pandas), `arrow`,
+`polars`, `numpy`, and `blosc2`. Narwhals was evaluated but is not required.
 
 ## Local file workflow
 
@@ -57,12 +59,14 @@ garbage-collect blob bookkeeping tables/objects.
 uv sync --frozen --extra test
 uv run --extra test pytest
 uv run --extra test ruff check .
+uv run --all-extras pytest
 uv build
 uv run python tools/package_smoke.py
+uv run python tools/package_smoke.py --formats
 ```
 
 The tests exercise both adapters. GitHub Actions runs Windows/Linux checks and
-fresh wheel/sdist installs. Examples in the MVP specification beyond S04 remain
+fresh wheel/sdist installs. Examples in the MVP specification beyond S05 remain
 proposed APIs, not implemented functionality.
 
 ## License

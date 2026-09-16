@@ -1,7 +1,6 @@
 """SQL-only retirement, durable cleanup intent and uncertain-outcome inspection."""
 
-from dataclasses import asdict
-
+from . import encodings
 from .errors import (
     ConflictError,
     SchemaConflictError,
@@ -161,7 +160,7 @@ def discard(store, prepared, tx):
     verify(tx)
     if not isinstance(prepared, PreparedFile) or prepared.storage_id != store.storage.storage_id:
         raise ValidationError("Expected this storage root's PreparedFile")
-    if tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,)) != [asdict(prepared)]:
+    if not encodings.matches(tx, prepared):
         raise ValidationError("Prepared token is unknown or altered")
     if tx.sql("SELECT 1 FROM ms_objects WHERE token=?", (prepared.token,)):
         raise ConflictError("Prepared token belongs to a blob; resolve that blob first")
@@ -185,7 +184,7 @@ def resolve(store, id, prepared, schema, metadata, tx):
     if (prepared.schema_name, prepared.schema_version) != (schema.name, schema.version):
         raise ValidationError("Token and schema differ")
     journal = tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,))
-    if journal and journal != [asdict(prepared)]:
+    if journal and not encodings.matches(tx, prepared):
         raise ConflictError("Prepared token descriptor differs")
     prior = retired(tx, id)
     if prior:

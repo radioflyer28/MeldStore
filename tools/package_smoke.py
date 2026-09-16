@@ -1,11 +1,15 @@
 """Install each built artifact in a fresh environment, outside the source checkout."""
 
+import argparse
 import subprocess
 import tempfile
 from pathlib import Path
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--formats", action="store_true")
+    args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     artifacts = list((root / "dist").glob("*.whl")) + list((root / "dist").glob("*.tar.gz"))
     if len(artifacts) != 2:
@@ -40,6 +44,41 @@ for adapter in ('sqlite', 'melddb'):
         assert store.deletion_status(blob['id'])['state'] == 'done'
 print('Both adapters passed from installed artifact')
 """
+    if args.formats:
+        code += """
+import numpy as np
+import pandas as pd
+import polars as pl
+import pyarrow as pa
+from polars.testing import assert_frame_equal
+for adapter in ('sqlite', 'melddb'):
+    schema = BlobSchema('formats', {}, handlers=(
+        'bytes', 'numpy.npz', 'numpy.blosc2', 'pandas.parquet', 'polars.parquet', 'pyarrow.parquet'))
+    with Catalog(adapter + '-formats.db', adapter=adapter) as catalog:
+        store = Store(catalog, LocalStorage(adapter + '-formats-objects'))
+        store.install_schema(schema)
+        values = {'bytes': b'hello', 'numpy.npz': np.arange(6), 'numpy.blosc2': np.arange(6),
+                  'pandas.parquet': pd.DataFrame({'x': [1, 2]}),
+                  'polars.parquet': pl.DataFrame({'x': [1, 2]}),
+                  'pyarrow.parquet': pa.table({'x': [1, 2]})}
+        for handler, value in values.items():
+            store.put(value, schema=schema, metadata={}, handler=handler, id=handler)
+    with Catalog(adapter + '-formats.db', adapter=adapter) as catalog:
+        store = Store(catalog, LocalStorage(adapter + '-formats-objects'))
+        for handler, value in values.items():
+            result = store.get(handler)
+            if handler.startswith('numpy.'):
+                np.testing.assert_array_equal(result, value, strict=True)
+            elif handler == 'pandas.parquet':
+                pd.testing.assert_frame_equal(result, value)
+            elif handler == 'polars.parquet':
+                assert_frame_equal(result, value)
+            elif handler == 'pyarrow.parquet':
+                assert result.equals(value)
+            else:
+                assert result == value
+print('Every optional handler passed from installed artifact')
+"""
     for artifact in artifacts:
         with tempfile.TemporaryDirectory(prefix="meldstore-package-") as directory:
             subprocess.run(
@@ -49,7 +88,7 @@ print('Both adapters passed from installed artifact')
                     "--no-project",
                     "--isolated",
                     "--with",
-                    str(artifact),
+                    str(artifact) + ("[parquet,numpy,blosc2,polars,arrow]" if args.formats else ""),
                     "python",
                     "-I",
                     "-c",
