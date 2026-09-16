@@ -142,20 +142,20 @@ it cannot subsequently commit. An exception escaping the context rolls back DDL
 and data together. A wrong-thread call is rejected without operating the owner
 connection. A foreign handle is rejected without operating its source connection.
 
-Both adapters use `BEGIN IMMEDIATE`, FK enforcement, and synchronous FULL.
-Consequently **even catalog.sql SELECT acquires a writer reservation** in S01.
-There is no read-only/snapshot/pooling API yet. Reads are materialized and should
-be bounded by SQL. File/object I/O must happen outside these short transactions.
-MeldDB creates new databases in WAL mode; sqlite3 retains its default journal
-mode. Both preserve the journal mode of existing files. Correctness relies on
-SQLite transactions/constraints, not matching journal mode. S02 can add an
-explicit read transaction API if measurements justify it; it must genuinely
-enforce read-only semantics rather than treating `BEGIN` as read-only.
+Both adapters use FK enforcement and synchronous FULL. Writable transactions
+use `BEGIN IMMEDIATE`; `catalog.sql()` remains writable by default, even for a
+SELECT. S06a adds explicit `write=False` transactions and makes Store metadata
+reads use them. Both adapters now apply an explicit live journal policy (WAL by
+default, requiring a patched SQLite runtime). See [SQLite contracts](sqlite.md)
+for read-statement restrictions, upgrades, maintenance and backup behavior.
+Results are materialized and should be bounded by SQL. File/object I/O remains
+outside SQL write transactions. There is no connection-pooling API.
 
 SQL transaction/configuration commands (including PRAGMA, ATTACH, DETACH) are
 rejected; callers cannot turn off FK enforcement through the wrapper. Standalone
 drivers **must enable `PRAGMA foreign_keys=ON` on each connection**. MeldDB is used
-only via public `open`, `transaction(write=True)`, `sql`, and `close`. Neither
+only via public connection/transaction/SQL/backup APIs; file-level SQLite
+configuration uses a short-lived standard-library control connection. Neither
 opening nor installing invokes document/graph APIs or creates managed tables.
 
 SQL failures map to ValidationError, ConstraintError or BusyError with driver

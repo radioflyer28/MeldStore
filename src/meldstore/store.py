@@ -86,6 +86,25 @@ class Store:
             for row in tx.sql("SELECT definition FROM ms_schemas ORDER BY name,version"):
                 lifecycle.install_schema(migrations.decode(row["definition"]), tx)
 
+    def install_query_indexes(self):
+        """Explicit additive S06a upgrade; no table rebuild or automatic ANALYZE."""
+        from .installation import _objects, _verify
+
+        ddl = {
+            "ms_gc_pending": "CREATE INDEX ms_gc_pending ON ms_gc(storage_id,object_key) WHERE state='pending'"
+        }
+        with self.catalog.transaction() as tx:
+            lifecycle.verify(tx)
+            objects = _objects(tx)
+            added = []
+            for name, sql in ddl.items():
+                if name in objects:
+                    _verify(objects, {name: sql})
+                else:
+                    tx.sql(sql)
+                    added.append(name)
+            return added
+
     def _schema(self, schema, tx, *, write=False):
         if not isinstance(schema, BlobSchema):
             raise ValidationError("Supply the installed BlobSchema declaration")
@@ -329,12 +348,12 @@ class Store:
 
     def stat(self, id):
         identifier(id)
-        with self.catalog.transaction() as tx:
+        with self.catalog.transaction(write=False) as tx:
             return self._record(id, tx)
 
     def find(self, *, schema, where=None, predicates=(), order_by=(), limit=100, after=None):
         """Ready records with typed scalar predicates and stable keyset pagination."""
-        with self.catalog.transaction() as tx:
+        with self.catalog.transaction(write=False) as tx:
             self._schema(schema, tx)
             sql, params = query.compile_query(
                 schema,
@@ -400,7 +419,7 @@ class Store:
 
     def migration_status(self, name):
         identifier(name)
-        with self.catalog.transaction() as tx:
+        with self.catalog.transaction(write=False) as tx:
             return migrations.status(tx, name)
 
     def delete(self, id, *, expected_version, tx=None):
@@ -420,13 +439,13 @@ class Store:
             return lifecycle.discard(self, prepared, tx)
 
     def resolve(self, id, *, prepared, schema, metadata):
-        with self.catalog.transaction() as tx:
+        with self.catalog.transaction(write=False) as tx:
             lifecycle.verify(tx)
             return lifecycle.resolve(self, id, prepared, schema, metadata, tx)
 
     def deletion_status(self, id):
         identifier(id)
-        with self.catalog.transaction() as tx:
+        with self.catalog.transaction(write=False) as tx:
             lifecycle.verify(tx)
             result = lifecycle.retired(tx, id)
             if result is None:

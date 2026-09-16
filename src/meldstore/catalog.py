@@ -18,7 +18,7 @@ from .errors import (
 )
 
 
-def _check_sql(statement):
+def _check_sql(statement, *, write=True):
     if not isinstance(statement, str):
         raise ValidationError("SQL must be text")
     remaining = statement.lstrip()
@@ -44,6 +44,14 @@ def _check_sql(statement):
         "DETACH",
     }:
         raise ValidationError("Transaction and connection control SQL is not supported")
+    # Some PRAGMAs take effect during preparation even under EXPLAIN. Limit
+    # explained statements to SELECT rather than letting EXPLAIN bypass controls.
+    if match[0].upper() == "EXPLAIN" and not re.match(
+        r"EXPLAIN\s+(?:QUERY\s+PLAN\s+)?SELECT\b", remaining, re.IGNORECASE
+    ):
+        raise ValidationError("EXPLAIN supports SELECT statements only")
+    if not write and match[0].upper() not in {"SELECT", "EXPLAIN"}:
+        raise ValidationError("Read transactions accept SELECT or EXPLAIN only")
 
 
 def _translate(exc):
@@ -63,16 +71,17 @@ def _translate(exc):
 class Transaction:
     """Live only inside its owning Catalog.transaction() context."""
 
-    def __init__(self, catalog, execute):
+    def __init__(self, catalog, execute, *, write=True):
         self._catalog = catalog
         self._execute = execute
         self._failed = False
         self._live = True
+        self._write = write
 
     def sql(self, statement: str, params=()) -> list[dict]:
         self._catalog.require_transaction(self)
         try:
-            _check_sql(statement)
+            _check_sql(statement, write=self._write)
             if not isinstance(params, (tuple, list, dict)):
                 raise ValidationError("Bindings must be a tuple, list, or dict")
             return self._execute(statement, params)
@@ -103,7 +112,24 @@ class Catalog:
         adapter: str = "melddb",
         timeout: float = 5.0,
         maintenance: bool = False,
+        journal_mode: str = "wal",
     ):
+        if adapter not in {"sqlite", "melddb"}:
+            raise ValidationError("adapter must be 'melddb' or 'sqlite'")
+        if not isinstance(journal_mode, str) or journal_mode not in {"wal", "delete"}:
+            raise ValidationError("journal_mode must be 'wal' or 'delete'")
+        version = sqlite3.sqlite_version_info
+        patched = (
+            version >= (3, 51, 3)
+            or ((3, 50, 7) <= version < (3, 51, 0))
+            or ((3, 44, 6) <= version < (3, 45, 0))
+        )
+        if str(path) != ":memory:" and journal_mode == "wal" and not patched:
+            raise ValidationError(
+                "WAL requires SQLite with the WAL-reset fix (3.51.3+, 3.50.7+, "
+                "or 3.44.6+ on those release branches). Upgrade Python's SQLite "
+                "runtime or explicitly select journal_mode='delete'."
+            )
         if type(maintenance) is not bool:
             raise ValidationError("maintenance must be boolean")
         self._owner = threading.get_ident()
@@ -122,11 +148,34 @@ class Catalog:
             else None
         )
         self.adapter = adapter
+        self._timeout = timeout
         try:
+            if self.path is not None:
+                # Journal mode is a file property. Use only public driver APIs;
+                # pre-create the file so MeldDB preserves the selected mode.
+                control = sqlite3.connect(self.path, timeout=timeout, autocommit=True)
+                try:
+                    mode = control.execute("PRAGMA journal_mode").fetchone()[0]
+                    if mode != journal_mode:
+                        mode = control.execute(f"PRAGMA journal_mode={journal_mode}").fetchone()[0]
+                    if mode != journal_mode:
+                        raise ValidationError(f"Could not enable journal mode {journal_mode}")
+                finally:
+                    control.close()
             self._open(path, adapter, timeout)
-        except BaseException:
+            expected_mode = journal_mode if self.path is not None else "memory"
+            if self.sql("SELECT * FROM pragma_journal_mode", write=False) != [
+                {"journal_mode": expected_mode}
+            ]:
+                raise ValidationError("Live catalog journal mode does not match requested policy")
+        except BaseException as exc:
+            connection = getattr(self, "_connection", None)
+            if connection is not None:
+                connection.close()
             if self._access:
                 self._access.close()
+            if isinstance(exc, sqlite3.Error):
+                raise _translate(exc) from exc
             raise
 
     def _open(self, path, adapter, timeout):
@@ -187,19 +236,21 @@ class Catalog:
             raise TransactionError("Storage I/O must occur outside a catalog transaction")
 
     @contextmanager
-    def transaction(self):
+    def transaction(self, *, write=True):
         self._check()
+        if type(write) is not bool:
+            raise ValidationError("write must be boolean")
         if self._active is not None:
             self._active._failed = True
             raise TransactionError("Nested transactions are not supported")
         manager = None
         try:
             if self.adapter == "melddb":
-                manager = self._connection.transaction(write=True)
+                manager = self._connection.transaction(write=write)
                 raw = manager.__enter__()
                 execute = raw.sql
             else:
-                self._connection.execute("BEGIN IMMEDIATE")
+                self._connection.execute("BEGIN IMMEDIATE" if write else "BEGIN")
 
                 def execute(statement, params):
                     cursor = self._connection.execute(statement, params)
@@ -211,7 +262,7 @@ class Catalog:
                         cursor.close()
         except Exception as exc:
             raise _translate(exc) from exc
-        tx = Transaction(self, execute)
+        tx = Transaction(self, execute, write=write)
         self._active = tx
         try:
             yield tx
@@ -255,9 +306,9 @@ class Catalog:
         else:
             self._connection.execute("COMMIT")
 
-    def sql(self, statement: str, params=()) -> list[dict]:
+    def sql(self, statement: str, params=(), *, write=True) -> list[dict]:
         """One owned transaction; use tx.sql to compose multiple operations."""
-        with self.transaction() as tx:
+        with self.transaction(write=write) as tx:
             return tx.sql(statement, params)
 
     def snapshot(self, destination):
@@ -289,6 +340,40 @@ class Catalog:
         with destination.open("r+b") as stream:
             os.fsync(stream.fileno())
         return destination
+
+    def maintain_sqlite(self, *, analyze=False, checkpoint="passive"):
+        """Explicit statistics/checkpoint work under cooperative exclusive access.
+
+        FULL durability and SQLite's automatic checkpoint threshold are unchanged.
+        A busy checkpoint is reported, not mistaken for a successful truncation.
+        """
+        self.require_idle()
+        if not self._exclusive or self._readers or self.path is None:
+            raise TransactionError("SQLite maintenance requires an exclusive file-backed catalog")
+        if (
+            type(analyze) is not bool
+            or not isinstance(checkpoint, str)
+            or checkpoint not in {"passive", "truncate"}
+        ):
+            raise ValidationError("Use boolean analyze and passive/truncate checkpoint")
+        control = sqlite3.connect(self.path, timeout=self._timeout, autocommit=True)
+        try:
+            control.execute("PRAGMA synchronous=FULL")
+            control.execute("ANALYZE" if analyze else "PRAGMA optimize=0x10002").fetchall()
+            # ANALYZE on the control connection updates persistent statistics.
+            # Reload them on the actual application connection as well.
+            self.sql("ANALYZE sqlite_schema")
+            busy, log, completed = control.execute(
+                f"PRAGMA wal_checkpoint({checkpoint})"
+            ).fetchone()
+            return {
+                "statistics": "analyze" if analyze else "optimize",
+                "checkpoint": {"busy": busy, "log_frames": log, "checkpointed_frames": completed},
+            }
+        except sqlite3.Error as exc:
+            raise _translate(exc) from exc
+        finally:
+            control.close()
 
     def install_schema(self, schema, *, tx: Transaction | None = None) -> str:
         from .installation import install

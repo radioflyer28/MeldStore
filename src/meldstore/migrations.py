@@ -312,9 +312,15 @@ def _batch(store, tx, plan, batch_size):
     ):
         raise ConflictError("Resolve unpublished or retiring blobs before resuming")
     table = q(plan.source.table_name)
+    # Keep the resume boundary sargable: a nullable-parameter OR makes SQLite
+    # scan from the start of the index for every batch.
+    boundary = "" if job["last_id"] is None else " AND id>?"
+    params = (plan.source.version,)
+    if job["last_id"] is not None:
+        params += (job["last_id"],)
     rows = tx.sql(
-        f"SELECT * FROM {table} WHERE schema_version=? AND (? IS NULL OR id>?) ORDER BY id LIMIT ?",
-        (plan.source.version, job["last_id"], job["last_id"], batch_size),
+        f"SELECT * FROM {table} WHERE schema_version=?{boundary} ORDER BY id LIMIT ?",
+        (*params, batch_size),
     )
     all_fields = {key for schema in declarations(tx, plan.source.name) for key in schema.fields}
     for row in rows:

@@ -21,10 +21,15 @@ The library has no caching policies and no built-in cUAS concepts.
 - [S05 verification evidence](docs/s05-verification.md)
 - [Offline backup, restore, and local transfer](docs/backup.md)
 - [S06 verification evidence](docs/s06-verification.md)
+- [SQLite settings, concurrency, and tuning](docs/sqlite.md)
+- [S06a verification evidence](docs/s06a-verification.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.
 MeldDB SQL and a direct SQLite adapter share the same relational schema.
+Default WAL mode requires a SQLite runtime containing the WAL-reset fix (normally
+3.51.3+); check SQLite's version, not only Python's. See the SQLite guide above
+for supported backports and explicit rollback mode.
 Local storage uses obstore; S3 remains planned.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
 fresh installation requires Git. Optional extras are `parquet` (pandas), `arrow`,

@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S06 complete, with local and Windows/Linux CI verification.
-S07-S08 remain planned.
+S06a is implemented with final qualification in progress; S07-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -45,8 +45,9 @@ These are responsibilities, not a requirement for one file/class per item.
 | S04 Lifecycle and recovery | S03 | Shared publication, restricted deletion, uncertain-commit resolution, and exclusive cleanup survive process interruptions |
 | S05 Format handlers | S02, S03 | Parquet/NPZ/Blosc2 and custom values round-trip under explicit contracts |
 | S06 Backup and offline transfer | S04 | Fresh restore preserves public IDs, metadata, references, and verified payloads |
+| S06a SQLite tuning and concurrency | S06 | Consistent live-catalog settings after creation/reopen/restore, genuine read transactions, and measured index/query-plan evidence through both adapters |
 | S07 S3 qualification | S04, S05, S06 | Same lifecycle on real S3; multipart/conditional-write and local-to-S3 transfer evidence |
-| S08 Consumer and release qualification | S01-S07 | Domain-neutral and cUAS examples, representative workload, clean installs, Windows/Linux evidence |
+| S08 Consumer and release qualification | S01-S07, including S06a | Domain-neutral and cUAS examples, representative workload, clean installs, Windows/Linux evidence |
 
 ### S01 — contracts and relational foundation
 
@@ -177,6 +178,56 @@ Test interrupted export/restore to fresh destinations, invalid manifests, retain
 IDs, reference integrity, destination no-overwrite, and verified relocation.
 Backup restore must cover application-owned SQL, not only library tables.
 
+### S06a — SQLite tuning and concurrency
+
+Implemented: see [SQLite settings and concurrency contracts](sqlite.md) and
+[S06a verification](s06a-verification.md). Final qualification is in progress.
+The slice includes patched-runtime WAL enforcement, explicit read transactions,
+an opt-in pending-queue index, migration ID seeks, and exclusive statistics and
+checkpoint maintenance. It does not change the completed S06 acceptance record.
+
+Baseline before S06a: the pinned MeldDB backend requests WAL for newly created catalogs but
+preserves the journal mode of existing databases. The direct sqlite3 adapter does
+not explicitly enable WAL. Both use foreign keys and synchronous FULL, with a
+configurable five-second default lock timeout. Metadata indexes are generated
+from schema declarations, and a representative query-plan test exists. Metadata
+reads currently use write transactions; restored standalone snapshots can remain
+in rollback mode. These are tuning gaps, not evidence of qualified concurrency.
+
+1. Define explicit, consistent live-catalog journal-mode configuration through
+   both adapters. Cover creation, existing databases, reopen, restore and transfer;
+   verify the effective setting and report unsupported modes or lock conflicts.
+   Document local-filesystem requirements and how existing catalogs adopt the
+   policy. Keep synchronous FULL as the durability default and retain configurable
+   lock timeouts; do not silently trade durability for throughput.
+2. Introduce genuine read transactions for metadata-only operations, including
+   stat/find, without changing explicit application write-transaction composition.
+   Test snapshot consistency, read/write concurrency, failed transactions and
+   write rejection in read-only contexts. Keep object-storage I/O outside SQL
+   write transactions.
+3. Preserve rollback DELETE mode for the separate maintenance/access-gate
+   databases: their exclusion protocol depends on it. Keep detached backup
+   artifacts standalone; apply live-catalog policy when opening a restored copy,
+   not by mutating the backup. Re-test exclusive maintenance and backup/restore
+   with concurrent participants and WAL-backed source catalogs.
+4. Audit query plans for metadata filters, ordering/keyset pagination, application
+   joins and foreign-key checks, migration batches, and lifecycle/cleanup queues.
+   Add indexes only where representative plans and measurements justify their
+   read benefit and write/storage cost. Preserve user-owned indexes and SQL
+   constraints, and provide an explicit upgrade path for existing catalogs.
+5. Evaluate planner-statistics maintenance (ANALYZE/PRAGMA optimize) and checkpoint
+   behavior, including long-lived readers and WAL growth. Document explicit
+   maintenance boundaries. Leave cache/mmap and other tuning at defaults unless
+   measurements justify changes; avoid speculative global PRAGMAs.
+
+Exit evidence: both adapters pass settings, read/write contention, maintenance
+exclusion and restore tests on Windows/Linux. Record before/after query plans,
+latency, SQL call counts and index costs using a deterministic metadata workload
+with declared row counts and selectivity. Record SQLite/runtime versions and
+checkpoint/WAL behavior. Distinguish process-crash tests from power-loss claims.
+S08 must validate these choices against its integrated consumer workload; no
+blanket performance claim follows from enabling WAL or passing one index test.
+
 ### S07 — S3
 
 Use an explicitly designated disposable AWS prefix. Exercise create-only writes,
@@ -194,6 +245,8 @@ files intact and retrieve each selected file once regardless of matched tracks.
 
 Use representative 100–300 MB payloads and roughly 10–30 GB total; record actual
 track counts, memory, disk staging, hash and import/retrieval timings, and SQL calls.
+Validate S06a settings and index choices against the integrated workload, including
+metadata growth and concurrent readers/writers; report regressions and limits.
 Run wheel/sdist clean-install tests, both adapters, all optional handler sets, and
 Windows/Linux checks. Mark macOS/PostgreSQL unqualified unless separately proven.
 Select a license and resolve dependency distribution before package release.
@@ -205,4 +258,5 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S07 real-S3 qualification, requiring an explicitly designated disposable bucket/prefix.
+Next action: finish S06a qualification. S07 real-S3 qualification remains
+planned and requires an explicitly designated disposable bucket/prefix.

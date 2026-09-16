@@ -25,6 +25,9 @@ for adapter in ('sqlite', 'melddb'):
         assert catalog.install_schema(schema) == schema.table_name
         store = Store(catalog, LocalStorage(adapter + '-objects'))
         store.install_schema(schema)
+        assert catalog.sql('SELECT * FROM pragma_journal_mode', write=False) == [{'journal_mode': 'wal'}]
+        assert store.install_query_indexes() == ['ms_gc_pending']
+        assert store.install_query_indexes() == []
         blob = store.import_file('source.bin', schema=schema, metadata={'title': 'smoke'})
         target = BlobSchema('smoke', {'title': Text(required=True), 'number': Integer(required=True)}, version=2)
         migration = MetadataMigration('smoke-v2', schema, target, 'add-number', lambda row: dict(row, number=1))
@@ -39,6 +42,7 @@ for adapter in ('sqlite', 'melddb'):
         assert store.deletion_status(blob['id'])['state'] == 'pending'
     with Catalog(adapter + '.db', adapter=adapter, maintenance=True) as catalog:
         store = Store(catalog, LocalStorage(adapter + '-objects'))
+        assert catalog.maintain_sqlite()['checkpoint']['busy'] == 0
         assert len(store.reconcile()['pending']) == 1
         assert store.cleanup()[0]['state'] == 'done'
         assert store.deletion_status(blob['id'])['state'] == 'done'
