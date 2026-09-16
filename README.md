@@ -3,7 +3,7 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S06 backup and local transfer implemented; verification is in progress.
+Status: S01-S06 implemented and verified on Windows/Linux; the MVP remains in development.
 No package has been released or qualified for application data.
 
 MeldStore stores immutable local files with user-defined
@@ -20,6 +20,7 @@ The library has no caching policies and no built-in cUAS concepts.
 - [Narwhals evaluation](docs/narwhals-evaluation.md)
 - [S05 verification evidence](docs/s05-verification.md)
 - [Offline backup, restore, and local transfer](docs/backup.md)
+- [S06 verification evidence](docs/s06-verification.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.

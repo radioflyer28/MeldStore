@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S05 complete, with local and Windows/Linux CI verification.
-S06 implemented, verification in progress. S07-S08 remain planned.
+Status: S01-S06 complete, with local and Windows/Linux CI verification.
+S07-S08 remain planned.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -162,6 +162,12 @@ and explicit application schema declaration accompany physical snapshots.
 Restoration and transfer require fresh destinations; all copying precedes final
 catalog publication. S06 requires one logical root and resolved lifecycle state.
 
+Local verification: 349 passed, 4 Windows symlink-permission skips. All six
+Windows/Linux Python 3.12-3.14 jobs passed all 353 tests with no skips, lint/build,
+and fresh core/format artifact backup/restore checks in
+[S06 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35156240446).
+See the [S06 verification record](s06-verification.md).
+
 Snapshot the shared SQL catalog and referenced payloads under explicit quiescence.
 Specify a portable application/library metadata export, since MeldDB logical
 export excludes external tables. Define the application's contribution for its
@@ -199,4 +205,4 @@ No green unit suite substitutes for real S3 or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: finish S06 verification, then S07 real-S3 qualification.
+Next action: S07 real-S3 qualification, requiring an explicitly designated disposable bucket/prefix.

@@ -45,8 +45,14 @@ Windows Python 3.12.10, locked dependencies with all format extras installed.
 
 ## CI
 
-Pending six Windows/Linux Python 3.12-3.14 jobs. The existing workflow runs core
-and all-extras suites, lint/build, and fresh core/format artifact-install checks.
+All six Windows/Linux Python 3.12-3.14 jobs passed for implementation commit
+`0731794c2dafebb6ed4d69226bcf5ed926db7b6c` in
+[S06 CI](https://github.com/radioflyer28/MeldStore/actions/runs/35156240446).
+Each core-only job passed 310 tests with 43 expected missing-extra skips; each
+all-extras job passed **all 353 tests with no skips**, including every symlink
+case. All jobs passed lint/build and fresh core/format wheel/sdist installations,
+with backup restoration of application SQL and all supported formats. The
+follow-up evidence commit changes documentation only.
 
 ## Boundaries
 
