@@ -5,6 +5,13 @@ a new library; the APIs below are proposed, not existing MeldDB capabilities.
 This is the authoritative MeldStore MVP specification. MeldStore is a separate
 project and Python package; implementation does not belong in MeldDB core.
 
+Acceptance amendment, September 16, 2026: the user approved a real Docker-local
+RustFS or Garage S3-compatible service for S07 qualification in place of the
+original AWS-only requirement. AWS-specific evidence is deferred; compatible
+service results do not qualify AWS or constitute AWS certification. S07 is
+implemented and undergoing qualification; S08 follows verification. See the
+[implemented S3 API](s3.md) and [forthcoming verification record](s07-verification.md).
+
 ## Project Description
 
 A synchronous Python blob store with user-defined relational metadata schemas,
@@ -40,9 +47,12 @@ is split into its own Parquet file.
 ## Completion Class
 
 Integration and operational. Unit tests alone cannot establish completion.
-Acceptance includes local filesystem behavior, an actual AWS S3 test prefix,
+Acceptance includes local filesystem behavior, an actual S3-compatible service
+with an explicitly designated disposable bucket/prefix,
 ordinary SQL interoperability, interrupted operations, and backup restoration.
 S3 credentials and a disposable destination are needed for that qualification.
+Docker-local RustFS or Garage is permitted under the September 16 amendment;
+AWS remains separately unqualified.
 
 ## Final Integrated Acceptance
 
@@ -156,6 +166,18 @@ Store relative object keys and storage identity. Start with one object per blob,
 immutable bytes, and no deduplication. Use fresh keys and reject unintended
 overwrites. Qualify conditional writes and multipart behavior on the selected
 backend; do not base publication on an assumed atomic S3 rename.
+
+S07 keeps the catalog and persistent coordination directory on a single host.
+All participants share those local resources; remote payloads do not create a
+distributed catalog or lease service. Identity is bound to the coordination
+path and explicit endpoint/bucket/prefix. Existing remote markers cannot be
+adopted from a new local directory. Credentials remain runtime configuration.
+
+Existing files are privately staged and hashed on local disk. Nonempty uploads
+use 5 MiB multipart chunks with concurrency two per blob, followed by server-side
+create-only multipart copy; empty payloads use conditional PUT. Incomplete
+multipart uploads require external cleanup. See [S3 contracts](s3.md) for
+configuration, temporary-space requirements, recovery, and backend limitations.
 
 ### Explicit, optional serialization handlers
 
@@ -287,7 +309,8 @@ reference relational integration, including truth recordings and correlations.
 - BS-02: User-defined relational schemas and SQL relationships.
 - BS-03: Existing-file and structured-format handlers, including custom handlers.
 - BS-04: XXH3-128 verification of exact stored bytes.
-- BS-05: obstore local and AWS S3 operation.
+- BS-05: obstore local and S3-compatible operation; AWS qualification deferred
+  under the September 16, 2026 acceptance amendment.
 - BS-06: Shared transactions, conflict detection, and interruption recovery.
 - BS-07: Explicit metadata schema evolution and resumable migration.
 - BS-08: SQL interoperability without MeldDB.
@@ -336,8 +359,12 @@ and S3Store; Pandas/Parquet, NumPy/NPZ, Blosc2 handlers; generic application sch
 registration and transaction composition. The cUAS example supplies its own SQL
 constraints. Backup captures a consistent catalog plus all
 referenced ready objects while mutations/cleanup are paused, and restores only
-into a fresh destination. Offline local-to-S3 transfer verifies bytes before
-switching recorded locations. Public IDs and domain references remain unchanged.
+into a fresh destination. Offline transfer to S3 requires both a fresh local
+catalog/coordination directory and an empty remote prefix. It verifies payloads
+before publishing the destination catalog last, preserving public IDs, logical
+storage identity, domain references, and the source. The caller explicitly
+switches applications after successful verification; there is no automatic
+cutover. S3-backed stores can also produce verified local backups.
 
 ## Testing Requirements
 
@@ -345,8 +372,10 @@ Test observable behavior: schema validation, handler round trips, indexed query
 results, UTC/microsecond boundaries, SQL FK/cardinality violations, missing handler
 versions, stale updates, and direct-driver interoperability. Inject interruption
 before/after upload, publication, commit, deletion, and metadata migration batches.
-Process-crash tests are not power-loss certification. Test real S3 separately from
-emulators; interrupted multipart remnants need backend cleanup coverage. Verify
+Process-crash tests are not power-loss certification. Exercise a real
+S3-compatible service separately from mocks; record its pinned image and client
+versions. AWS service behavior needs separate, deferred evidence. Interrupted
+multipart remnants need backend cleanup coverage. Verify
 backup restoration and local-to-S3 transfer with hashes and domain queries.
 
 ## Acceptance Criteria
@@ -374,7 +403,8 @@ These do not reopen the chosen architecture:
 
 - Repository: radioflyer28/MeldStore; Python package: meldstore. Repository setup
   is authorized; implementing the MVP follows the implementation plan.
-- Representative data and disposable AWS S3 destination/credentials for qualification.
+- Representative data for S08. AWS-specific qualification remains deferred and
+  requires a separately designated disposable AWS destination and credentials.
 - cUAS source UUID reuse, timestamp precision conversion, and authority for track
   validation/correlation: the schema package defines these domain policies.
 - Measured performance targets after the first representative workload baseline.

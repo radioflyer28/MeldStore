@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S06 and S06a complete, with local and Windows/Linux CI verification.
-S07-S08 remain planned.
+S07 is implemented and undergoing qualification. S08 follows S07 verification.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -46,7 +46,7 @@ These are responsibilities, not a requirement for one file/class per item.
 | S05 Format handlers | S02, S03 | Parquet/NPZ/Blosc2 and custom values round-trip under explicit contracts |
 | S06 Backup and offline transfer | S04 | Fresh restore preserves public IDs, metadata, references, and verified payloads |
 | S06a SQLite tuning and concurrency | S06 | Consistent live-catalog settings after creation/reopen/restore, genuine read transactions, and measured index/query-plan evidence through both adapters |
-| S07 S3 qualification | S04, S05, S06 | Same lifecycle on real S3; multipart/conditional-write and local-to-S3 transfer evidence |
+| S07 S3-compatible qualification | S04, S05, S06 | Same lifecycle on a real S3-compatible service; multipart/conditional-write and offline transfer evidence; AWS evidence deferred |
 | S08 Consumer and release qualification | S01-S07, including S06a | Domain-neutral and cUAS examples, representative workload, clean installs, Windows/Linux evidence |
 
 ### S01 — contracts and relational foundation
@@ -233,11 +233,27 @@ blanket performance claim follows from enabling WAL or passing one index test.
 
 ### S07 — S3
 
-Use an explicitly designated disposable AWS prefix. Exercise create-only writes,
-multipart completion/abort remnants, stream verification, transport errors,
-uncertain publication, pending deletion, and offline LocalStore-to-S3 relocation.
-Avoid relying on rename atomicity or ETags as content digests. Record backend and
-dependency versions. Emulator results do not close real S3 acceptance.
+Implemented and undergoing qualification: [S3 API and operational limits](s3.md).
+S3Storage uses explicit endpoint/bucket/prefix configuration, path-bound local
+coordination, create-only publication, and verified whole-object reads. Offline
+backup/transfer supports S3 payloads while the catalog remains local; destination
+catalog publication follows verification of all copied payloads.
+
+Acceptance changed September 16, 2026 by explicit user approval: a real
+Docker-local RustFS or Garage S3-compatible service may satisfy S07 backend
+qualification. Use loopback, ephemeral credentials, and an explicitly designated
+disposable bucket/prefix. AWS-specific evidence is deferred; this change does
+not mean AWS tests passed or confer AWS certification.
+
+Exercise conditional PUT (including empty payloads), UploadPartCopy and
+conditional CompleteMultipartUpload, competing create-only publications,
+multipart list/abort remnants, stream verification, transport errors, uncertain
+publication, pending deletion, and offline fresh-destination transfer. Include
+S3-to-local backup and identity mismatch/no-adoption cases. Avoid relying on
+rename atomicity or ETags as content digests. Record the exact backend image,
+configuration and dependency versions, memory/disk behavior, and remaining gaps
+in the [forthcoming S07 verification record](s07-verification.md). Preliminary
+live checks do not establish final suite totals, CI success, or slice completion.
 
 ### S08 — consumers and release
 
@@ -257,9 +273,10 @@ Select a license and resolve dependency distribution before package release.
 ## Completion rules
 
 Each slice records behavior changes, test commands/results, and remaining limits.
-No green unit suite substitutes for real S3 or process recovery evidence. Do not
+No green unit suite substitutes for real S3-compatible service or process recovery evidence. Do not
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S07 real-S3 qualification, requiring an explicitly designated
-disposable bucket/prefix.
+Next action: finish and record S07 qualification on the designated disposable
+S3-compatible backend, then advance to S08 consumer/release verification.
+AWS-specific qualification remains deferred.

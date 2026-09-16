@@ -1,7 +1,7 @@
-"""Generic relational metadata and verified immutable local file storage."""
+"""Generic relational metadata and verified immutable local/S3 blob storage."""
 
 from .access import catalog_access
-from .backup import restore_backup
+from .backup import restore_backup, restore_backup_to_s3
 from .catalog import Catalog, Transaction
 from .errors import (
     BusyError,
@@ -19,6 +19,7 @@ from .errors import (
 from .handlers import Handler, HandlerRegistry, MissingDependencyError, UnsupportedHandlerError
 from .migrations import MetadataMigration
 from .query import FindCursor, Order, Predicate
+from .s3 import S3Storage
 from .schema import (
     BlobSchema,
     Boolean,
@@ -35,6 +36,8 @@ from .store import PreparedFile, PreparedValue, Store
 
 __all__ = [
     "restore_backup",
+    "restore_backup_to_s3",
+    "S3Storage",
     "Handler",
     "HandlerRegistry",
     "MissingDependencyError",

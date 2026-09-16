@@ -60,7 +60,7 @@ def _payload_operation(method):
 
 
 class Store:
-    """Borrows a Catalog; the caller owns its lifetime. Storage is local in S05."""
+    """Borrows a caller-owned Catalog with local or S3 payload storage."""
 
     def __init__(self, catalog, storage: LocalStorage, *, handlers=None):
         self.catalog = catalog
@@ -476,6 +476,13 @@ class Store:
         from .backup import transfer
 
         return transfer(self, destination, application=application, max_entries=max_entries)
+
+    def transfer_to_s3(self, destination, *, application, max_entries=10000, **s3_options):
+        from .backup import transfer_to_s3
+
+        return transfer_to_s3(
+            self, destination, application=application, max_entries=max_entries, **s3_options
+        )
 
     @_payload_operation
     def import_file(self, source, *, schema, metadata, id=None, handler="file"):

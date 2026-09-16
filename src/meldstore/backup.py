@@ -385,8 +385,8 @@ def _manifest(source, max_entries):
     return value
 
 
-def restore_backup(source, destination, *, max_entries=10000):
-    """Restore a trusted backup to a fresh directory; catalog is published last."""
+def _restore_backup(source, destination, *, max_entries=10000, storage_factory=None):
+    """Shared fresh-destination restore; verify payloads before publishing SQL."""
     _bound(max_entries)
     source = _path(source)
     destination = _destination(destination, source)
@@ -405,7 +405,10 @@ def restore_backup(source, destination, *, max_entries=10000):
     catalog = destination / "catalog.sqlite"
     gate = Lease(str(catalog) + ".meldstore-access", owner=canonical(catalog), exclusive=True)
     try:
-        storage = LocalStorage._replica(destination / "storage", manifest["storage_id"])
+        if storage_factory is None:
+            storage = LocalStorage._replica(destination / "storage", manifest["storage_id"])
+        else:
+            storage = storage_factory(destination / "storage", manifest["storage_id"])
         root_gate = Lease(
             storage.root / "meldstore-access.sqlite", owner=canonical(catalog), exclusive=True
         )
@@ -432,6 +435,33 @@ def restore_backup(source, destination, *, max_entries=10000):
         gate.close()
 
 
+def restore_backup(source, destination, *, max_entries=10000):
+    """Restore a trusted backup to a fresh local directory; catalog is published last."""
+    return _restore_backup(source, destination, max_entries=max_entries)
+
+
+def restore_backup_to_s3(source, destination, *, max_entries=10000, **s3_options):
+    """Restore into a fresh S3 prefix and fresh local catalog/coordinator directory.
+
+    Credentials stay in s3_options memory, never in the catalog or result.
+    Failed destinations are retained for inspection; retry at fresh destinations.
+    """
+    from .s3 import S3Storage
+
+    forbidden = {"coordination_directory", "_storage_id", "_fresh"} & s3_options.keys()
+    if forbidden:
+        raise ValidationError("Restore owns the destination coordination directory and identity")
+
+    def factory(root, storage_id):
+        return S3Storage(
+            coordination_directory=root, _storage_id=storage_id, _fresh=True, **s3_options
+        )
+
+    return _restore_backup(
+        source, destination, max_entries=max_entries, storage_factory=factory
+    )
+
+
 def transfer(store, destination, *, application, max_entries=10000):
     """Verified, non-destructive offline local relocation to a fresh catalog/root."""
     store.catalog.require_maintenance(store.storage.root)
@@ -440,3 +470,15 @@ def transfer(store, destination, *, application, max_entries=10000):
         snapshot = Path(temporary) / "backup"
         backup(store, snapshot, application=application, max_entries=max_entries)
         return restore_backup(snapshot, destination, max_entries=max_entries)
+
+
+def transfer_to_s3(store, destination, *, application, max_entries=10000, **s3_options):
+    """Non-destructive offline relocation; caller switches only after verified success."""
+    store.catalog.require_maintenance(store.storage.root)
+    _destination(destination, store.storage.root, store.catalog.path)
+    with TemporaryDirectory(prefix="meldstore-transfer-") as temporary:
+        snapshot = Path(temporary) / "backup"
+        backup(store, snapshot, application=application, max_entries=max_entries)
+        return restore_backup_to_s3(
+            snapshot, destination, max_entries=max_entries, **s3_options
+        )
