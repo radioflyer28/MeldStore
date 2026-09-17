@@ -239,7 +239,7 @@ source = { git = "https://github.com/radioflyer28/melddb.git?rev=8970099be98c6b4
 
 [[package]]
 name = "meldstore"
-version = "0.0.0.dev0"
+version = "0.1.0rc1"
 source = { editable = "." }
 dependencies = [
     { name = "melddb" },

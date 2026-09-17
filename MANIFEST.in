@@ -1,5 +1,6 @@
 include AGENTS.md uv.lock
 include LICENSE
+include CHANGELOG.md
 recursive-include examples *.py
 recursive-include docs *.md
 recursive-include tools *.py

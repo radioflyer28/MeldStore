@@ -30,6 +30,8 @@ The library has no caching policies and no built-in cUAS concepts.
 - [S07 verification evidence](docs/s07-verification.md)
 - [Generic and separate SQL application examples](docs/consumers.md)
 - [S08 qualification evidence and release gates](docs/s08-verification.md)
+- [Release-candidate notes](CHANGELOG.md)
+- [MVP release checklist](docs/release.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.

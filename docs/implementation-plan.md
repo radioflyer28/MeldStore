@@ -49,6 +49,7 @@ These are responsibilities, not a requirement for one file/class per item.
 | S06a SQLite tuning and concurrency | S06 | Consistent live-catalog settings after creation/reopen/restore, genuine read transactions, and measured index/query-plan evidence through both adapters |
 | S07 S3-compatible qualification | S04, S05, S06 | Same lifecycle on a real S3-compatible service; multipart/conditional-write and offline transfer evidence; AWS evidence deferred |
 | S08 Consumer and release qualification | S01-S07, including S06a | Domain-neutral and cUAS examples, representative workload, clean installs, Windows/Linux evidence |
+| S09 MVP release preparation | S08 | Merged MVP, versioned candidate, release notes, verified artifacts and explicit distribution/publication gates |
 
 ### S01 — contracts and relational foundation
 
@@ -287,6 +288,19 @@ index. Evaluate interval-index orientation and SQL bulk-insert approaches in
 application benchmarks, with before/after plans, selectivity, write cost and
 memory evidence. Do not turn a consumer's index layout into a MeldStore core
 schema or tune global SQLite settings without measurements.
+
+### S09 — MVP release preparation
+
+Authorized closeout of the existing MVP, not a new feature milestone. Prepare
+`0.1.0rc1`, merge the completed S07/S08 history, document qualification and
+known limits, verify versioned wheel/sdist contents and fresh installations,
+and resolve dependency licensing/distribution. See the
+[release checklist](release.md). Actual package publication requires a separate
+explicit approval; a version bump or green CI is not a release announcement.
+
+PostgreSQL metadata plus remote payloads and cross-host coordination are deferred
+to a future milestone, as agreed after S08. Keep the SQLite embedded deployment
+and distinguish a remote object backend from a remotely shared catalog.
 
 ## Completion rules
 

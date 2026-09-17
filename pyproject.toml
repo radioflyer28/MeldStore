@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meldstore"
-version = "0.0.0.dev0"
+version = "0.1.0rc1"
 description = "Generic blob storage with portable relational metadata"
 readme = "README.md"
 license = "Apache-2.0"
@@ -15,6 +15,11 @@ dependencies = [
     "obstore>=0.11,<0.12",
     "xxhash>=3.5,<4",
 ]
+
+[project.urls]
+Repository = "https://github.com/radioflyer28/MeldStore"
+Documentation = "https://github.com/radioflyer28/MeldStore/blob/main/README.md"
+Issues = "https://github.com/radioflyer28/MeldStore/issues"
 
 [project.optional-dependencies]
 parquet = ["pandas>=2.2,<4", "pyarrow>=19,<24"]

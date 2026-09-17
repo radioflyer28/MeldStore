@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import tarfile
 import tempfile
+import tomllib
 import zipfile
 from pathlib import Path
 
@@ -20,18 +21,33 @@ def check_archive(artifact):
         assert any(name.endswith("/examples/dataset_catalog.py") for name in names)
     for name in names:
         parts = Path(name).parts
-        assert not {".planning", ".qualification", ".staging"}.intersection(parts), name
-        assert Path(name).suffix not in {".parquet", ".npz", ".b2nd", ".db", ".sqlite"}, name
+        assert not {".git", ".planning", ".qualification", ".staging"}.intersection(parts), name
+        assert not any(part == ".env" or part.startswith(".env.") for part in parts), name
+        assert Path(name).suffix.lower() not in {
+            ".parquet", ".npz", ".b2nd", ".db", ".sqlite", ".db-wal", ".db-shm",
+            ".sqlite-wal", ".sqlite-shm",
+        }, name
+
+
+def release_artifacts(directory, version):
+    """Reject mixed versions or incomplete builds without deleting old artifacts."""
+    expected = {f"meldstore-{version}-py3-none-any.whl", f"meldstore-{version}.tar.gz"}
+    artifacts = list(directory.glob("*.whl")) + list(directory.glob("*.tar.gz"))
+    if {path.name for path in artifacts} != expected:
+        raise RuntimeError(f"Expected exactly the wheel and sdist for {version} in {directory}")
+    return sorted(artifacts)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--formats", action="store_true")
+    parser.add_argument("--dist-dir", type=Path, help="Artifact directory (default: checkout dist/)")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    artifacts = list((root / "dist").glob("*.whl")) + list((root / "dist").glob("*.tar.gz"))
-    if len(artifacts) != 2:
-        raise RuntimeError("Expected exactly one wheel and one sdist in dist/")
+    with (root / "pyproject.toml").open("rb") as stream:
+        version = tomllib.load(stream)["project"]["version"]
+    directory = args.dist_dir.resolve() if args.dist_dir else root / "dist"
+    artifacts = release_artifacts(directory, version)
     code = """
 import importlib.metadata
 from pathlib import Path
@@ -82,6 +98,8 @@ for adapter in ('sqlite', 'melddb'):
             assert payload.read_bytes() == b'installed artifact payload'
 print('Both adapters passed from installed artifact')
 """
+    code = ("import importlib.metadata\n"
+            f"assert importlib.metadata.version('meldstore') == {version!r}\n") + code
     if args.formats:
         code += """
 import numpy as np
