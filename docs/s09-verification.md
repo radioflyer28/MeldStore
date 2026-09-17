@@ -1,11 +1,15 @@
 # S09 release preparation and file export
 
 Local verification: September 17, 2026, Windows, Python 3.12.13 / SQLite 3.53.1.
-Artifacts remain unreleased `0.1.0rc1` candidates. Publication requires separate
-approval and an agreed distribution channel; see [release gates](release.md).
+The owner approved `0.1.0rc1` as a GitHub prerelease with wheel and sdist,
+retaining the tested MeldDB Git pin. PyPI is not included; see [release gates](release.md).
 
 ## Changes and evidence
 
+- Final implementation `31d9d03` passed all seven Windows/Linux Python 3.12–3.14
+  and RustFS [CI jobs](https://github.com/radioflyer28/MeldStore/actions/runs/35242305047),
+  including lint, builds and fresh artifact installations. Release closeout
+  changes documentation only; runtime code and dependency pins are unchanged.
 - `Store.export_file(id, destination)` persistently copies verified raw bytes
   without overwriting destinations, deleting sources, or modifying catalog rows.
   Both metadata adapters cover empty/binary files, independent destination edits,

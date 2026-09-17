@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.1.0rc1 — unreleased candidate
+## 0.1.0rc1 — GitHub prerelease (2026-09-17)
 
-Initial MeldStore MVP. This entry records a prepared candidate, not an announced
-release. Dependency distribution and explicit publication approval
-remain gates; see the [release checklist](docs/release.md).
+Initial MeldStore MVP, approved for GitHub prerelease distribution. The tested
+MeldDB Git pin is retained; Git is required for installation. No PyPI release
+is included; see the [release checklist](docs/release.md).
 
 ### Included
 

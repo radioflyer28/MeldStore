@@ -5,6 +5,13 @@ validated local artifacts from authorization and readiness to publish them.
 S09 closes out the existing MVP; it does not add PostgreSQL or distributed
 coordination. The latter belong to a future milestone.
 
+## Approved distribution
+
+On September 17, 2026, the owner approved closing S09, merging into main, and
+publishing `v0.1.0rc1` as a GitHub prerelease with wheel and sdist. The tested
+MeldDB Git dependency is retained. No PyPI/TestPyPI publication is authorized.
+The checklist below remains applicable to future releases.
+
 ## Current gates
 
 - S07/S08 were fast-forwarded into `main` at `368ea9a` after fresh regression and
@@ -18,8 +25,8 @@ coordination. The latter belong to a future milestone.
   Move semantics remain deferred.
 - The current dependency is an exact Git commit. Git is needed for a fresh
   installation; local/URL artifact installation is distinct from index release.
-- No GitHub release, tag, TestPyPI upload, or PyPI upload is authorized or created
-  by these preparation steps. Passing CI does not authorize publication.
+- GitHub tag/prerelease publication is approved for this candidate only.
+  Passing CI does not authorize any additional publication.
 
 ## Reproduce candidate validation
 
@@ -29,8 +36,8 @@ versioned wheel/sdist builds. Both artifacts passed fresh core and all-format
 installations through both metadata adapters. The dependency lock update changes
 only the exact MeldDB revision to its licensed commit, without unrelated upgrades.
 The 33 skips are the 27 separately passed live S3 cases and six Windows symlink
-permission cases. See [S09 verification](s09-verification.md). Candidate CI must
-also pass before its merge.
+permission cases. See [S09 verification](s09-verification.md). Implementation
+commit `31d9d03` passed all seven candidate CI jobs before release closeout.
 
 Use a patched SQLite runtime; check the [runtime policy](sqlite.md), not just
 the Python version. Run from a clean source checkout. The version-specific
@@ -90,5 +97,6 @@ silently implied by the release-candidate version bump.
 5. Ask the owner to approve the version, destination and actual publication.
    Only then tag or publish; verify the published artifacts afterward.
 
-Until those gates are satisfied, artifacts are **unreleased local candidates**,
-not a completed package release.
+Future candidates remain unreleased until their own verification and publication
+approval gates are satisfied. This candidate's GitHub approval does not authorize
+an index release or establish unrestricted production support.

@@ -3,11 +3,11 @@
 Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
-Status: S01-S07, including S06a, implemented and verified on Windows/Linux.
-S07 qualifies the pinned RustFS backend. S08 consumer qualification passed with
-100-file, 16.37 GB local and RustFS workloads; package release remains gated by
-dependency distribution and publication approval. No package has been released. See the S08
-record for measured limits rather than assuming unrestricted production readiness.
+Status: S01-S09, including S06a, implemented and verified on Windows/Linux.
+Version `0.1.0rc1` is the first GitHub prerelease; it is not a PyPI release.
+S07 qualifies pinned RustFS. S08 passed 100-file, 16.37 GB local and RustFS
+workloads. See the verification records for measured limits rather than assuming
+unrestricted production readiness.
 
 MeldStore stores immutable local or S3-compatible payloads with user-defined
 SQL metadata schemas. Applications own their domain tables and relationships.
@@ -49,6 +49,19 @@ AWS-specific qualification is deferred and remains unpassed.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
 fresh installation requires Git. Optional extras are `parquet` (pandas), `arrow`,
 `polars`, `numpy`, and `blosc2`. Narwhals was evaluated but is not required.
+
+## Install the prerelease
+
+Python 3.12+, uv, Git, and a patched SQLite runtime are required (see above).
+In your Python project:
+
+```console
+uv add "meldstore @ https://github.com/radioflyer28/MeldStore/releases/download/v0.1.0rc1/meldstore-0.1.0rc1-py3-none-any.whl"
+```
+
+For optional formats, use `meldstore[parquet,numpy,blosc2,polars,arrow]` before
+the `@` in that requirement. The wheel installs the exact tested MeldDB Git
+revision automatically; do not substitute an unrelated index package.
 
 ## Local file workflow
 
@@ -99,4 +112,4 @@ illustrative sketches in the MVP specification are not an API reference.
 MeldStore is licensed under [Apache-2.0](LICENSE). Dependencies retain their own
 licenses. The pinned MeldDB dependency is also Apache-2.0, approved separately
 by its owner. Dependency distribution remains a release gate; see the checklist.
-No package release is authorized by this development work.
+The owner approved the `0.1.0rc1` GitHub prerelease; PyPI publication remains separate.

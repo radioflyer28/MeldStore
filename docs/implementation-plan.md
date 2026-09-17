@@ -2,7 +2,8 @@
 
 Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
 S07 qualifies pinned RustFS, not AWS. S08 consumer and operational qualification
-passed; dependency distribution remains a package-release gate.
+passed. S09 closes the MVP with an approved `0.1.0rc1` GitHub prerelease;
+PyPI distribution remains separate.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -290,6 +291,10 @@ memory evidence. Do not turn a consumer's index layout into a MeldStore core
 schema or tune global SQLite settings without measurements.
 
 ### S09 — MVP release preparation
+
+Closeout: implementation `31d9d03` passed all seven candidate CI jobs. The owner
+approved merge and GitHub prerelease publication, retaining the tested MeldDB Git
+pin. See [S09 evidence](s09-verification.md). No PyPI publication is included.
 
 September 17 amendment: include verified, persistent `export_file` for copy-out;
 retain `import_file` for copy-in and defer move semantics. See [file export](file-export.md).
