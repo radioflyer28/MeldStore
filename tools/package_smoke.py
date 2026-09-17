@@ -2,8 +2,26 @@
 
 import argparse
 import subprocess
+import tarfile
 import tempfile
+import zipfile
 from pathlib import Path
+
+
+def check_archive(artifact):
+    """Inspect names before installation: no private inputs or local handoffs."""
+    if artifact.suffix == ".whl":
+        with zipfile.ZipFile(artifact) as archive:
+            names = archive.namelist()
+        assert not any(name.startswith("examples/") for name in names)
+    else:
+        with tarfile.open(artifact) as archive:
+            names = archive.getnames()
+        assert any(name.endswith("/examples/dataset_catalog.py") for name in names)
+    for name in names:
+        parts = Path(name).parts
+        assert not {".planning", ".qualification", ".staging"}.intersection(parts), name
+        assert Path(name).suffix not in {".parquet", ".npz", ".b2nd", ".db", ".sqlite"}, name
 
 
 def main():
@@ -15,8 +33,13 @@ def main():
     if len(artifacts) != 2:
         raise RuntimeError("Expected exactly one wheel and one sdist in dist/")
     code = """
+import importlib.metadata
 from pathlib import Path
 from meldstore import BlobSchema, Catalog, Integer, LocalStorage, MetadataMigration, Predicate, Store, Text, restore_backup
+distribution = importlib.metadata.distribution('meldstore')
+assert distribution.metadata['License-Expression'] == 'Apache-2.0'
+assert any(str(path).endswith('/licenses/LICENSE') for path in distribution.files)
+assert not any(str(path).startswith('examples/') for path in distribution.files)
 Path('source.bin').write_bytes(b'installed artifact payload')
 for adapter in ('sqlite', 'melddb'):
     with Catalog(adapter + '.db', adapter=adapter) as catalog:
@@ -99,6 +122,7 @@ for adapter in ('sqlite', 'melddb'):
 print('Every optional handler passed from installed artifact')
 """
     for artifact in artifacts:
+        check_archive(artifact)
         with tempfile.TemporaryDirectory(prefix="meldstore-package-") as directory:
             subprocess.run(
                 [

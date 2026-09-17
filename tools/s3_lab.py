@@ -220,7 +220,11 @@ class Lab:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--probe-only", action="store_true")
+    parser.add_argument("--workload-source-root", help="Opt-in private RadarNet input directory; never used by CI")
+    parser.add_argument("--workload-output", help="New aggregate-only JSON report outside the input directory")
     args = parser.parse_args()
+    if bool(args.workload_source_root) != bool(args.workload_output) or (args.probe_only and args.workload_source_root):
+        parser.error("Workload requires both source root and output, without --probe-only")
     with Lab() as lab:
         lab.probe()
         if not args.probe_only:
@@ -231,6 +235,11 @@ def main():
                            env=env, check=True)
             for size in (32, 256):
                 subprocess.run([sys.executable, "tools/qualify_s3.py", "--mib", str(size)],
+                               env=env, check=True)
+            if args.workload_source_root:
+                subprocess.run([sys.executable, "-m", "tools.qualify_workload", "--s3",
+                                "--source-root", args.workload_source_root,
+                                "--output", args.workload_output, "--adapter", "sqlite"],
                                env=env, check=True)
 
 

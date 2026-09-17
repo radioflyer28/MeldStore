@@ -14,4 +14,8 @@ build/
 *.sqlite*
 *.db
 .qualification/
+.planning/
 .staging/
+*.parquet
+*.npz
+*.b2nd

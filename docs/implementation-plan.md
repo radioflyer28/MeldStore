@@ -1,7 +1,7 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
-S07 qualifies pinned RustFS, not AWS. S08 consumer/release qualification is next.
+S07 qualifies pinned RustFS, not AWS. S08 consumer/release qualification is in progress.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -258,6 +258,12 @@ in the [S07 verification record](s07-verification.md). All seven jobs passed in
 capability/outage probes, lint, builds and fresh artifact installs.
 
 ### S08 — consumers and release
+
+In progress: independent application examples, SQL integration tests, private
+workload tooling, and Apache-2.0 packaging. See the [consumer guide](consumers.md)
+and [S08 evidence and remaining release gates](s08-verification.md). No domain
+entities are added to the library. Do not mark this slice complete before the
+representative workloads and fresh CI have finished.
 
 First ship a dataset/document example that works without cUAS imports. Separately
 implement the cUAS SQL example with radar multi-track and aircraft single-track

@@ -318,3 +318,20 @@ def test_optional_formats_roundtrip_remote(remote, tmp_path, handler):
             library.testing.assert_array_equal(result, value)
         else:
             assert result.equals(value)
+
+
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+@pytest.mark.parametrize("consumer", ["dataset_catalog", "cuas_catalog"])
+def test_s08_application_examples_on_real_s3(remote, tmp_path, adapter, consumer):
+    import importlib
+
+    if consumer == "cuas_catalog":
+        pytest.importorskip("pyarrow")
+    exercise = importlib.import_module("examples." + consumer).exercise
+    storage, _ = remote
+    with Catalog(tmp_path / "catalog.db", adapter=adapter) as catalog:
+        result = exercise(Store(catalog, storage), tmp_path)
+        if consumer == "cuas_catalog":
+            assert result == {"correlations": 2, "recordings": ["radar", "truth"], "materializations": 2}
+        else:
+            assert result["retrieved"] == b"example document\n"

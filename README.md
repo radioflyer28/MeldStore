@@ -4,7 +4,7 @@ Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
 Status: S01-S07, including S06a, implemented and verified on Windows/Linux.
-S07 qualifies the pinned RustFS backend; S08 consumer/release qualification is next.
+S07 qualifies the pinned RustFS backend; S08 consumer/release qualification is in progress.
 The MVP remains in development.
 No package has been released or qualified for application data.
 
@@ -27,6 +27,8 @@ The library has no caching policies and no built-in cUAS concepts.
 - [S06a verification evidence](docs/s06a-verification.md)
 - [S3 configuration, recovery, backup, and offline transfer](docs/s3.md)
 - [S07 verification evidence](docs/s07-verification.md)
+- [Generic and separate SQL application examples](docs/consumers.md)
+- [S08 qualification progress and release gates](docs/s08-verification.md)
 - [Contributor guidance](AGENTS.md)
 
 The import package is `meldstore`. Python 3.12+ is the initial target.
@@ -83,10 +85,12 @@ uv run python tools/package_smoke.py --formats
 
 The tests exercise both adapters. GitHub Actions runs Windows/Linux checks and
 fresh wheel/sdist installs for the previously verified slices. S07 final test
-totals and CI evidence are pending. Use the S3 guide for implemented APIs;
+totals and CI evidence are recorded in its verification document. Use the S3 guide for implemented APIs;
 illustrative sketches in the MVP specification are not an API reference.
 
 ## License
 
-A distribution license has not been selected. Do not publish package releases
-until licensing and dependency distribution requirements are resolved.
+MeldStore is licensed under [Apache-2.0](LICENSE). Dependencies retain their own
+licenses. The pinned MeldDB dependency's licensing and distribution requirements
+remain a release gate; selecting MeldStore's license does not resolve that gate.
+No package release is authorized by this development work.
