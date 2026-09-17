@@ -11,7 +11,7 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
-    "melddb @ git+https://github.com/radioflyer28/melddb.git@8970099be98c6b4b6e0af30ac562ae65536e6403",
+    "melddb @ git+https://github.com/radioflyer28/melddb.git@aad59aba7cb348b7f4e0607962db6ecd5dda8d31",
     "obstore>=0.11,<0.12",
     "xxhash>=3.5,<4",
 ]

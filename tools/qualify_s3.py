@@ -44,10 +44,17 @@ def main():
                         assert stream.read(len(block)) == block
                     assert stream.read(1) == b""
             finished = time.perf_counter()
+            exported = store.export_file(record["id"], root / "exported.bin")
+            with exported.open("rb") as stream:
+                for _ in range(args.mib):
+                    assert stream.read(len(block)) == block
+                assert stream.read(1) == b""
+            exported_at = time.perf_counter()
             print(json.dumps({"mib": args.mib, "baseline_peak_rss": baseline,
                               "peak_rss": peak_rss(), "additional_peak_rss": peak_rss() - baseline,
                               "import_seconds": uploaded - started,
-                              "materialize_seconds": finished - uploaded}), flush=True)
+                              "materialize_seconds": finished - uploaded,
+                              "export_and_compare_seconds": exported_at - finished}), flush=True)
 
 
 if __name__ == "__main__":

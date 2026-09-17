@@ -3,11 +3,13 @@
 ## 0.1.0rc1 — unreleased candidate
 
 Initial MeldStore MVP. This entry records a prepared candidate, not an announced
-release. Dependency licensing/distribution and explicit publication approval
+release. Dependency distribution and explicit publication approval
 remain gates; see the [release checklist](docs/release.md).
 
 ### Included
 
+- Persistent `export_file(id, destination)` with size/XXH3-128 verification,
+  create-only publication and no source deletion; move semantics are deferred.
 - Immutable file/byte storage with user-defined relational metadata, stable
   public IDs, explicit shared SQL transactions, and optimistic metadata edits.
 - Local and S3-compatible payloads through obstore, verified with XXH3-128 before
@@ -21,7 +23,8 @@ remain gates; see the [release checklist](docs/release.md).
 - Verified offline catalog/payload backup, fresh restore and relocation.
 - Independent generic examples plus separate application-owned SQL integration
   fixtures. No built-in sensor, aircraft, track, or other domain model.
-- Apache-2.0 license for MeldStore, source-distribution examples, and packaging
+- Apache-2.0 licenses for MeldStore and its pinned MeldDB dependency,
+  source-distribution examples, and packaging
   checks that reject private test data and local handoffs.
 
 ### Qualification and limits

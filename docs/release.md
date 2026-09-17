@@ -11,8 +11,11 @@ coordination. The latter belong to a future milestone.
   successful Windows/Linux/RustFS CI for that exact commit.
 - S09 prepares version `0.1.0rc1`, [release notes](../CHANGELOG.md), project links,
   explicit artifact selection and private-artifact exclusion checks.
-- MeldStore is Apache-2.0. The pinned MeldDB commit lacks a declared license;
-  selecting a license for that separate repository requires the owner's decision.
+- The owner approved Apache-2.0 for both repositories. MeldStore now pins
+  MeldDB `aad59aba7cb348b7f4e0607962db6ecd5dda8d31`, which packages its license.
+  This revision changes licensing/packaging checks, not MeldDB runtime code.
+- S09 also includes the requested persistent, verified [file export](file-export.md).
+  Move semantics remain deferred.
 - The current dependency is an exact Git commit. Git is needed for a fresh
   installation; local/URL artifact installation is distinct from index release.
 - No GitHub release, tag, TestPyPI upload, or PyPI upload is authorized or created
@@ -21,12 +24,13 @@ coordination. The latter belong to a future milestone.
 ## Reproduce candidate validation
 
 Local candidate validation on September 17, 2026: Python 3.12.13 / SQLite 3.53.1,
-`uv lock --check`, **533 tests passed, 29 expected skips**, clean Ruff, and
+**563 tests passed, 33 expected skips**, clean Ruff, and
 versioned wheel/sdist builds. Both artifacts passed fresh core and all-format
-installations through both metadata adapters. The lock update changed only
-MeldStore's project version; no dependency upgrades were introduced. The 29
-skips are the 25 separately qualified live S3 cases and four Windows symlink
-permission cases. S09 candidate CI must also pass before its merge.
+installations through both metadata adapters. The dependency lock update changes
+only the exact MeldDB revision to its licensed commit, without unrelated upgrades.
+The 33 skips are the 27 separately passed live S3 cases and six Windows symlink
+permission cases. See [S09 verification](s09-verification.md). Candidate CI must
+also pass before its merge.
 
 Use a patched SQLite runtime; check the [runtime policy](sqlite.md), not just
 the Python version. Run from a clean source checkout. The version-specific
@@ -57,9 +61,8 @@ changes do not imply a new large-data measurement.
 
 ## Resolve dependency distribution before publication
 
-First settle MeldDB's license, package the license with its artifacts, and test
-any new dependency revision. Do not merely add a license to MeldDB's latest
-branch while leaving MeldStore pinned to an older unlicensed commit.
+MeldDB licensing is resolved at the exact pinned revision. Fresh candidate
+installations check both packages' Apache-2.0 metadata and packaged license files.
 
 For a PyPI release, arrange an approved MeldDB release on the intended index,
 replace the direct Git requirement with the tested version requirement, refresh
@@ -70,7 +73,7 @@ declarations; local installers do. See the
 Do not substitute an unrelated same-named package from an index.
 
 A GitHub-only artifact distribution can retain the tested Git requirement, but
-still needs dependency licensing resolved, clear installation requirements and
+still needs clear installation requirements and
 explicit publication approval. The intended channel must be agreed before
 claiming release readiness. No dependency source change or package upload is
 silently implied by the release-candidate version bump.

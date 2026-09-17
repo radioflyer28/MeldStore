@@ -80,6 +80,12 @@ def main():
                         assert stream.read(len(block)) == block
                     assert stream.read(1) == b""
             finished = time.perf_counter()
+            exported = store.export_file(blob["id"], root / "exported.bin")
+            with exported.open("rb") as stream:
+                for _ in range(args.mib):
+                    assert stream.read(len(block)) == block
+                assert stream.read(1) == b""
+            exported_at = time.perf_counter()
             print(
                 json.dumps(
                     {
@@ -88,6 +94,7 @@ def main():
                         "digest": blob["digest"],
                         "import_seconds": imported - start,
                         "materialize_and_compare_seconds": finished - imported,
+                        "export_and_compare_seconds": exported_at - finished,
                         "baseline_peak_rss_bytes": baseline,
                         "final_peak_rss_bytes": peak_rss(),
                         "additional_peak_rss_bytes": peak_rss() - baseline,

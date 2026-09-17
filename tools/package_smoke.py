@@ -53,6 +53,9 @@ import importlib.metadata
 from pathlib import Path
 from meldstore import BlobSchema, Catalog, Integer, LocalStorage, MetadataMigration, Predicate, Store, Text, restore_backup
 distribution = importlib.metadata.distribution('meldstore')
+dependency = importlib.metadata.distribution('melddb')
+assert dependency.metadata['License-Expression'] == 'Apache-2.0'
+assert any(str(path).endswith('/licenses/LICENSE') for path in dependency.files)
 assert distribution.metadata['License-Expression'] == 'Apache-2.0'
 assert any(str(path).endswith('/licenses/LICENSE') for path in distribution.files)
 assert not any(str(path).startswith('examples/') for path in distribution.files)
@@ -77,6 +80,8 @@ for adapter in ('sqlite', 'melddb'):
         assert len(store.find(schema=target, predicates=(Predicate('number', 'gte', 2),))) == 1
         with store.materialize(blob['id']) as payload:
             assert payload.read_bytes() == b'installed artifact payload'
+        exported = store.export_file(blob['id'], adapter + '-exported.bin')
+        assert exported.read_bytes() == b'installed artifact payload'
         store.delete(blob['id'], expected_version=3)
         assert store.deletion_status(blob['id'])['state'] == 'pending'
     with Catalog(adapter + '.db', adapter=adapter, maintenance=True) as catalog:

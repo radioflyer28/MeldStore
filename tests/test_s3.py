@@ -33,6 +33,23 @@ pytestmark = pytest.mark.skipif(
 )
 
 
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+def test_export_remote_blob_is_persistent_verified_and_create_only(remote, tmp_path, adapter):
+    storage, _ = remote
+    with Catalog(tmp_path / "catalog.db", adapter=adapter) as catalog:
+        store = Store(catalog, storage)
+        schema = BlobSchema("dataset", {}, handlers=("bytes",))
+        store.install_schema(schema)
+        before = store.put(b"remote export\x00bytes", schema=schema, metadata={}, handler="bytes", id="one")
+        destination = tmp_path / "downloaded"
+        assert store.export_file("one", destination) == destination.resolve()
+        assert hash_file(destination) == (before["byte_size"], before["digest"])
+        with pytest.raises(ConflictError):
+            store.export_file("one", destination)
+        assert store.stat("one") == before
+    assert destination.read_bytes() == b"remote export\x00bytes"
+
+
 @pytest.fixture
 def remote(tmp_path):
     config = json.loads(os.environ["MELDSTORE_S3_CONFIG"])

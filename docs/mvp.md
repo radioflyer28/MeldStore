@@ -249,11 +249,13 @@ Transaction adapters enforce connection ownership; no nested independent commit.
 Preparing an object does not make a blob record visible. Tokens bind object key,
 size, digest, and storage identity; they are validated against staged state.
 
-The ordinary operations are `put`, `import_file`, `stat`, `find`, `get`,
+The ordinary operations are `put`, `import_file`, `export_file`, `stat`, `find`, `get`,
 `materialize`, `update_metadata`, and `delete`, plus schema and maintenance APIs.
 `find` provides bounded scalar filters and pagination; richer domain queries use
 documented SQL. `get` decodes data; `materialize` exposes a context-managed verified
 file for existing-Parquet workflows. `stat`/`find` do not touch payload storage.
+September 17 amendment: include persistent, verified, no-overwrite `export_file`
+in this release; see [copy workflows](file-export.md). Move semantics are deferred.
 
 Creation accepts a caller ID for retry resolution; an existing different record
 is a conflict. Resolve an uncertain commit by that ID and matching object/metadata

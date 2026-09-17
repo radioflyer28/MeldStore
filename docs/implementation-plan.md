@@ -2,7 +2,7 @@
 
 Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
 S07 qualifies pinned RustFS, not AWS. S08 consumer and operational qualification
-passed; dependency licensing/distribution remains a package-release gate.
+passed; dependency distribution remains a package-release gate.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -290,6 +290,10 @@ memory evidence. Do not turn a consumer's index layout into a MeldStore core
 schema or tune global SQLite settings without measurements.
 
 ### S09 — MVP release preparation
+
+September 17 amendment: include verified, persistent `export_file` for copy-out;
+retain `import_file` for copy-in and defer move semantics. See [file export](file-export.md).
+The owner separately approved Apache-2.0 for MeldDB; pin its licensed revision.
 
 Authorized closeout of the existing MVP, not a new feature milestone. Prepare
 `0.1.0rc1`, merge the completed S07/S08 history, document qualification and

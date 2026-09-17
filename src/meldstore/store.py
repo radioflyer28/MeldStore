@@ -544,6 +544,17 @@ class Store:
             raise ConflictError("Existing ID has a different encoding descriptor")
         return existing
 
+    @_payload_operation
+    def export_file(self, id, destination):
+        """Copy exact stored bytes to a new persistent local file; return its Path.
+
+        The parent must exist. Existing files, directories and symlinks conflict.
+        Neither the blob nor any import source is deleted or modified.
+        """
+        from .exporting import export_file
+
+        return export_file(self, id, destination)
+
     @contextmanager
     def materialize(self, id):
         self.catalog.require_idle()
