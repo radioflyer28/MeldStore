@@ -9,7 +9,8 @@ Acceptance amendment, September 16, 2026: the user approved a real Docker-local
 RustFS or Garage S3-compatible service for S07 qualification in place of the
 original AWS-only requirement. AWS-specific evidence is deferred; compatible
 service results do not qualify AWS or constitute AWS certification. S07 is
-implemented and qualified on pinned RustFS; S08 is next. See the
+implemented and qualified on pinned RustFS; S08 consumer qualification passed,
+with [evidence and remaining release gates](s08-verification.md). See the
 [implemented S3 API](s3.md) and [verification record](s07-verification.md).
 
 ## Project Description
@@ -403,7 +404,8 @@ These do not reopen the chosen architecture:
 
 - Repository: radioflyer28/MeldStore; Python package: meldstore. Repository setup
   is authorized; implementing the MVP follows the implementation plan.
-- Representative data for S08. AWS-specific qualification remains deferred and
+- Representative data for S08 has been supplied for private read-only tests;
+  only synthetic fixtures are published. AWS-specific qualification remains deferred and
   requires a separately designated disposable AWS destination and credentials.
 - cUAS source UUID reuse, timestamp precision conversion, and authority for track
   validation/correlation: the schema package defines these domain policies.

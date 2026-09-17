@@ -1,7 +1,8 @@
 # MeldStore MVP implementation plan
 
 Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
-S07 qualifies pinned RustFS, not AWS. S08 consumer/release qualification is in progress.
+S07 qualifies pinned RustFS, not AWS. S08 consumer and operational qualification
+passed; dependency licensing/distribution remains a package-release gate.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -259,11 +260,13 @@ capability/outage probes, lint, builds and fresh artifact installs.
 
 ### S08 — consumers and release
 
-In progress: independent application examples, SQL integration tests, private
-workload tooling, and Apache-2.0 packaging. See the [consumer guide](consumers.md)
+Implemented and qualified: independent application examples, SQL integration
+tests, private 100-file local/RustFS workloads, and Apache-2.0 packaging.
+All seven Windows/Linux/RustFS CI jobs passed for implementation commit `c984645`.
+See the [consumer guide](consumers.md)
 and [S08 evidence and remaining release gates](s08-verification.md). No domain
-entities are added to the library. Do not mark this slice complete before the
-representative workloads and fresh CI have finished.
+entities are added to the library. Package release remains gated by the pinned
+MeldDB dependency's licensing and distribution; no release is authorized here.
 
 First ship a dataset/document example that works without cUAS imports. Separately
 implement the cUAS SQL example with radar multi-track and aircraft single-track
@@ -278,6 +281,13 @@ Run wheel/sdist clean-install tests, both adapters, all optional handler sets, a
 Windows/Linux checks. Mark macOS/PostgreSQL unqualified unless separately proven.
 Select a license and resolve dependency distribution before package release.
 
+Measured follow-up, not additional MVP scope: S08's 301,296-occurrence
+application query chose a primary-key scan instead of its declared interval
+index. Evaluate interval-index orientation and SQL bulk-insert approaches in
+application benchmarks, with before/after plans, selectivity, write cost and
+memory evidence. Do not turn a consumer's index layout into a MeldStore core
+schema or tune global SQLite settings without measurements.
+
 ## Completion rules
 
 Each slice records behavior changes, test commands/results, and remaining limits.
@@ -285,5 +295,6 @@ No green unit suite substitutes for real S3-compatible service or process recove
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: S08 consumer/release qualification.
+Next action: resolve dependency licensing/distribution before considering a
+package release. Consumer qualification does not itself authorize publication.
 AWS-specific qualification remains deferred.

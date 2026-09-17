@@ -15,7 +15,8 @@
   designated disposable bucket/prefix; local services use loopback endpoints and
   ephemeral credentials. Do not infer AWS qualification from compatible-service
   results. AWS-specific evidence is deferred and remains unqualified.
-- S07 qualification is recorded in docs/s07-verification.md. S08 is next;
+- S07 qualification is recorded in docs/s07-verification.md. S08 progress and
+  release gates are recorded in docs/s08-verification.md;
   preserve the distinction between tested RustFS behavior and unqualified AWS.
 - S3 participants must use one local catalog and the same persistent, path-bound
   coordination directory on one host. No distributed leases or marker adoption.
@@ -28,3 +29,8 @@
 - Run uv run --extra test pytest and uv run --extra test ruff check . for changes;
   test package build/install when packaging changes. Report qualification gaps.
 - Never claim scaffold checks establish blob integrity or recovery guarantees.
+- Keep consumer-specific schemas in examples/tests, never in the generic core.
+- Never commit private Parquet inputs, derived payloads, source paths, real IDs,
+  or local handoff history. Public CI uses generated synthetic data only.
+- MeldStore is Apache-2.0. Dependency distribution remains a separate release
+  gate; do not infer permission to relicense MeldDB or publish packages.
