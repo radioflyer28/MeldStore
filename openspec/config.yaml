@@ -1,0 +1,29 @@
+schema: spec-driven
+
+context: |
+  MeldStore is a generic Python 3.12+ immutable blob store built around MeldDB,
+  obstore, and XXH3-128. It owns blob lifecycle, payload integrity, serialization,
+  local/S3-compatible storage, backup, and recovery. Applications own domain SQL
+  tables and relationships; the core must contain no cUAS-specific entities.
+  Metadata remains ordinary relational SQL usable through MeldDB or sqlite3.
+  Storage I/O must not occur inside long-lived SQL write transactions. Use uv for
+  dependencies, tests, and packaging. PostgreSQL metadata and multi-host coordination
+  are deferred beyond the current SQLite/single-host release boundary.
+
+references:
+  - meld-platform-specs
+
+rules:
+  specs:
+    - State generic observable behavior; keep consumer domain rules out of core specs.
+    - Separate verified guarantees from backend qualification and measured evidence.
+    - Include interruption, integrity, no-overwrite, and explicit transaction scenarios.
+  design:
+    - Keep payload storage, metadata, handlers, and application SQL at explicit seams.
+  tasks:
+    - Include both metadata adapters, uv-based tests, Ruff, and package smoke checks when applicable.
+
+operations:
+  archive:
+    guidance:
+      - Do not copy private workload paths, identifiers, payloads, or local handoff history.
