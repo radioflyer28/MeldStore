@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.0rc2 — GitHub prerelease (2026-09-24)
+
 - Adopt MeldDB's public SQLite runtime and maintenance contracts at the MeldDB
   adapter seam while retaining an independent direct-sqlite3 implementation.
 - Enforce declared read transactions in SQLite rather than by first-keyword

@@ -227,16 +227,16 @@ SQLite DDL, triggers, and affinity are not claimed to be byte-for-byte portable 
 ## Dependencies and qualification
 
 MeldDB is pinned to public source commit
-`8970099be98c6b4b6e0af30ac562ae65536e6403` (0.1.0rc1). `uv.lock` records the
+`adfc87fb9933412e67a2d4b7de316cd6db552d9c` (0.1.0rc1). `uv.lock` records the
 resolved core/test/format dependency set. obstore and xxhash are installed core
 dependencies; Parquet (`pandas`, `pyarrow`), NumPy, and Blosc2 have separate extras.
 Importing MeldStore imports no optional codec or MeldDB; the sqlite adapter runs
 with MeldDB imports blocked. The ordinary package install still declares MeldDB.
 
-The Git dependency requires Git/network for a fresh source installation. It is
-not a final PyPI release dependency strategy: select a distribution license and
-replace the direct source dependency with a qualified published version before
-package release. No MeldDB core files/dependencies are changed by MeldStore.
+The Git dependency requires Git/network for a fresh source installation. GitHub
+release artifacts retain this exact tested dependency; PyPI publication remains
+out of scope until a qualified index dependency is available. No MeldDB core
+files or dependencies are changed by MeldStore.
 
 MeldDB's SQLite capability checks include quoted-key JSON access even for raw SQL
 use. CI therefore requests uv-managed Python with a recent bundled SQLite, and

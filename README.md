@@ -4,7 +4,7 @@ Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
 Status: S01-S09, including S06a, implemented and verified on Windows/Linux.
-Version `0.1.0rc1` is the first GitHub prerelease; it is not a PyPI release.
+Version `0.1.0rc2` is the current GitHub prerelease; it is not a PyPI release.
 S07 qualifies pinned RustFS. S08 passed 100-file, 16.37 GB local and RustFS
 workloads. See the verification records for measured limits rather than assuming
 unrestricted production readiness.
@@ -34,6 +34,7 @@ The library has no caching policies and no built-in cUAS concepts.
 - [Generic and separate SQL application examples](docs/consumers.md)
 - [S08 qualification evidence and release gates](docs/s08-verification.md)
 - [Release-candidate notes](CHANGELOG.md)
+- [0.1.0rc2 release notes](docs/prerelease-0.1.0rc2.md)
 - [MVP release checklist](docs/release.md)
 - [S09 export and packaging verification](docs/s09-verification.md)
 - [Contributor guidance](AGENTS.md)
@@ -58,7 +59,7 @@ Python 3.12+, uv, Git, and a patched SQLite runtime are required (see above).
 In your Python project:
 
 ```console
-uv add "meldstore @ https://github.com/radioflyer28/MeldStore/releases/download/v0.1.0rc1/meldstore-0.1.0rc1-py3-none-any.whl"
+uv add "meldstore @ https://github.com/radioflyer28/MeldStore/releases/download/v0.1.0rc2/meldstore-0.1.0rc2-py3-none-any.whl"
 ```
 
 For optional formats, use `meldstore[parquet,numpy,blosc2,polars,arrow]` before
@@ -114,4 +115,4 @@ illustrative sketches in the MVP specification are not an API reference.
 MeldStore is licensed under [Apache-2.0](LICENSE). Dependencies retain their own
 licenses. The pinned MeldDB dependency is also Apache-2.0, approved separately
 by its owner. Dependency distribution remains a release gate; see the checklist.
-The owner approved the `0.1.0rc1` GitHub prerelease; PyPI publication remains separate.
+The owner approved the `0.1.0rc2` GitHub prerelease; PyPI publication remains separate.

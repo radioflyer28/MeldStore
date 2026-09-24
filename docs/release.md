@@ -1,26 +1,26 @@
 # MVP release preparation
 
-This checklist is for a maintainer preparing MeldStore **0.1.0rc1**. It separates
+This checklist is for a maintainer preparing MeldStore **0.1.0rc2**. It separates
 validated local artifacts from authorization and readiness to publish them.
 S09 closes out the existing MVP; it does not add PostgreSQL or distributed
 coordination. The latter belong to a future milestone.
 
 ## Approved distribution
 
-On September 17, 2026, the owner approved closing S09, merging into main, and
-publishing `v0.1.0rc1` as a GitHub prerelease with wheel and sdist. The tested
-MeldDB Git dependency is retained. No PyPI/TestPyPI publication is authorized.
-The checklist below remains applicable to future releases.
+On September 24, 2026, the owner approved publishing `v0.1.0rc2` as a GitHub
+prerelease with wheel and sdist after merging the MeldDB contract adoptions. The
+tested MeldDB Git dependency is retained. No PyPI/TestPyPI publication is
+authorized. The checklist below remains applicable to future releases.
 
 ## Current gates
 
 - S07/S08 were fast-forwarded into `main` at `368ea9a` after fresh regression and
   successful Windows/Linux/RustFS CI for that exact commit.
-- S09 prepares version `0.1.0rc1`, [release notes](../CHANGELOG.md), project links,
-  explicit artifact selection and private-artifact exclusion checks.
+- This candidate packages the MeldDB runtime/transaction and application-owned-SQL
+  contract adoptions recorded in the [release notes](../CHANGELOG.md).
 - The owner approved Apache-2.0 for both repositories. MeldStore now pins
-  MeldDB `aad59aba7cb348b7f4e0607962db6ecd5dda8d31`, which packages its license.
-  This revision changes licensing/packaging checks, not MeldDB runtime code.
+  MeldDB `adfc87fb9933412e67a2d4b7de316cd6db552d9c`, which packages its license
+  and the adopted public contracts.
 - S09 also includes the requested persistent, verified [file export](file-export.md).
   Move semantics remain deferred.
 - The current dependency is an exact Git commit. Git is needed for a fresh
@@ -30,14 +30,11 @@ The checklist below remains applicable to future releases.
 
 ## Reproduce candidate validation
 
-Local candidate validation on September 17, 2026: Python 3.12.13 / SQLite 3.53.1,
-**563 tests passed, 33 expected skips**, clean Ruff, and
-versioned wheel/sdist builds. Both artifacts passed fresh core and all-format
-installations through both metadata adapters. The dependency lock update changes
-only the exact MeldDB revision to its licensed commit, without unrelated upgrades.
-The 33 skips are the 27 separately passed live S3 cases and six Windows symlink
-permission cases. See [S09 verification](s09-verification.md). Implementation
-commit `31d9d03` passed all seven candidate CI jobs before release closeout.
+The `0.1.0rc1` baseline passed 563 tests with 33 expected skips, clean Ruff,
+versioned wheel/sdist builds, fresh core/all-format artifact installations, and
+all seven Windows/Linux/RustFS CI jobs. See [S09 verification](s09-verification.md).
+The `0.1.0rc2` candidate must repeat the commands below after its final source
+change and pass all seven CI jobs for its exact commit before publication.
 
 Use a patched SQLite runtime; check the [runtime policy](sqlite.md), not just
 the Python version. Run from a clean source checkout. The version-specific
@@ -47,9 +44,9 @@ directory keeps previous development artifacts intact.
 uv sync --frozen --all-extras
 uv run --frozen --all-extras pytest
 uv run --frozen --extra test ruff check .
-uv build --out-dir dist/0.1.0rc1
-uv run --frozen python tools/package_smoke.py --dist-dir dist/0.1.0rc1
-uv run --frozen python tools/package_smoke.py --dist-dir dist/0.1.0rc1 --formats
+uv build --out-dir dist/0.1.0rc2
+uv run --frozen python tools/package_smoke.py --dist-dir dist/0.1.0rc2
+uv run --frozen python tools/package_smoke.py --dist-dir dist/0.1.0rc2 --formats
 uv run --frozen --all-extras python tools/s3_lab.py
 ```
 

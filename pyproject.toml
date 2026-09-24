@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meldstore"
-version = "0.1.0rc1"
+version = "0.1.0rc2"
 description = "Generic blob storage with portable relational metadata"
 readme = "README.md"
 license = "Apache-2.0"
