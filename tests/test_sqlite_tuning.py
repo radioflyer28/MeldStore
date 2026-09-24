@@ -4,6 +4,7 @@ import sys
 
 import pytest
 
+import meldstore.catalog as catalog_module
 from meldstore import (
     BlobSchema,
     BusyError,
@@ -18,6 +19,17 @@ from meldstore import (
 )
 
 
+class _SQLiteModuleProxy:
+    """Override selected catalog-local sqlite attributes without patching drivers globally."""
+
+    def __init__(self, real, **overrides):
+        self._real = real
+        self._overrides = overrides
+
+    def __getattr__(self, name):
+        return self._overrides.get(name, getattr(self._real, name))
+
+
 @pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
 def test_live_journal_policy_on_existing_catalog(tmp_path, adapter):
     path = tmp_path / "catalog.db"
@@ -30,6 +42,30 @@ def test_live_journal_policy_on_existing_catalog(tmp_path, adapter):
         assert catalog.sql("SELECT * FROM pragma_journal_mode") == [{"journal_mode": "delete"}]
     with Catalog(path, adapter=adapter) as catalog:
         assert catalog.sql("SELECT * FROM pragma_journal_mode") == [{"journal_mode": "wal"}]
+
+
+def test_melddb_runtime_policy_is_delegated_without_catalog_control_connection(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "delegated.db"
+    real_sqlite = sqlite3
+
+    def unexpected_connect(*args, **kwargs):
+        pytest.fail("MeldStore opened a redundant catalog control connection")
+
+    monkeypatch.setattr(
+        catalog_module,
+        "sqlite3",
+        _SQLiteModuleProxy(
+            real_sqlite,
+            sqlite_version_info=(3, 49, 1),
+            connect=unexpected_connect,
+        ),
+    )
+    with Catalog(path, adapter="melddb", journal_mode="delete") as catalog:
+        assert catalog.sql("SELECT * FROM pragma_journal_mode", write=False) == [
+            {"journal_mode": "delete"}
+        ]
 
 
 @pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
@@ -113,6 +149,56 @@ def test_read_transaction_rejects_mutations(tmp_path, adapter, statement):
 
 
 @pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+def test_engine_read_scope_accepts_cte_rejects_triggered_write_and_restores_writes(
+    tmp_path, adapter
+):
+    with Catalog(tmp_path / "catalog.db", adapter=adapter, journal_mode="delete") as catalog:
+        catalog.sql("CREATE TABLE sample(value INTEGER)")
+        catalog.sql("INSERT INTO sample VALUES(1)")
+        catalog.sql("CREATE VIEW sample_view AS SELECT value FROM sample")
+        catalog.sql(
+            "CREATE TRIGGER sample_insert INSTEAD OF INSERT ON sample_view "
+            "BEGIN INSERT INTO sample VALUES(NEW.value); END"
+        )
+
+        with pytest.raises(TransactionError):
+            with catalog.transaction(write=False) as tx:
+                assert tx.sql("WITH values_(value) AS (SELECT 1) SELECT value FROM values_") == [
+                    {"value": 1}
+                ]
+                with pytest.raises(ValidationError):
+                    tx.sql("INSERT INTO sample_view VALUES(2)")
+
+        assert catalog.sql("SELECT value FROM sample ORDER BY value", write=False) == [
+            {"value": 1}
+        ]
+        catalog.sql("INSERT INTO sample VALUES(3)")
+        assert catalog.sql("SELECT value FROM sample ORDER BY value", write=False) == [
+            {"value": 1},
+            {"value": 3},
+        ]
+
+
+def test_direct_engine_read_scope_blocks_same_connection_udf_mutation(tmp_path):
+    with Catalog(
+        tmp_path / "catalog.db", adapter="sqlite", journal_mode="delete"
+    ) as catalog:
+        catalog.sql("CREATE TABLE sample(value INTEGER)")
+
+        def mutate():
+            catalog._connection.execute("INSERT INTO sample VALUES(1)")
+            return 1
+
+        catalog._connection.create_function("mutate", 0, mutate)
+        with pytest.raises(TransactionError):
+            with catalog.transaction(write=False) as tx:
+                with pytest.raises(ValidationError):
+                    tx.sql("SELECT mutate()")
+
+        assert catalog.sql("SELECT * FROM sample", write=False) == []
+
+
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
 def test_explicit_delete_policy_and_memory(tmp_path, adapter):
     with Catalog(tmp_path / "delete.db", adapter=adapter, journal_mode="delete") as catalog:
         assert catalog.sql("SELECT * FROM pragma_journal_mode") == [{"journal_mode": "delete"}]
@@ -185,6 +271,58 @@ def test_statistics_and_checkpoint_are_explicit_exclusive_maintenance(tmp_path, 
         with pytest.raises(TransactionError):
             with catalog.transaction(write=False):
                 catalog.maintain_sqlite()
+
+
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+def test_delete_mode_maintenance_preserves_inactive_wal_sentinels(tmp_path, adapter):
+    with Catalog(
+        tmp_path / "catalog.db",
+        adapter=adapter,
+        maintenance=True,
+        journal_mode="delete",
+    ) as catalog:
+        catalog.sql("CREATE TABLE sample(value INTEGER)")
+        result = catalog.maintain_sqlite(analyze=True, checkpoint="truncate")
+        assert result == {
+            "statistics": "analyze",
+            "checkpoint": {
+                "busy": 0,
+                "log_frames": -1,
+                "checkpointed_frames": -1,
+            },
+        }
+        assert type(result["checkpoint"]["busy"]) is int
+        assert type(result["checkpoint"]["log_frames"]) is int
+        assert type(result["checkpoint"]["checkpointed_frames"]) is int
+
+
+def test_melddb_maintenance_delegates_without_catalog_control_connection(
+    tmp_path, monkeypatch
+):
+    with Catalog(
+        tmp_path / "catalog.db",
+        adapter="melddb",
+        maintenance=True,
+        journal_mode="delete",
+    ) as catalog:
+        real_sqlite = sqlite3
+
+        def unexpected_connect(*args, **kwargs):
+            pytest.fail("MeldStore opened a redundant maintenance control connection")
+
+        monkeypatch.setattr(
+            catalog_module,
+            "sqlite3",
+            _SQLiteModuleProxy(real_sqlite, connect=unexpected_connect),
+        )
+        assert catalog.maintain_sqlite() == {
+            "statistics": "optimize",
+            "checkpoint": {
+                "busy": 0,
+                "log_frames": -1,
+                "checkpointed_frames": -1,
+            },
+        }
 
 
 @pytest.mark.parametrize("adapter", ["sqlite", "melddb"])

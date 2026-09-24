@@ -27,6 +27,8 @@ The library has no caching policies and no built-in cUAS concepts.
 - [S06 verification evidence](docs/s06-verification.md)
 - [SQLite settings, concurrency, and tuning](docs/sqlite.md)
 - [S06a verification evidence](docs/s06a-verification.md)
+- [MeldDB runtime and transaction adoption evidence](docs/melddb-runtime-contracts-verification.md)
+- [MeldDB application-owned SQL contract evidence](docs/melddb-application-owned-sql-contract-verification.md)
 - [S3 configuration, recovery, backup, and offline transfer](docs/s3.md)
 - [S07 verification evidence](docs/s07-verification.md)
 - [Generic and separate SQL application examples](docs/consumers.md)

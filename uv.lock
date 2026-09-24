@@ -235,7 +235,7 @@ wheels = [
 [[package]]
 name = "melddb"
 version = "0.1.0rc1"
-source = { git = "https://github.com/radioflyer28/melddb.git?rev=aad59aba7cb348b7f4e0607962db6ecd5dda8d31#aad59aba7cb348b7f4e0607962db6ecd5dda8d31" }
+source = { git = "https://github.com/radioflyer28/melddb.git?rev=adfc87fb9933412e67a2d4b7de316cd6db552d9c#adfc87fb9933412e67a2d4b7de316cd6db552d9c" }
 
 [[package]]
 name = "meldstore"
@@ -275,7 +275,7 @@ test = [
 requires-dist = [
     { name = "blosc2", marker = "extra == 'blosc2'", specifier = ">=3,<4" },
     { name = "build", marker = "extra == 'test'", specifier = ">=1" },
-    { name = "melddb", git = "https://github.com/radioflyer28/melddb.git?rev=aad59aba7cb348b7f4e0607962db6ecd5dda8d31" },
+    { name = "melddb", git = "https://github.com/radioflyer28/melddb.git?rev=adfc87fb9933412e67a2d4b7de316cd6db552d9c" },
     { name = "numpy", marker = "extra == 'blosc2'", specifier = ">=2.2,<3" },
     { name = "numpy", marker = "extra == 'numpy'", specifier = ">=2.2,<3" },
     { name = "obstore", specifier = ">=0.11,<0.12" },

@@ -102,6 +102,14 @@ They may join metadata using its `id`; do not write registry/identity/lifecycle
 bookkeeping directly. S01 tests insert unpublished fixture rows solely to prove
 the SQL contract; they are not examples of safe blob creation. S02 owns creation.
 
+In MeldDB's public inspection terminology, both MeldStore's `ms_*` tables and
+application tables are **external tables**: they are ordinary SQL objects outside
+MeldDB's managed document/table model, even though they live in the same SQLite
+database. MeldStore owns its schema and migration history; each application owns
+its domain schema and migration history. `db.inspect()` may report those tables
+under `external_tables`, but neither opening nor inspection registers, adopts, or
+migrates them. No MeldDB managed physical table is a supported foreign-key target.
+
 `install_schema()` installs core tables and a version-1 metadata table atomically.
 Identical registration is idempotent. Conflicting definitions, unsupported
 versions, namespace collisions, altered core/schema DDL, or missing guards fail;
@@ -154,18 +162,24 @@ outside SQL write transactions. There is no connection-pooling API.
 SQL transaction/configuration commands (including PRAGMA, ATTACH, DETACH) are
 rejected; callers cannot turn off FK enforcement through the wrapper. Standalone
 drivers **must enable `PRAGMA foreign_keys=ON` on each connection**. MeldDB is used
-only via public connection/transaction/SQL/backup APIs; file-level SQLite
-configuration uses a short-lived standard-library control connection. Neither
+only through public open/runtime/transaction/SQL/maintenance/backup APIs. The
+direct adapter independently uses standard-library SQLite connections. Neither
 opening nor installing invokes document/graph APIs or creates managed tables.
+The same catalog can therefore reopen through `adapter="sqlite"` or plain
+`sqlite3` without schema adoption or data conversion.
 
 SQL failures map to ValidationError, ConstraintError or BusyError with driver
 causes retained. Transaction misuse maps to TransactionError; schema reuse/drift
-to SchemaConflictError. Connection-open failures retain driver-specific errors.
-A commit exception becomes CommitError; it is not evidence that nothing committed.
-Resolve durable state before retrying. Rollback failure poisons the connection
-until closed. No automatic transaction retry. Separate connections/processes
-serialize writes through SQLite; version predicates prevent stale overwrites.
-No process-local lock or hidden unit of work substitutes for database constraints.
+to SchemaConflictError. `TransactionOutcomeError` carries `phase`, `outcome`,
+`initiating_error` and `backend_error`; `CommitError` and `RollbackError` are its
+public subclasses. Confirmed rollback re-raises the identical initiating error.
+Uncertain begin/commit/rollback or required read-state cleanup quarantines the
+catalog: close it, reopen it, and inspect durable state before deciding whether
+to retry. Close attempts every owned database/lease release, with secondary
+failures available as `cleanup_errors`. There is no automatic reconnect or
+transaction retry. Separate connections/processes serialize writes through
+SQLite; version predicates prevent stale overwrites. No process-local lock or
+hidden unit of work substitutes for database constraints.
 
 ## Lifecycle contract for S02/S04
 

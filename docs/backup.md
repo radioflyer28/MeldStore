@@ -6,6 +6,13 @@ MeldStore schema/concurrency versions, encoding descriptors, and retirement
 history are included. This is not MeldDB's managed-data export, which does not
 represent application-owned SQL tables.
 
+`Catalog.snapshot(destination)` is the catalog-only operation. With the MeldDB
+adapter it delegates to MeldDB's physical SQLite backup primitive, which captures
+the complete committed database, including MeldStore and application-owned
+external tables and native objects. The resulting SQLite file contains no payload
+copy, portable `catalog.sql`, or completed MeldStore manifest and must not be
+represented as a complete blob-store backup.
+
 ## Backup
 
 Close all application connections, materialized-file readers and direct SQL
@@ -45,6 +52,11 @@ obstore with whole-object XXH3-128 verification on **both** source and destinati
 No payload storage I/O runs inside a long catalog SQL transaction. The physical
 copy uses [SQLite's backup API](https://www.sqlite.org/backup.html), not a plain
 copy of a live `.db` file that could omit committed WAL data.
+
+MeldStore generates `catalog.sql` from that detached whole-database snapshot and
+coordinates the payload and manifest itself. It does not call or substitute
+MeldDB's managed logical export: that separate upstream format intentionally
+excludes external tables and cannot restore a complete MeldStore catalog.
 
 ## Artifact format 1
 

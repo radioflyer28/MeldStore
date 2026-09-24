@@ -92,9 +92,15 @@ expected version conflicts. Inspect it with `store.deletion_status(blob_id)`;
 
 ## Uncertain commits and prepared uploads
 
-A `CommitError` now quarantines the connection: close it, reopen, and inspect
-durable state. It is never evidence that nothing committed. Returned values from
-shared transactions remain provisional until the outer commit succeeds.
+Any `TransactionOutcomeError` quarantines the catalog. `CommitError` identifies
+an uncertain commit or cleanup after a confirmed commit; `RollbackError`
+identifies rollback failure or cleanup after confirmed rollback. Inspect their
+`phase`, `outcome`, `initiating_error`, and `backend_error`, then close, reopen,
+and inspect durable state. An uncertain outcome is never evidence that nothing
+committed, and MeldStore never reconnects or retries automatically. Returned
+values from shared transactions remain provisional until the outer commit
+succeeds. If close also encounters resource failures, it still attempts every
+lease release and exposes those secondary exceptions in `cleanup_errors`.
 
 For explicit preparation/publication, retain the caller ID and `PreparedFile`:
 

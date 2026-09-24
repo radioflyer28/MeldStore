@@ -25,8 +25,33 @@ class TransactionError(MeldStoreError):
     """Closed, nested, foreign, wrong-thread, or poisoned transaction."""
 
 
-class CommitError(TransactionError):
+class TransactionOutcomeError(TransactionError):
+    """A transaction boundary left durable state or safe reuse uncertain."""
+
+    def __init__(
+        self,
+        message,
+        *,
+        phase=None,
+        outcome=None,
+        initiating_error=None,
+        backend_error=None,
+        cleanup_errors=(),
+    ):
+        super().__init__(message)
+        self.phase = phase
+        self.outcome = outcome
+        self.initiating_error = initiating_error
+        self.backend_error = backend_error
+        self.cleanup_errors = tuple(cleanup_errors)
+
+
+class CommitError(TransactionOutcomeError):
     """Commit failed; callers must resolve durable state before retrying."""
+
+
+class RollbackError(TransactionOutcomeError):
+    """Rollback failed or its required cleanup could not be confirmed."""
 
 
 class NotFoundError(MeldStoreError):

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Adopt MeldDB's public SQLite runtime and maintenance contracts at the MeldDB
+  adapter seam while retaining an independent direct-sqlite3 implementation.
+- Enforce declared read transactions in SQLite rather than by first-keyword
+  classification, including read-only top-level CTE support.
+- Add structured transaction outcome evidence, rollback-specific errors,
+  fail-closed catalog quarantine, and exhaustive close/lease cleanup.
+- Adopt MeldDB's application-owned SQL contract at an exact revision and qualify
+  external-table inspection, mixed application/blob rollback, conversion-free
+  direct-SQLite reopen, and complete external-table physical snapshots.
+- Keep MeldStore's catalog-plus-payload backup and portable SQL export independent
+  from MeldDB's managed logical export.
+- Preserve the ordinary SQL catalog, IDs, metadata versions, payload hashes and
+  backup formats. Support remains SQLite/single-host; RustFS qualification does
+  not imply AWS or PostgreSQL qualification.
+
 ## 0.1.0rc1 — GitHub prerelease (2026-09-17)
 
 Initial MeldStore MVP, approved for GitHub prerelease distribution. The tested

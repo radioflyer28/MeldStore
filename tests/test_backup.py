@@ -104,6 +104,98 @@ def test_backup_restore_both_adapters_and_sql_export(setup):
         assert store.stat("one") == before
 
 
+def test_melddb_snapshot_preserves_complete_external_sql_catalog(tmp_path):
+    schema = BlobSchema("snapshot", {"label": Text()}, handlers=("bytes",))
+    catalog_path = tmp_path / "source.db"
+    snapshot = tmp_path / "catalog-snapshot.db"
+
+    with Catalog(catalog_path, adapter="melddb", maintenance=True) as catalog:
+        store = Store(catalog, LocalStorage(tmp_path / "objects"))
+        store.install_schema(schema)
+        store.put(
+            b"snapshot payload",
+            schema=schema,
+            metadata={"label": "preserved"},
+            handler="bytes",
+            id="one",
+        )
+        with catalog.transaction() as tx:
+            tx.sql(
+                "CREATE TABLE app_snapshot("
+                "id INTEGER PRIMARY KEY, "
+                "blob_id TEXT NOT NULL REFERENCES ms_blobs(id), "
+                "note TEXT NOT NULL)"
+            )
+            tx.sql("CREATE INDEX app_snapshot_blob ON app_snapshot(blob_id)")
+            tx.sql(
+                "CREATE TRIGGER app_snapshot_note BEFORE UPDATE OF note ON app_snapshot "
+                "WHEN NEW.note IS NULL BEGIN SELECT RAISE(ABORT,'note required'); END"
+            )
+            tx.sql("INSERT INTO app_snapshot VALUES(1,'one','kept')")
+        assert catalog.snapshot(snapshot) == snapshot
+
+    with sqlite3.connect(snapshot) as raw:
+        assert raw.execute("PRAGMA integrity_check").fetchall() == [("ok",)]
+        assert raw.execute("PRAGMA foreign_key_check").fetchall() == []
+        assert raw.execute("SELECT * FROM app_snapshot").fetchall() == [(1, "one", "kept")]
+        objects = {
+            (kind, name)
+            for kind, name in raw.execute(
+                "SELECT type,name FROM sqlite_schema "
+                "WHERE name IN ('app_snapshot','app_snapshot_blob','app_snapshot_note')"
+            )
+        }
+        assert objects == {
+            ("table", "app_snapshot"),
+            ("index", "app_snapshot_blob"),
+            ("trigger", "app_snapshot_note"),
+        }
+
+    assert snapshot.is_file()
+    assert not (tmp_path / "manifest.json").exists()
+    assert not (tmp_path / "catalog.sql").exists()
+
+
+def test_complete_melddb_backup_does_not_use_managed_logical_export(tmp_path, monkeypatch):
+    import melddb
+
+    schema = BlobSchema("backup_boundary", {"label": Text()}, handlers=("bytes",))
+    backup_path = tmp_path / "backup"
+
+    def reject_managed_export(*args, **kwargs):
+        raise AssertionError("MeldStore backup must not call MeldDB managed logical export")
+
+    monkeypatch.setattr(melddb.Database, "export", reject_managed_export)
+    with Catalog(tmp_path / "source.db", adapter="melddb", maintenance=True) as catalog:
+        store = Store(catalog, LocalStorage(tmp_path / "objects"))
+        store.install_schema(schema)
+        store.put(
+            b"complete backup payload",
+            schema=schema,
+            metadata={"label": "preserved"},
+            handler="bytes",
+            id="one",
+        )
+        catalog.sql(
+            "CREATE TABLE app_backup("
+            "blob_id TEXT PRIMARY KEY REFERENCES ms_blobs(id) ON DELETE RESTRICT)"
+        )
+        catalog.sql("INSERT INTO app_backup VALUES('one')")
+        manifest = store.backup(backup_path, application=APP)
+
+    assert manifest["format"] == "meldstore-backup"
+    assert (backup_path / "catalog.sqlite").is_file()
+    assert (backup_path / "catalog.sql").is_file()
+    assert (backup_path / "manifest.json").is_file()
+    assert len(manifest["objects"]) == 1
+    with sqlite3.connect(backup_path / "catalog.sqlite") as raw:
+        assert raw.execute("SELECT * FROM app_backup").fetchall() == [("one",)]
+        assert raw.execute("PRAGMA foreign_key_check").fetchall() == []
+    sql = (backup_path / "catalog.sql").read_text(encoding="utf-8")
+    assert "CREATE TABLE app_backup" in sql
+    assert (backup_path / "storage" / manifest["objects"][0]["object_key"]).is_file()
+
+
 def test_transfer_preserves_ids_and_source_and_new_root_ownership(setup):
     path, adapter, _ = setup
     with opened(setup) as store:

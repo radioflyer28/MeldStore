@@ -28,8 +28,12 @@ from meldstore import (
 
 @pytest.fixture(params=["sqlite", "melddb"])
 def catalog(request, tmp_path):
-    with Catalog(tmp_path / "catalog.db", adapter=request.param) as catalog:
+    catalog = Catalog(tmp_path / "catalog.db", adapter=request.param)
+    try:
         yield catalog
+    finally:
+        if not catalog._closed:
+            catalog.close()
 
 
 @pytest.fixture
@@ -59,6 +63,33 @@ def test_install_idempotent_and_no_managed_tables(catalog, schema):
     assert catalog.install_schema(schema) == schema.table_name
     tables = {r["name"] for r in catalog.sql("SELECT name FROM sqlite_master WHERE type = 'table'")}
     assert tables == {"ms_format", "ms_schemas", "ms_blobs", schema.table_name}
+
+
+def test_melddb_inspection_classifies_meldstore_and_application_tables_as_external(
+    tmp_path, schema
+):
+    import melddb
+
+    path = tmp_path / "external.db"
+    with Catalog(path, adapter="melddb") as catalog:
+        catalog.install_schema(schema)
+        catalog.sql(
+            "CREATE TABLE app_reference("
+            "blob_id TEXT PRIMARY KEY REFERENCES ms_blobs(id) ON DELETE RESTRICT)"
+        )
+
+    with melddb.open(path) as database:
+        inspection = database.inspect()
+
+    assert inspection["objects"] == []
+    assert inspection["migrations"] == []
+    assert {
+        "ms_format",
+        "ms_schemas",
+        "ms_blobs",
+        schema.table_name,
+        "app_reference",
+    } <= set(inspection["external_tables"])
 
 
 def test_conflict_and_no_implicit_evolution(catalog, schema):
@@ -111,6 +142,57 @@ def test_atomic_install_and_application_rollback(catalog, schema):
             seed(tx, schema)
             raise RuntimeError("application failed")
     assert catalog.sql("SELECT name FROM sqlite_master WHERE type='table'") == []
+
+
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+def test_application_constraint_rolls_back_blob_and_reopens_without_adoption(
+    tmp_path, schema, adapter
+):
+    path = tmp_path / "shared-publication.db"
+    objects = tmp_path / "objects"
+    source = tmp_path / "payload.bin"
+    source.write_bytes(b"generic application-owned SQL fixture")
+
+    from meldstore import LocalStorage, Store
+
+    with Catalog(path, adapter=adapter) as catalog:
+        store = Store(catalog, LocalStorage(objects))
+        store.install_schema(schema)
+        catalog.sql("CREATE TABLE app_owner(id TEXT PRIMARY KEY)")
+        catalog.sql(
+            "CREATE TABLE app_blob("
+            "blob_id TEXT PRIMARY KEY REFERENCES ms_blobs(id) ON DELETE RESTRICT, "
+            "owner_id TEXT NOT NULL REFERENCES app_owner(id))"
+        )
+        prepared = store.prepare_file(source, schema=schema)
+
+        with pytest.raises(ConstraintError):
+            with catalog.transaction() as tx:
+                store.finalize(
+                    prepared,
+                    tx=tx,
+                    schema=schema,
+                    metadata={"label": "first", "source": "fixture"},
+                    id="one",
+                )
+                tx.sql("INSERT INTO app_blob VALUES (?, ?)", ("one", "missing-owner"))
+                store.publish("one", tx=tx)
+
+        assert store.find(schema=schema) == []
+        assert catalog.sql("SELECT * FROM ms_blobs", write=False) == []
+        assert catalog.sql("SELECT * FROM app_blob", write=False) == []
+
+    other = "melddb" if adapter == "sqlite" else "sqlite"
+    with Catalog(path, adapter=other) as catalog:
+        assert catalog.install_schema(schema) == schema.table_name
+        assert catalog.sql("SELECT * FROM ms_blobs", write=False) == []
+        assert catalog.sql("SELECT * FROM app_blob", write=False) == []
+
+    with sqlite3.connect(path) as raw:
+        raw.execute("PRAGMA foreign_keys=ON")
+        assert raw.execute("PRAGMA foreign_key_check").fetchall() == []
+        assert raw.execute("SELECT * FROM ms_blobs").fetchall() == []
+        assert raw.execute("SELECT * FROM app_blob").fetchall() == []
 
 
 def test_caught_sql_failure_poisoned(catalog):
@@ -237,6 +319,7 @@ def test_commit_constraint_failure_requires_fresh_connection(catalog):
             tx.sql("INSERT INTO child VALUES (1)")
     with pytest.raises(TransactionError):
         catalog.sql("SELECT * FROM child")
+    catalog.close()
     with Catalog(catalog.path, adapter=catalog.adapter) as reopened:
         assert reopened.sql("SELECT * FROM child") == []
 

@@ -1,7 +1,10 @@
 # SQLite settings, concurrency, and tuning
 
-Both catalog adapters use the same live-catalog policy. No change to MeldDB core
-or its private connection objects is required.
+Both catalog adapters expose the same live-catalog policy through independent
+public seams. The MeldDB adapter passes file journal selection to `melddb.open`
+and validates `sqlite_runtime()`; the direct adapter configures and verifies the
+standard-library connection itself. MeldStore does not reach into MeldDB private
+connection objects.
 
 ## Opening and upgrading catalogs
 
@@ -43,14 +46,14 @@ with catalog.transaction(write=False) as tx:
 rows = catalog.sql("SELECT id FROM ms_blobs LIMIT 100", write=False)
 ```
 
-Read transactions use deferred BEGIN and accept SELECT or EXPLAIN of SELECT only. A write,
-DDL, transaction-control statement or unsupported statement poisons the
-transaction, even if the caller catches the error. Top-level WITH is deliberately
-not accepted in this restricted API because it can prefix a write. Read-only
-CTEs can be placed in a SELECT subquery; otherwise use the existing general SQL
-transaction. This is a cooperative SQL interface, not a sandbox for untrusted SQL.
-EXPLAIN is restricted to SELECT on writable transactions too: some PRAGMAs take
-effect during preparation even when prefixed by EXPLAIN.
+Read transactions use deferred BEGIN and engine-enforced query-only state. A
+top-level read-only CTE is accepted; INSERT, DDL, WITH-prefixed writes and
+trigger-mediated persistent writes fail in the database engine and poison the
+transaction even if the caller catches the error. Transaction/configuration SQL
+is still rejected before execution. EXPLAIN remains restricted to SELECT because
+some PRAGMAs take effect during preparation even when prefixed by EXPLAIN. This
+is a cooperative SQL interface, not a sandbox for arbitrary Python UDF side
+effects or activity on unrelated connections.
 
 The snapshot begins with the first database read, not merely entering the context.
 In WAL mode, another connection can commit while that snapshot stays consistent.
@@ -97,8 +100,9 @@ result = catalog.maintain_sqlite(analyze=True, checkpoint="truncate")
 
 Maintenance requires an idle exclusive file-backed catalog, with no active
 payload readers. `analyze=True` explicitly opts into full ANALYZE; the default
-uses `PRAGMA optimize=0x10002` to consider tables on a fresh control connection.
-Statistics are reloaded on the application connection. Neither runs on ordinary
+uses SQLite optimization. The MeldDB adapter delegates this work to
+`maintain_sqlite`; the direct adapter uses its own control connection and reloads
+planner statistics on the application connection. Neither runs on ordinary
 reads, writes or close. Full ANALYZE can be expensive and changes query plans.
 
 The checkpoint result contains `busy`, `log_frames` and `checkpointed_frames`.

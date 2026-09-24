@@ -153,14 +153,24 @@ def test_lost_commit_result_requires_reopen_and_exact_resolution(
 ):
     with opened(setup) as store:
         token = create(store, setup, publish=operation == "delete")
-        original = store.catalog._commit
+        if store.catalog.adapter == "melddb":
+            original = store.catalog._connection._backend.commit
 
-        def fail(manager):
-            if committed:
-                original(manager)
-            raise RuntimeError("lost commit result")
+            def fail():
+                if committed:
+                    original()
+                raise RuntimeError("lost commit result")
 
-        monkeypatch.setattr(store.catalog, "_commit", fail)
+            monkeypatch.setattr(store.catalog._connection._backend, "commit", fail)
+        else:
+            original = store.catalog._commit
+
+            def fail(manager):
+                if committed:
+                    original(manager)
+                raise RuntimeError("lost commit result")
+
+            monkeypatch.setattr(store.catalog, "_commit", fail)
         with pytest.raises(CommitError):
             with store.catalog.transaction() as tx:
                 tx.sql("CREATE TABLE app_atomic(note TEXT)")
@@ -438,17 +448,29 @@ def test_cleanup_commit_failure_is_resolved_by_reopening(setup, monkeypatch):
         token = create(store, setup)
         store.delete("one", expected_version=1)
     with opened(setup, maintenance=True) as store:
-        original = store.catalog._commit
         calls = 0
+        if store.catalog.adapter == "melddb":
+            original = store.catalog._connection._backend.commit
 
-        def fail(manager):
-            nonlocal calls
-            calls += 1
-            if calls == 2:  # selection transaction committed, object deleted, job still pending
-                raise RuntimeError("before cleanup result commit")
-            original(manager)
+            def fail():
+                nonlocal calls
+                calls += 1
+                if calls == 2:
+                    raise RuntimeError("before cleanup result commit")
+                original()
 
-        monkeypatch.setattr(store.catalog, "_commit", fail)
+            monkeypatch.setattr(store.catalog._connection._backend, "commit", fail)
+        else:
+            original = store.catalog._commit
+
+            def fail(manager):
+                nonlocal calls
+                calls += 1
+                if calls == 2:
+                    raise RuntimeError("before cleanup result commit")
+                original(manager)
+
+            monkeypatch.setattr(store.catalog, "_commit", fail)
         with pytest.raises(CommitError):
             store.cleanup()
         assert not (store.storage.root / token.object_key).exists()

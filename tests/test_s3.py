@@ -232,12 +232,24 @@ def test_uncertain_commit_resolves_without_another_upload(remote, tmp_path, monk
         store = Store(catalog, storage)
         store.install_schema(schema)
         token = store.prepare(b"uncertain", schema=schema, handler="bytes")
-        original = catalog._commit
-        def fail(manager):
-            if committed:
-                original(manager)
-            raise RuntimeError("lost commit acknowledgement")
-        monkeypatch.setattr(catalog, "_commit", fail)
+        if adapter == "melddb":
+            original = catalog._connection._backend.commit
+
+            def fail():
+                if committed:
+                    original()
+                raise RuntimeError("lost commit acknowledgement")
+
+            monkeypatch.setattr(catalog._connection._backend, "commit", fail)
+        else:
+            original = catalog._commit
+
+            def fail(manager):
+                if committed:
+                    original(manager)
+                raise RuntimeError("lost commit acknowledgement")
+
+            monkeypatch.setattr(catalog, "_commit", fail)
         with pytest.raises(CommitError):
             with catalog.transaction() as tx:
                 store.finalize(token, schema=schema, metadata={}, id="one", tx=tx)
