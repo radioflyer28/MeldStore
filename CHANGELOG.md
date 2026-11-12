@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0rc3 — candidate (unreleased)
 
 - Add opt-in PostgreSQL metadata through MeldDB's exact revision
   `01e27441d7512f85663c8a86986429d62a69bff9`, including explicit constraint
@@ -14,6 +14,8 @@
   for the tested scope; this does not change MeldDB's experimental backend status
   or imply AWS/multi-host qualification. No new release is published.
 
+- Update locked optional dependencies to certifi 2026.10.18, msgpack 1.2.3 and
+  urllib3 2.8.0 to resolve the four reported GitHub dependency alerts.
 - Add explicit transaction-scoped `sql_many` for ordered, single-pass application
   metadata inserts through both SQLite adapters, with fail-closed rollback and no
   implicit transaction, chunking, retry, or payload I/O.

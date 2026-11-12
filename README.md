@@ -4,7 +4,8 @@ Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
 Status: S01-S09, including S06a, implemented and verified on Windows/Linux.
-Version `0.1.0rc2` is the current GitHub prerelease; it is not a PyPI release.
+Version `0.1.0rc2` is the current published GitHub prerelease; it is not a PyPI release.
+The checkout prepares unpublished `0.1.0rc3`; see [candidate notes](docs/prerelease-0.1.0rc3.md).
 S07 qualifies pinned RustFS. S08 passed 100-file, 16.37 GB local and RustFS
 workloads. See the verification records for measured limits rather than assuming
 unrestricted production readiness.

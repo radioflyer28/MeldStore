@@ -1,4 +1,21 @@
-# MVP release preparation
+# Release preparation
+
+## 0.1.0rc3 candidate closeout (2026-11-12)
+
+The current checkout prepares unpublished 0.1.0rc3 with opt-in PostgreSQL metadata,
+cutover and whole-store recovery. See [candidate notes](prerelease-0.1.0rc3.md) and
+[qualification](postgresql-verification.md). Retain the exact MeldDB Git dependency
+and GitHub-only artifact channel. Validate all eight MeldStore CI jobs (including
+live PostgreSQL/RustFS), build the versioned wheel/sdist and run clean core and
+postgres/all-format installs. The shared OpenSpec store is committed locally only,
+as explicitly requested; no remote is configured.
+
+Only after these checks pass and the candidate is merged should the maintainer
+request approval to publish tag v0.1.0rc3 and its two artifacts. No approval for an
+older candidate authorizes this publication. PyPI and multi-host coordination
+remain outside this closeout.
+
+## Historical 0.1.0rc2 checklist
 
 This checklist is for a maintainer preparing MeldStore **0.1.0rc2**. It separates
 validated local artifacts from authorization and readiness to publish them.
