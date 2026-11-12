@@ -4,8 +4,8 @@ Generic blob storage with relational metadata, built around MeldDB, obstore,
 and XXH3-128 verification.
 
 Status: S01-S09, including S06a, implemented and verified on Windows/Linux.
-Version `0.1.0rc2` is the current published GitHub prerelease; it is not a PyPI release.
-The checkout prepares unpublished `0.1.0rc3`; see [candidate notes](docs/prerelease-0.1.0rc3.md).
+Version `0.1.0rc3` is the current published GitHub prerelease; it is not a PyPI release.
+See [0.1.0rc3 release notes](docs/prerelease-0.1.0rc3.md) for PostgreSQL metadata and recovery.
 S07 qualifies pinned RustFS. S08 passed 100-file, 16.37 GB local and RustFS
 workloads. See the verification records for measured limits rather than assuming
 unrestricted production readiness.
@@ -53,7 +53,7 @@ Default WAL mode requires a SQLite runtime containing the WAL-reset fix (normall
 3.51.3+); check SQLite's version, not only Python's. See the SQLite guide above
 for supported backports and explicit rollback mode.
 Local and S3 storage use obstore. The released SQLite deployment uses a local
-catalog. Unreleased, opt-in PostgreSQL metadata also permits a remote catalog;
+catalog. Opt-in PostgreSQL metadata also permits a remote catalog;
 see its separate qualification record above. Both S3 deployments require one
 persistent coordination directory shared by every participant on a single host.
 On September 16, 2026, S07 acceptance was amended to permit a real Docker-local
@@ -61,7 +61,7 @@ RustFS or Garage S3-compatible service. This does not establish AWS S3 support:
 AWS-specific qualification is deferred and remains unpassed.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
 fresh installation requires Git. Optional extras are `parquet` (pandas), `arrow`,
-`polars`, `numpy`, and `blosc2`; the unreleased PostgreSQL adapter uses `postgres`. Narwhals was evaluated but is not required.
+`polars`, `numpy`, and `blosc2`; the PostgreSQL adapter uses `postgres`. Narwhals was evaluated but is not required.
 
 ## Install the prerelease
 
@@ -69,7 +69,7 @@ Python 3.12+, uv, Git, and a patched SQLite runtime are required (see above).
 In your Python project:
 
 ```console
-uv add "meldstore @ https://github.com/radioflyer28/MeldStore/releases/download/v0.1.0rc2/meldstore-0.1.0rc2-py3-none-any.whl"
+uv add "meldstore @ https://github.com/radioflyer28/MeldStore/releases/download/v0.1.0rc3/meldstore-0.1.0rc3-py3-none-any.whl"
 ```
 
 For optional formats, use `meldstore[parquet,numpy,blosc2,polars,arrow]` before

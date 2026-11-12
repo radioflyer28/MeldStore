@@ -1,5 +1,11 @@
 # PostgreSQL deployment qualification
 
+Publication checkpoint, November 12, 2026: the owner approved and published
+[v0.1.0rc3](https://github.com/radioflyer28/MeldStore/releases/tag/v0.1.0rc3)
+at commit 5318f1fa05980c3af859115fef7c4a56e21d20ad. The tag and both downloaded
+artifacts matched the approved source and hashes. The preparation records below
+retain their historical candidate status. No PyPI release was made.
+
 The unreleased `add-postgresql-metadata-support` implementation completes its 13
 roadmap tasks. This record qualifies the named experimental MeldStore deployment;
 it does not promote MeldDB's broader PostgreSQL capability matrix or change the

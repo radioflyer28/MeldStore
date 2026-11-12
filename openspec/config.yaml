@@ -7,8 +7,8 @@ context: |
   tables and relationships; the core must contain no cUAS-specific entities.
   Metadata remains ordinary relational SQL usable through MeldDB or sqlite3.
   Storage I/O must not occur inside long-lived SQL write transactions. Use uv for
-  dependencies, tests, and packaging. The released MVP remains SQLite/single-host.
-  Unreleased PostgreSQL 17 metadata is opt-in and qualified separately with pinned
+  dependencies, tests, and packaging. The original MVP remains SQLite/single-host.
+  Released PostgreSQL 17 metadata is opt-in and qualified separately with pinned
   RustFS and one persistent single-host coordinator. Multi-host coordination and
   AWS remain deferred; MeldDB's broader PostgreSQL status remains experimental.
 

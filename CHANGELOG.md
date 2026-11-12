@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0rc3 — candidate (unreleased)
+## 0.1.0rc3 — GitHub prerelease (2026-11-12)
 
 - Add opt-in PostgreSQL metadata through MeldDB's exact revision
   `01e27441d7512f85663c8a86986429d62a69bff9`, including explicit constraint
@@ -12,7 +12,7 @@
 - Add mandatory live PostgreSQL 17/RustFS CI qualification and optional dependency
   installation checks. See [qualification evidence](docs/postgresql-verification.md)
   for the tested scope; this does not change MeldDB's experimental backend status
-  or imply AWS/multi-host qualification. No new release is published.
+  or imply AWS/multi-host qualification. Published as an approved GitHub prerelease.
 
 - Update locked optional dependencies to certifi 2026.10.18, msgpack 1.2.3 and
   urllib3 2.8.0 to resolve the four reported GitHub dependency alerts.

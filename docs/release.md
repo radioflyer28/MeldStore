@@ -1,5 +1,11 @@
 # Release preparation
 
+Publication checkpoint, November 12, 2026: the owner approved and published
+[v0.1.0rc3](https://github.com/radioflyer28/MeldStore/releases/tag/v0.1.0rc3)
+at commit 5318f1fa05980c3af859115fef7c4a56e21d20ad. The tag and both downloaded
+artifacts matched the approved source and hashes. The preparation records below
+retain their historical candidate status. No PyPI release was made.
+
 ## 0.1.0rc3 candidate closeout (2026-11-12)
 
 The current checkout prepares unpublished 0.1.0rc3 with opt-in PostgreSQL metadata,

@@ -19,8 +19,8 @@
   release gates are recorded in docs/s08-verification.md;
   preserve the distinction between tested RustFS behavior and unqualified AWS.
 - S3 participants must use one catalog and the same persistent, path-bound
-  coordination directory on one host. Released catalogs are SQLite; unreleased
-  opt-in PostgreSQL qualification is recorded in docs/postgresql-verification.md.
+  coordination directory on one host. Released catalogs include SQLite and
+  opt-in PostgreSQL; qualification is recorded in docs/postgresql-verification.md.
   No distributed leases or marker adoption.
 - Keep S3 endpoint/bucket/prefix explicit, use canonical obstore config keys,
   and keep credentials out of catalog, identity markers, and transfer results.
