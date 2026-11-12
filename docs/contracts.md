@@ -142,6 +142,18 @@ plain dictionaries. Alias duplicate result-column names yourself. `catalog.sql`
 owns one transaction. Use `tx.sql`, not `catalog.sql`, inside an existing transaction.
 `install_schema(schema, tx=tx)` participates in that same commit/rollback.
 
+For repeated non-result-producing application SQL, a live write transaction also
+exposes `tx.sql_many(statement, parameter_sets)`. It consumes an ordered iterable
+once and returns `{"parameter_sets": n, "affected_rows": n_or_none}`. Empty input
+returns zeroes without executing the statement. There is deliberately no
+`catalog.sql_many`: callers retain visible commit ownership, and MeldStore does not
+split, chunk, retry or continue bulk work implicitly. Read transactions and
+result-producing statements, including RETURNING, are rejected. Statement,
+iteration, binding, constraint, driver or result-boundary failure poisons the
+transaction and rolls back the whole scope even if the immediate error is caught.
+Bulk SQL performs no payload I/O; prepare and verify bytes before opening the short
+publication transaction.
+
 Connections and transaction handles are confined to their creating thread. A
 handle expires on context exit. Nested transactions, foreign handles, closing an
 active connection, and reuse of failed handles are rejected. A failed SQL or
@@ -221,13 +233,15 @@ No payload integrity/durability or crash-safety claim follows from S01 tests.
 
 Format-1 development catalogs are pre-release. Later format evolution must fail
 explicitly or use documented migrations; do not silently reinterpret these rows.
-PostgreSQL is a later qualification target. Relational design is portable, but
-SQLite DDL, triggers, and affinity are not claimed to be byte-for-byte portable SQL.
+PostgreSQL deployment remains a qualification target. Experimental native catalog
+DDL and SQL metadata parity are described in [PostgreSQL catalog connections](postgresql.md).
+Relational design is portable, but SQLite DDL, triggers, and affinity are not
+claimed to be byte-for-byte portable SQL.
 
 ## Dependencies and qualification
 
 MeldDB is pinned to public source commit
-`adfc87fb9933412e67a2d4b7de316cd6db552d9c` (0.1.0rc1). `uv.lock` records the
+`01e27441d7512f85663c8a86986429d62a69bff9` (0.1.0rc1). `uv.lock` records the
 resolved core/test/format dependency set. obstore and xxhash are installed core
 dependencies; Parquet (`pandas`, `pyarrow`), NumPy, and Blosc2 have separate extras.
 Importing MeldStore imports no optional codec or MeldDB; the sqlite adapter runs

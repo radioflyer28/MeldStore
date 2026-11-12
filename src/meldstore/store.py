@@ -1,7 +1,6 @@
 """Explicit file preparation, SQL publication and verified temporary materialization."""
 
 import json
-from collections.abc import Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from functools import wraps
@@ -9,7 +8,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
 
-from . import encodings, lifecycle, migrations, payload_catalog, query
+from . import encodings, lifecycle, metadata, migrations, payload_catalog, query
+from .dialect import for_transaction
 from .errors import (
     ConflictError,
     IntegrityError,
@@ -19,7 +19,6 @@ from .errors import (
 )
 from .handlers import HandlerRegistry, UnsupportedHandlerError, descriptor_json
 from .schema import BlobSchema, identifier
-from .schema import quote_identifier as q
 from .storage import LocalStorage, hash_file
 
 
@@ -68,6 +67,8 @@ class Store:
         self.handlers = HandlerRegistry() if handlers is None else handlers
         if not isinstance(self.handlers, HandlerRegistry):
             raise ValidationError("handlers must be a HandlerRegistry")
+        if catalog.adapter == "postgres" and catalog._postgres_binding is not None:
+            catalog.bind_postgres_storage(storage, maintenance=catalog._exclusive)
         catalog.bind_storage(storage.root)
 
     def install_schema(self, schema):
@@ -90,6 +91,18 @@ class Store:
         """Explicit additive S06a upgrade; no table rebuild or automatic ANALYZE."""
         from .installation import _objects, _verify
 
+        if self.catalog.adapter == "postgres":
+            from .postgres_extensions import GC_INDEX
+            from .postgres_schema import create, namespace_objects, verify
+
+            with self.catalog.transaction() as tx:
+                lifecycle.lock(tx)
+                lifecycle.verify(tx)
+                if GC_INDEX.name in namespace_objects(tx):
+                    verify(tx, [GC_INDEX])
+                    return []
+                create(tx, [GC_INDEX])
+                return [GC_INDEX.name]
         ddl = {
             "ms_gc_pending": "CREATE INDEX ms_gc_pending ON ms_gc(storage_id,object_key) WHERE state='pending'"
         }
@@ -106,10 +119,28 @@ class Store:
             return added
 
     def _schema(self, schema, tx, *, write=False):
+        bind = for_transaction(tx).bind
         if not isinstance(schema, BlobSchema):
             raise ValidationError("Supply the installed BlobSchema declaration")
+        if self.catalog.adapter == "postgres":
+            from .postgres_extensions import publication_guard
+            from .postgres_migrations import verify_schema
+            from .postgres_schema import verify
+
+            rows = tx.sql(
+                "SELECT definition FROM ms_schemas WHERE name=%s AND version=%s",
+                (schema.name, schema.version),
+            )
+            if rows != [{"definition": schema.definition}]:
+                raise SchemaConflictError("Schema is not installed or its definition differs")
+            if write and tx.sql("SELECT MAX(version) AS v FROM ms_schemas WHERE name=%s",
+                                (schema.name,)) != [{"v": schema.version}]:
+                raise SchemaConflictError("Old schema versions are read-only after migration starts")
+            verify_schema(tx, schema.name)
+            verify(tx, publication_guard(schema, evolved=migrations.evolved(tx, schema.name)))
+            return
         rows = tx.sql(
-            "SELECT definition FROM ms_schemas WHERE name=? AND version=?",
+            f"SELECT definition FROM ms_schemas WHERE name={bind} AND version={bind}",
             (schema.name, schema.version),
         )
         if rows != [{"definition": schema.definition}]:
@@ -117,7 +148,7 @@ class Store:
         if write:
             migrations.writable(tx, schema)
         name, sql = payload_catalog.guard(schema, evolved=migrations.evolved(tx, schema.name))
-        if tx.sql("SELECT sql FROM sqlite_master WHERE name=?", (name,)) != [{"sql": sql}]:
+        if tx.sql(f"SELECT sql FROM sqlite_master WHERE name={bind}", (name,)) != [{"sql": sql}]:
             raise SchemaConflictError("Call Store.install_schema before using payload APIs")
 
     @_payload_operation
@@ -160,11 +191,13 @@ class Store:
         self.storage.upload(staged, prepared.object_key)
         # Journal the completed upload in its own short transaction; it isn't a blob yet.
         with self.catalog.transaction() as tx:
+            bind = for_transaction(tx).bind
+            lifecycle.lock(tx)
             self._schema(schema, tx, write=True)
             if encoding is not None:
                 encodings.verify(tx)
                 tx.sql(
-                    "INSERT INTO ms_encodings VALUES(?,?,?,?)",
+                    f"INSERT INTO ms_encodings VALUES({bind},{bind},{bind},{bind})",
                     (
                         prepared.token,
                         prepared.encoding_id,
@@ -177,16 +210,18 @@ class Store:
                 "INSERT INTO ms_prepared ("
                 + ",".join(values)
                 + ") VALUES ("
-                + ",".join("?" for _ in values)
+                + ",".join(for_transaction(tx).bind for _ in values)
                 + ")",
                 tuple(values.values()),
             )
         return prepared
 
     def finalize(self, prepared, *, tx, schema, metadata, id):
+        bind = for_transaction(tx).bind
         self.catalog.require_transaction(tx)
         with tx.operation():
             identifier(id)
+            lifecycle.lock(tx)
             self._schema(schema, tx, write=True)
             values = schema.normalize_metadata(metadata)
             if not isinstance(prepared, PreparedFile):
@@ -197,52 +232,57 @@ class Store:
             ):
                 raise ValidationError("Unknown, altered or foreign prepared token")
             if "ms_gc" in lifecycle._objects(tx) and tx.sql(
-                "SELECT 1 FROM ms_gc WHERE token=?", (prepared.token,)
+                f"SELECT 1 FROM ms_gc WHERE token={bind}", (prepared.token,)
             ):
                 raise ConflictError("Prepared token has been revoked for cleanup")
             if (prepared.schema_name, prepared.schema_version) != (schema.name, schema.version):
                 raise ValidationError("Prepared token belongs to another schema")
-            if tx.sql("SELECT id FROM ms_blobs WHERE id=?", (id,)):
+            if tx.sql(f"SELECT id FROM ms_blobs WHERE id={bind}", (id,)):
                 existing = self._record(id, tx, ready_only=False)
                 if existing["token"] != prepared.token or existing["metadata"] != values:
                     raise ConflictError("Blob ID already identifies a different operation")
                 return existing
-            if tx.sql("SELECT blob_id FROM ms_objects WHERE token=?", (prepared.token,)):
+            if tx.sql(f"SELECT blob_id FROM ms_objects WHERE token={bind}", (prepared.token,)):
                 raise ConflictError("Prepared token is already associated with another blob")
             tx.sql(
-                "INSERT INTO ms_blobs (id, schema_name, schema_version) VALUES (?, ?, ?)",
+                f"INSERT INTO ms_blobs (id, schema_name, schema_version) VALUES ({bind}, {bind}, {bind})",
                 (id, schema.name, schema.version),
             )
+            dialect = for_transaction(tx)
             columns = ["id", "schema_version", *values]
             tx.sql(
-                f"INSERT INTO {q(schema.table_name)} ("
-                + ",".join(q(n) for n in columns)
+                f"INSERT INTO {dialect.quote(dialect.table(schema))} ("
+                + ",".join(dialect.quote(n) for n in columns)
                 + ") VALUES ("
-                + ",".join("?" for _ in columns)
+                + ",".join(for_transaction(tx).bind for _ in columns)
                 + ")",
                 (id, schema.version, *values.values()),
             )
-            tx.sql("INSERT INTO ms_objects VALUES (?, ?)", (id, prepared.token))
+            tx.sql(f"INSERT INTO ms_objects VALUES ({bind}, {bind})", (id, prepared.token))
             return self._record(id, tx, ready_only=False)
 
     def publish(self, id, *, tx):
+        bind = for_transaction(tx).bind
         self.catalog.require_transaction(tx)
         with tx.operation():
+            lifecycle.lock(tx)
             record = self._record(id, tx, ready_only=False)
             if record["storage_id"] != self.storage.storage_id:
                 raise ValidationError("Blob belongs to another storage root")
             if record["state"] not in {"publishing", "ready"}:
                 raise ConflictError("Retired blob cannot be published")
-            tx.sql("UPDATE ms_blobs SET state='ready' WHERE id=? AND state='publishing'", (id,))
+            tx.sql(f"UPDATE ms_blobs SET state='ready' WHERE id={bind} AND state='publishing'", (id,))
             return self._record(id, tx)
 
     def _record(self, id, tx, *, ready_only=True):
+        dialect = for_transaction(tx)
+        bind = dialect.bind
         rows = tx.sql(
             "SELECT b.*, p.token, p.storage_id, p.object_key, p.byte_size, p.digest, "
             "p.hash_algorithm, p.handler_id, p.handler_version, "
             "p.schema_name AS prepared_schema_name, p.schema_version AS prepared_schema_version "
             "FROM ms_blobs b LEFT JOIN ms_objects o ON b.id=o.blob_id "
-            "LEFT JOIN ms_prepared p ON o.token=p.token WHERE b.id=?"
+            f"LEFT JOIN ms_prepared p ON o.token=p.token WHERE b.id={bind}"
             + (" AND b.state='ready'" if ready_only else ""),
             (id,),
         )
@@ -257,8 +297,8 @@ class Store:
             or prepared_version > record["schema_version"]
         ):
             raise IntegrityError("Blob object association is missing or inconsistent")
-        table = "ms_data_" + record["schema_name"].encode().hex()
-        metadata = tx.sql(f"SELECT * FROM {q(table)} WHERE id=?", (id,))
+        table = dialect.table(BlobSchema(record["schema_name"], {}))
+        metadata = tx.sql(f"SELECT * FROM {dialect.quote(table)} WHERE id={bind}", (id,))
         if not metadata:
             raise IntegrityError("Blob metadata is missing")
         fields = metadata[0]
@@ -267,7 +307,7 @@ class Store:
         record["version"] = fields.pop("version")
         declaration = migrations.decode(
             tx.sql(
-                "SELECT definition FROM ms_schemas WHERE name=? AND version=?",
+                f"SELECT definition FROM ms_schemas WHERE name={bind} AND version={bind}",
                 (record["schema_name"], record["schema_version"]),
             )[0]["definition"]
         )
@@ -362,6 +402,7 @@ class Store:
                 order_by=order_by,
                 after=after,
                 limit=limit,
+                dialect=for_transaction(tx),
             )
             rows = tx.sql(sql, params)
             return [self._record(row["id"], tx) for row in rows]
@@ -380,21 +421,7 @@ class Store:
         with tx.operation():
             identifier(id)
             self._schema(schema, tx, write=True)
-            if type(expected_version) is not int or not 1 <= expected_version < 2**63 - 1:
-                raise ValidationError("expected_version must be a positive, incrementable int64")
-            if (
-                not isinstance(changes, Mapping)
-                or not changes
-                or changes.keys() - schema.fields.keys()
-            ):
-                raise ValidationError(
-                    "changes must be a nonempty mapping of declared metadata fields"
-                )
-            values = {}
-            for name, value in changes.items():
-                if schema.fields[name].immutable:
-                    raise ValidationError(f"Immutable metadata field: {name}")
-                values[name] = schema.fields[name].normalize(value)
+            values = metadata.changes(schema, changes, expected_version)
             current = self._record(id, tx)
             if (current["schema_name"], current["schema_version"], current["version"]) != (
                 schema.name,
@@ -402,14 +429,7 @@ class Store:
                 expected_version,
             ):
                 raise ConflictError("Metadata schema or concurrency version is stale")
-            rows = tx.sql(
-                f"UPDATE {q(schema.table_name)} SET "
-                + ",".join(f"{q(name)}=?" for name in values)
-                + ", version=version+1 WHERE id=? AND schema_version=? AND version=? RETURNING id",
-                (*values.values(), id, schema.version, expected_version),
-            )
-            if not rows:
-                raise ConflictError("Metadata changed before the guarded update")
+            metadata.update(tx, id, schema, values, expected_version)
             return self._record(id, tx)
 
     def migrate(self, plan, *, batch_size=100, max_batches=None, dry_run=False):
@@ -467,10 +487,10 @@ class Store:
 
         return cleanup(self, limit=limit)
 
-    def backup(self, destination, *, application, max_entries=10000):
+    def backup(self, destination, *, application, max_entries=10000, tools=None):
         from .backup import backup
 
-        return backup(self, destination, application=application, max_entries=max_entries)
+        return backup(self, destination, application=application, max_entries=max_entries, tools=tools)
 
     def transfer(self, destination, *, application, max_entries=10000):
         from .backup import transfer
@@ -506,11 +526,13 @@ class Store:
         return result
 
     def _retry(self, id, schema, values, size, digest, tx, *, encoding=None):
+        bind = for_transaction(tx).bind
+        lifecycle.lock(tx)
         if "ms_retired" in lifecycle._objects(tx) and tx.sql(
-            "SELECT 1 FROM ms_retired WHERE blob_id=?", (id,)
+            f"SELECT 1 FROM ms_retired WHERE blob_id={bind}", (id,)
         ):
             raise ConflictError("Retired blob IDs cannot be reused")
-        if not tx.sql("SELECT id FROM ms_blobs WHERE id=?", (id,)):
+        if not tx.sql(f"SELECT id FROM ms_blobs WHERE id={bind}", (id,)):
             return None
         try:
             existing = self._record(id, tx, ready_only=False)

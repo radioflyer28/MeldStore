@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Add opt-in PostgreSQL metadata through MeldDB's exact revision
+  `01e27441d7512f85663c8a86986429d62a69bff9`, including explicit constraint
+  validation, native SQL layouts, guarded edits and resumable metadata migrations.
+- Bind PostgreSQL/RustFS to one persistent single-host coordinator. Preserve
+  publication, integrity, external SQL transactions and uncertain-outcome recovery.
+- Add verified offline SQLite cutover with an explicit application SQL manifest,
+  plus PostgreSQL-native whole-database archives and fresh verified restore.
+- Add mandatory live PostgreSQL 17/RustFS CI qualification and optional dependency
+  installation checks. See [qualification evidence](docs/postgresql-verification.md)
+  for the tested scope; this does not change MeldDB's experimental backend status
+  or imply AWS/multi-host qualification. No new release is published.
+
+- Add explicit transaction-scoped `sql_many` for ordered, single-pass application
+  metadata inserts through both SQLite adapters, with fail-closed rollback and no
+  implicit transaction, chunking, retry, or payload I/O.
+- Pin MeldDB's published bulk-SQL contract and coordinate its compatibility
+  boundary through `meld-platform-specs`; synthetic workload measurements remain
+  application evidence rather than a cUAS feature in MeldStore core.
+
 ## 0.1.0rc2 — GitHub prerelease (2026-09-24)
 
 - Adopt MeldDB's public SQLite runtime and maintenance contracts at the MeldDB

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Callable
 from uuid import uuid4
 
+from .dialect import for_transaction
 from .errors import ConflictError, NotFoundError, SchemaConflictError, ValidationError
 from .installation import _column, _literal, _objects, _schema_objects, _verify
 from .schema import BlobSchema, Field, Index, identifier
@@ -75,22 +76,30 @@ def _unavailable_validator(_):
 
 
 def declarations(tx, name):
+    bind = for_transaction(tx).bind
     return [
         decode(row["definition"])
         for row in tx.sql(
-            "SELECT definition FROM ms_schemas WHERE name=? ORDER BY version", (name,)
+            f"SELECT definition FROM ms_schemas WHERE name={bind} ORDER BY version", (name,)
         )
     ]
 
 
 def evolved(tx, name):
+    if for_transaction(tx).postgres:
+        from .postgres_schema import namespace_objects
+
+        return "ms_metadata_layouts" in namespace_objects(tx) and bool(
+            tx.sql("SELECT 1 FROM ms_metadata_layouts WHERE schema_name=%s", (name,))
+        )
     return "ms_metadata_layouts" in _objects(tx) and bool(
         tx.sql("SELECT 1 FROM ms_metadata_layouts WHERE schema_name=?", (name,))
     )
 
 
 def writable(tx, schema):
-    if tx.sql("SELECT MAX(version) AS v FROM ms_schemas WHERE name=?", (schema.name,)) != [
+    bind = for_transaction(tx).bind
+    if tx.sql(f"SELECT MAX(version) AS v FROM ms_schemas WHERE name={bind}", (schema.name,)) != [
         {"v": schema.version}
     ]:
         raise SchemaConflictError("Old schema versions are read-only after migration starts")
@@ -155,6 +164,10 @@ def layout(schemas):
 
 
 def verify(tx, name):
+    if for_transaction(tx).postgres:
+        from .postgres_migrations import verify_schema
+
+        return verify_schema(tx, name)
     objects = _objects(tx)
     _verify(objects, DDL)
     _verify(objects, layout(declarations(tx, name)))
@@ -225,15 +238,26 @@ def _rebuild(tx, plan, old, new):
 
 
 def status(tx, name):
-    if "ms_migrations" not in _objects(tx):
+    dialect = for_transaction(tx)
+    if dialect.postgres:
+        from .postgres_schema import namespace_objects
+
+        objects = namespace_objects(tx)
+    else:
+        objects = _objects(tx)
+    if "ms_migrations" not in objects:
         raise NotFoundError("No metadata migrations installed")
-    rows = tx.sql("SELECT * FROM ms_migrations WHERE name=?", (name,))
+    rows = tx.sql(f"SELECT * FROM ms_migrations WHERE name={dialect.bind}", (name,))
     if not rows:
         raise NotFoundError(f"No migration: {name}")
     return rows[0]
 
 
 def _initialize(store, tx, plan):
+    if for_transaction(tx).postgres:
+        from .postgres_migrations import initialize
+
+        return initialize(store, tx, plan)
     from . import payload_catalog
 
     store.catalog.install_schema(plan.source, tx=tx)
@@ -304,51 +328,62 @@ def _initialize(store, tx, plan):
 
 
 def _batch(store, tx, plan, batch_size):
+    dialect = for_transaction(tx)
+    bind = dialect.bind
+    if dialect.postgres:
+        tx.sql("SELECT name FROM ms_migrations WHERE name=%s FOR UPDATE", (plan.name,))
+        verify(tx, plan.source.name)
     job = status(tx, plan.name)
     if job["state"] == "complete":
         return job
     if tx.sql(
-        "SELECT 1 FROM ms_blobs WHERE schema_name=? AND state!='ready' LIMIT 1", (plan.source.name,)
+        f"SELECT 1 FROM ms_blobs WHERE schema_name={bind} AND state!='ready' LIMIT 1",
+        (plan.source.name,),
     ):
         raise ConflictError("Resolve unpublished or retiring blobs before resuming")
-    table = q(plan.source.table_name)
+    table = dialect.quote(dialect.table(plan.source))
     # Keep the resume boundary sargable: a nullable-parameter OR makes SQLite
     # scan from the start of the index for every batch.
-    boundary = "" if job["last_id"] is None else " AND id>?"
+    boundary = "" if job["last_id"] is None else f" AND id>{bind}"
     params = (plan.source.version,)
     if job["last_id"] is not None:
         params += (job["last_id"],)
     rows = tx.sql(
-        f"SELECT * FROM {table} WHERE schema_version=?{boundary} ORDER BY id LIMIT ?",
+        f"SELECT * FROM {table} WHERE schema_version={bind}{boundary} ORDER BY id LIMIT {bind}"
+        + (" FOR UPDATE" if dialect.postgres else ""),
         (*params, batch_size),
     )
     all_fields = {key for schema in declarations(tx, plan.source.name) for key in schema.fields}
     for row in rows:
         inputs = {key: spec.from_sql(row[key]) for key, spec in plan.source.fields.items()}
         values = plan.target.normalize_metadata(plan.transform(inputs))
-        values = {key: values.get(key) for key in sorted(all_fields)}
+        values = {key: dialect.value(values.get(key)) for key in sorted(all_fields)}
         tx.sql(
-            "INSERT INTO ms_migration_steps VALUES (?,?,?)", (row["id"], plan.name, row["version"])
+            f"INSERT INTO ms_migration_steps VALUES ({bind},{bind},{bind})",
+            (row["id"], plan.name, row["version"]),
         )
         changed = tx.sql(
             f"UPDATE {table} SET "
-            + ",".join(f"{q(key)}=?" for key in values)
+            + ",".join(f"{dialect.quote(key)}={bind}" for key in values)
             + ("," if values else "")
-            + "schema_version=?,version=version+1 WHERE id=? AND schema_version=? AND version=? RETURNING id",
+            + f"schema_version={bind},version=version+1 WHERE id={bind} AND schema_version={bind} AND version={bind} RETURNING id",
             (*values.values(), plan.target.version, row["id"], plan.source.version, row["version"]),
         )
         if not changed:
             raise ConflictError("Migration row changed unexpectedly")
-        tx.sql("UPDATE ms_blobs SET schema_version=? WHERE id=?", (plan.target.version, row["id"]))
-        tx.sql("DELETE FROM ms_migration_steps WHERE blob_id=?", (row["id"],))
+        tx.sql(
+            f"UPDATE ms_blobs SET schema_version={bind} WHERE id={bind}",
+            (plan.target.version, row["id"]),
+        )
+        tx.sql(f"DELETE FROM ms_migration_steps WHERE blob_id={bind}", (row["id"],))
     last = rows[-1]["id"] if rows else job["last_id"]
     remaining = tx.sql(
-        f"SELECT 1 FROM {table} WHERE schema_version=? LIMIT 1", (plan.source.version,)
+        f"SELECT 1 FROM {table} WHERE schema_version={bind} LIMIT 1", (plan.source.version,)
     )
     if remaining and not rows:
         raise ConflictError("Source rows exist behind the checkpoint; catalog needs inspection")
     tx.sql(
-        "UPDATE ms_migrations SET migrated_rows=migrated_rows+?,last_id=?,state=? WHERE name=?",
+        f"UPDATE ms_migrations SET migrated_rows=migrated_rows+{bind},last_id={bind},state={bind} WHERE name={bind}",
         (len(rows), last, "running" if remaining else "complete", plan.name),
     )
     return status(tx, plan.name)
@@ -375,7 +410,9 @@ def run(store, plan, *, batch_size=100, max_batches=None, dry_run=False):
                 result = _initialize(store, tx, plan)
                 while result["state"] != "complete":
                     result = _batch(store, tx, plan, batch_size)
-                if tx.sql("SELECT * FROM pragma_foreign_key_check"):
+                if for_transaction(tx).postgres:
+                    tx.validate_constraints()
+                elif tx.sql("SELECT * FROM pragma_foreign_key_check"):
                     raise SchemaConflictError("Dry-run foreign key validation failed")
                 raise _DryRunRollback(dict(result, dry_run=True))
         except _DryRunRollback as rolled_back:

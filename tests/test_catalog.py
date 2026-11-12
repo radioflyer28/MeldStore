@@ -360,6 +360,10 @@ sys.meta_path.insert(0, Block())
 from meldstore import Catalog, BlobSchema
 with Catalog(sys.argv[1], adapter='sqlite') as catalog:
     catalog.install_schema(BlobSchema('empty', {}))
+    with catalog.transaction() as tx:
+        tx.sql('CREATE TABLE app_bulk(position INTEGER PRIMARY KEY)')
+        assert tx.sql_many('INSERT INTO app_bulk VALUES (?)', [(1,), (2,)]) == {
+            'parameter_sets': 2, 'affected_rows': 2}
 """
     subprocess.run([sys.executable, "-c", script, str(tmp_path / "plain.db")], check=True)
 

@@ -3,9 +3,9 @@
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from .dialect import SQLITE
 from .errors import ValidationError
 from .schema import Text
-from .schema import quote_identifier as q
 
 
 @dataclass(frozen=True)
@@ -37,8 +37,8 @@ def field(schema, name):
     return schema.fields[name]
 
 
-def column(name):
-    return "b.id" if name == "id" else "m." + q(name)
+def column(name, dialect=SQLITE):
+    return "b.id" if name == "id" else "m." + dialect.quote(name)
 
 
 def ordering(schema, order_by):
@@ -64,7 +64,8 @@ def cursor(record, schema, order_by=()):
     return FindCursor(schema.name, schema.version, order, values)
 
 
-def compile_query(schema, *, where, predicates, order_by, after, limit):
+def compile_query(schema, *, where, predicates, order_by, after, limit, dialect=SQLITE):
+    bind = dialect.bind
     if type(limit) is not int or not 1 <= limit <= 1000:
         raise ValidationError("limit must be an integer between 1 and 1000")
     where = {} if where is None else where
@@ -73,13 +74,18 @@ def compile_query(schema, *, where, predicates, order_by, after, limit):
     terms = [Predicate(name, "eq", value) for name, value in where.items()] + list(predicates)
     if len(terms) > 64:
         raise ValidationError("At most 64 predicates are supported")
-    clauses = ["b.state='ready'", "b.schema_name=?", "b.schema_version=?", "m.schema_version=?"]
+    clauses = [
+        "b.state='ready'",
+        f"b.schema_name={bind}",
+        f"b.schema_version={bind}",
+        f"m.schema_version={bind}",
+    ]
     params = [schema.name, schema.version, schema.version]
     operators = {"eq": "=", "ne": "!=", "lt": "<", "lte": "<=", "gt": ">", "gte": ">="}
     for term in terms:
         if not isinstance(term, Predicate) or not isinstance(term.op, str):
             raise ValidationError("Expected Predicate(field, op, value)")
-        spec, col = field(schema, term.field), column(term.field)
+        spec, col = field(schema, term.field), column(term.field, dialect)
         if term.op in {"is_null", "not_null"}:
             if term.value is not None:
                 raise ValidationError("Null predicates do not take a value")
@@ -92,7 +98,7 @@ def compile_query(schema, *, where, predicates, order_by, after, limit):
             clauses.append(
                 col
                 + (" IN (" if term.op == "in" else " NOT IN (")
-                + ",".join("?" for _ in term.value)
+                + ",".join(bind for _ in term.value)
                 + ")"
             )
             params.extend(spec.normalize(value) for value in term.value)
@@ -102,7 +108,7 @@ def compile_query(schema, *, where, predicates, order_by, after, limit):
                     raise ValidationError("Null has no scalar range ordering")
                 clauses.append(col + (" IS NULL" if term.op == "eq" else " IS NOT NULL"))
             else:
-                clauses.append(f"{col} {operators[term.op]} ?")
+                clauses.append(f"{col} {operators[term.op]} {bind}")
                 params.append(spec.normalize(term.value))
         else:
             raise ValidationError("Unsupported scalar operator")
@@ -127,18 +133,24 @@ def compile_query(schema, *, where, predicates, order_by, after, limit):
             values.append(value)
         branches = []
         for i, item in enumerate(order):
-            pieces = [f"{column(o.field)} IS ?" for o in order[:i]]
+            pieces = [dialect.equal(column(o.field, dialect)) for o in order[:i]]
             params.extend(values[:i])
-            col, value = column(item.field), values[i]
+            col, value = column(item.field, dialect), values[i]
             if value is None:
-                pieces.append("0" if item.descending else col + " IS NOT NULL")
+                pieces.append(
+                    ("FALSE" if dialect.postgres else "0")
+                    if item.descending
+                    else col + " IS NOT NULL"
+                )
             else:
-                pieces.append(f"({col} < ? OR {col} IS NULL)" if item.descending else f"{col} > ?")
+                pieces.append(
+                    f"({col} < {bind} OR {col} IS NULL)" if item.descending else f"{col} > {bind}"
+                )
                 params.append(value)
             branches.append("(" + " AND ".join(pieces) + ")")
         clauses.append("(" + " OR ".join(branches) + ")")
     params.append(limit)
-    sql = f"SELECT b.id FROM ms_blobs b JOIN {q(schema.table_name)} m ON b.id=m.id WHERE "
+    sql = f"SELECT b.id FROM ms_blobs b JOIN {dialect.quote(dialect.table(schema))} m ON b.id=m.id WHERE "
     sql += " AND ".join(clauses) + " ORDER BY "
-    sql += ",".join(column(o.field) + (" DESC" if o.descending else " ASC") for o in order)
-    return sql + " LIMIT ?", params
+    sql += ",".join(dialect.order(column(o.field, dialect), o.descending) for o in order)
+    return sql + f" LIMIT {bind}", [dialect.value(v) for v in params]

@@ -99,9 +99,13 @@ Parquet schemas. Failed publication leaves an explicit prepared operation.
             "start_time": start, "end_time": end, "annotation": None}, tx=tx)
         tx.sql("INSERT INTO c_recording_source VALUES(?,?,?,?)",
                (id, sensor_config, "truth" if aircraft_config else "radar", aircraft_config))
-        for track, begin, finish in tracks:
-            tx.sql("INSERT INTO c_occurrence VALUES(?,?,?,?)",
-                   (id, track, instant(begin), instant(finish)))
+        tx.sql_many(
+            "INSERT INTO c_occurrence VALUES(?,?,?,?)",
+            (
+                (id, track, instant(begin), instant(finish))
+                for track, begin, finish in tracks
+            ),
+        )
         store.publish(id, tx=tx)
     return store.stat(id)
 

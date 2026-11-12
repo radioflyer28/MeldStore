@@ -229,7 +229,10 @@ with Catalog(sys.argv[1],adapter=sys.argv[4]) as catalog:
         assert not report["missing"] and not report["corrupt"]
 
 
-def test_workload_runner_uses_read_only_sources_and_removes_temporary_copies(tmp_path):
+@pytest.mark.parametrize("adapter", ["sqlite", "melddb"])
+def test_workload_runner_uses_read_only_sources_and_removes_temporary_copies(
+    tmp_path, adapter
+):
     pa = pytest.importorskip("pyarrow")
     import pyarrow.parquet as pq
 
@@ -241,8 +244,21 @@ def test_workload_runner_uses_read_only_sources_and_removes_temporary_copies(tmp
                              "sns_uuid": ["one", "one"], "trk_uuid": ["a", "b"]}),
                    source / "2026-01-01_EchoK-000001.mt.parquet")
     output = tmp_path / "results" / "report.json"
-    result = run(source, files=1, adapter="sqlite", output=output, min_bytes=0, max_bytes=100000)
+    result = run(
+        source,
+        files=1,
+        adapter=adapter,
+        output=output,
+        min_bytes=0,
+        max_bytes=100000,
+    )
     assert result["files"] == 1 and result["track_occurrences"] == 2
+    assert result["adapter"] == adapter
+    assert result["import_and_retrieval_calls"]["sql_many_api_calls"] == 1
+    assert result["import_and_retrieval_calls"]["sql_many_parameter_sets"] == 2
+    assert result["import_and_retrieval_public_sql_calls"] == (
+        result["import_and_retrieval_calls"]["sql_api_calls"] + 1
+    )
     assert result["metadata_query_calls"] == {"sql_api_calls": 100}
     assert result["originals_unchanged"]
     assert list(output.parent.iterdir()) == [output]

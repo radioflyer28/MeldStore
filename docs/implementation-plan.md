@@ -307,9 +307,11 @@ and resolve dependency licensing/distribution. See the
 [release checklist](release.md). Actual package publication requires a separate
 explicit approval; a version bump or green CI is not a release announcement.
 
-PostgreSQL metadata plus remote payloads and cross-host coordination are deferred
-to a future milestone, as agreed after S08. Keep the SQLite embedded deployment
-and distinguish a remote object backend from a remotely shared catalog.
+The S08/S09 release deferred PostgreSQL metadata and cross-host coordination.
+The subsequent, unreleased `add-postgresql-metadata-support` milestone implements
+PostgreSQL metadata plus remote payloads with a single-host coordinator; see
+[its qualification record](postgresql-verification.md). Both SQLite adapters
+remain supported. Cross-host coordination remains deferred.
 
 ## Completion rules
 

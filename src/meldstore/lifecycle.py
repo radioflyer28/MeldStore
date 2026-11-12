@@ -1,12 +1,14 @@
 """SQL-only retirement, durable cleanup intent and uncertain-outcome inspection."""
 
 from . import encodings
+from .dialect import for_transaction
 from .errors import (
     ConflictError,
     SchemaConflictError,
     ValidationError,
 )
-from .installation import _objects, _verify
+from .installation import _objects as _sqlite_objects
+from .installation import _verify
 from .schema import BlobSchema, identifier
 from .schema import quote_identifier as q
 
@@ -57,7 +59,38 @@ DDL = {
 }
 
 
+def _objects(tx):
+    if for_transaction(tx).postgres:
+        from .postgres_schema import namespace_objects
+
+        return namespace_objects(tx)
+    return _sqlite_objects(tx)
+
+
+def lock(tx, id=None):
+    """Serialize short lifecycle writes; optionally lock the metadata version."""
+    if not for_transaction(tx).postgres:
+        return
+    tx.sql("SELECT singleton FROM ms_format FOR UPDATE")
+    if id is not None:
+        rows = tx.sql("SELECT schema_name FROM ms_blobs WHERE id=%s FOR UPDATE", (id,))
+        if rows:
+            dialect = for_transaction(tx)
+            name = dialect.quote(dialect.table(BlobSchema(rows[0]['schema_name'], {})))
+            tx.sql(f"SELECT id FROM {name} WHERE id=%s FOR UPDATE", (id,))
+
+
 def verify(tx):
+    if for_transaction(tx).postgres:
+        from .postgres_extensions import LIFECYCLE, retirement_guard
+        from .postgres_schema import verify as verify_postgres
+
+        verify_postgres(tx, LIFECYCLE)
+        if tx.sql("SELECT version FROM ms_lifecycle_format") != [{"version": 1}]:
+            raise SchemaConflictError("Unsupported lifecycle extension")
+        for row in tx.sql("SELECT schema_name FROM ms_lifecycle_schemas"):
+            verify_postgres(tx, retirement_guard(BlobSchema(row['schema_name'], {})))
+        return
     _verify(_objects(tx), DDL)
     if tx.sql("SELECT version FROM ms_lifecycle_format") != [{"version": 1}]:
         raise SchemaConflictError("Unsupported lifecycle extension")
@@ -68,6 +101,11 @@ def verify(tx):
 
 
 def install(tx):
+    if tx._catalog.adapter == "postgres":
+        from .postgres_extensions import LIFECYCLE, install_group
+
+        return install_group(tx, LIFECYCLE, "ms_lifecycle_format")
+
     objects = _objects(tx)
     if "ms_lifecycle_format" in objects:
         verify(tx)
@@ -92,16 +130,22 @@ def schema_guard(schema):
 
 
 def install_schema(schema, tx):
+    bind = for_transaction(tx).bind
+    if tx._catalog.adapter == "postgres":
+        from .postgres_extensions import install_retirement
+
+        return install_retirement(schema, tx)
+
     # Enrollment is separate so missing guards on already-enrolled schemas fail.
     name, sql = schema_guard(schema)
     objects = _objects(tx)
-    if tx.sql("SELECT 1 FROM ms_lifecycle_schemas WHERE schema_name=?", (schema.name,)):
+    if tx.sql(f"SELECT 1 FROM ms_lifecycle_schemas WHERE schema_name={bind}", (schema.name,)):
         _verify(objects, {name: sql})
     else:
         if name in objects:
             raise SchemaConflictError("Retirement guard exists without enrollment")
         tx.sql(sql)
-        tx.sql("INSERT INTO ms_lifecycle_schemas VALUES(?)", (schema.name,))
+        tx.sql(f"INSERT INTO ms_lifecycle_schemas VALUES({bind})", (schema.name,))
 
 
 def _version(value):
@@ -110,16 +154,19 @@ def _version(value):
 
 
 def retired(tx, id):
+    bind = for_transaction(tx).bind
     rows = tx.sql(
-        "SELECT r.*,g.state,g.last_error,g.storage_id,g.object_key FROM ms_retired r JOIN ms_gc g ON g.blob_id=r.blob_id WHERE r.blob_id=?",
+        f"SELECT r.*,g.state,g.last_error,g.storage_id,g.object_key FROM ms_retired r JOIN ms_gc g ON g.blob_id=r.blob_id WHERE r.blob_id={bind}",
         (id,),
     )
     return rows[0] if rows else None
 
 
 def delete(store, id, expected_version, tx):
+    bind = for_transaction(tx).bind
     identifier(id)
     _version(expected_version)
+    lock(tx, id)
     verify(tx)
     previous = retired(tx, id)
     if previous:
@@ -134,46 +181,49 @@ def delete(store, id, expected_version, tx):
     if row["version"] != expected_version:
         raise ConflictError("Metadata concurrency version is stale")
     if "ms_migrations" in _objects(tx) and tx.sql(
-        "SELECT 1 FROM ms_migrations WHERE schema_name=? AND state='running'", (row["schema_name"],)
+        f"SELECT 1 FROM ms_migrations WHERE schema_name={bind} AND state='running'", (row["schema_name"],)
     ):
         raise ConflictError("Finish the schema migration before retiring its blobs")
     tx.sql(
-        "INSERT INTO ms_retired VALUES (?,?,?,?,?)",
+        f"INSERT INTO ms_retired VALUES ({bind},{bind},{bind},{bind},{bind})",
         (id, row["token"], row["schema_name"], row["schema_version"], row["version"]),
     )
     tx.sql(
-        "INSERT INTO ms_gc(storage_id,object_key,token,blob_id,reason) VALUES(?,?,?,?,'retired')",
+        f"INSERT INTO ms_gc(storage_id,object_key,token,blob_id,reason) VALUES({bind},{bind},{bind},{bind},'retired')",
         (row["storage_id"], row["object_key"], row["token"], id),
     )
-    tx.sql("UPDATE ms_blobs SET state='pending_delete' WHERE id=?", (id,))
-    table = "ms_data_" + row["schema_name"].encode().hex()
-    tx.sql(f"DELETE FROM {q(table)} WHERE id=?", (id,))
-    tx.sql("DELETE FROM ms_objects WHERE blob_id=?", (id,))
+    tx.sql(f"UPDATE ms_blobs SET state='pending_delete' WHERE id={bind}", (id,))
+    table = for_transaction(tx).table(BlobSchema(row["schema_name"], {}))
+    tx.sql(f"DELETE FROM {for_transaction(tx).quote(table)} WHERE id={bind}", (id,))
+    tx.sql(f"DELETE FROM ms_objects WHERE blob_id={bind}", (id,))
     # Real DELETE enforces application FKs, including deferred ones at commit.
-    tx.sql("DELETE FROM ms_blobs WHERE id=?", (id,))
+    tx.sql(f"DELETE FROM ms_blobs WHERE id={bind}", (id,))
     return retired(tx, id)
 
 
 def discard(store, prepared, tx):
+    bind = for_transaction(tx).bind
     from .store import PreparedFile
 
+    lock(tx)
     verify(tx)
     if not isinstance(prepared, PreparedFile) or prepared.storage_id != store.storage.storage_id:
         raise ValidationError("Expected this storage root's PreparedFile")
     if not encodings.matches(tx, prepared):
         raise ValidationError("Prepared token is unknown or altered")
-    if tx.sql("SELECT 1 FROM ms_objects WHERE token=?", (prepared.token,)):
+    if tx.sql(f"SELECT 1 FROM ms_objects WHERE token={bind}", (prepared.token,)):
         raise ConflictError("Prepared token belongs to a blob; resolve that blob first")
-    if tx.sql("SELECT 1 FROM ms_retired WHERE token=?", (prepared.token,)):
+    if tx.sql(f"SELECT 1 FROM ms_retired WHERE token={bind}", (prepared.token,)):
         raise ConflictError("Prepared token belongs to a retired blob")
     tx.sql(
-        "INSERT OR IGNORE INTO ms_gc(storage_id,object_key,token,reason) VALUES(?,?,?,'discarded')",
+        f"INSERT INTO ms_gc(storage_id,object_key,token,reason) VALUES({bind},{bind},{bind},'discarded') ON CONFLICT DO NOTHING",
         (prepared.storage_id, prepared.object_key, prepared.token),
     )
-    return tx.sql("SELECT * FROM ms_gc WHERE token=?", (prepared.token,))[0]
+    return tx.sql(f"SELECT * FROM ms_gc WHERE token={bind}", (prepared.token,))[0]
 
 
 def resolve(store, id, prepared, schema, metadata, tx):
+    bind = for_transaction(tx).bind
     from .store import PreparedFile
 
     identifier(id)
@@ -183,7 +233,7 @@ def resolve(store, id, prepared, schema, metadata, tx):
     values = schema.normalize_metadata(metadata)
     if (prepared.schema_name, prepared.schema_version) != (schema.name, schema.version):
         raise ValidationError("Token and schema differ")
-    journal = tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,))
+    journal = tx.sql(f"SELECT * FROM ms_prepared WHERE token={bind}", (prepared.token,))
     if journal and not encodings.matches(tx, prepared):
         raise ConflictError("Prepared token descriptor differs")
     prior = retired(tx, id)
@@ -191,7 +241,7 @@ def resolve(store, id, prepared, schema, metadata, tx):
         if prior["token"] != prepared.token:
             raise ConflictError("ID belongs to another retired operation")
         return {"outcome": "retired", "retirement": prior}
-    if tx.sql("SELECT 1 FROM ms_blobs WHERE id=?", (id,)):
+    if tx.sql(f"SELECT 1 FROM ms_blobs WHERE id={bind}", (id,)):
         row = store._record(id, tx, ready_only=False)
         if (row["token"], row["schema_name"], row["schema_version"], row["metadata"]) != (
             prepared.token,
@@ -201,9 +251,9 @@ def resolve(store, id, prepared, schema, metadata, tx):
         ):
             raise ConflictError("ID exists with different object or metadata")
         return {"outcome": row["state"], "record": row}
-    if tx.sql("SELECT 1 FROM ms_objects WHERE token=?", (prepared.token,)):
+    if tx.sql(f"SELECT 1 FROM ms_objects WHERE token={bind}", (prepared.token,)):
         raise ConflictError("Token is associated with another ID")
-    if tx.sql("SELECT 1 FROM ms_gc WHERE token=?", (prepared.token,)):
+    if tx.sql(f"SELECT 1 FROM ms_gc WHERE token={bind}", (prepared.token,)):
         return {"outcome": "discarded"}
     if not journal:
         return {"outcome": "unknown"}

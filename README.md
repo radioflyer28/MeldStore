@@ -29,6 +29,13 @@ The library has no caching policies and no built-in cUAS concepts.
 - [S06a verification evidence](docs/s06a-verification.md)
 - [MeldDB runtime and transaction adoption evidence](docs/melddb-runtime-contracts-verification.md)
 - [MeldDB application-owned SQL contract evidence](docs/melddb-application-owned-sql-contract-verification.md)
+- [MeldDB transaction-scoped bulk SQL adoption evidence](docs/melddb-transaction-scoped-bulk-sql-verification.md)
+- [Experimental PostgreSQL metadata](docs/postgresql.md)
+- [PostgreSQL coordination and external SQL participation](docs/postgresql-coordination.md)
+- [PostgreSQL metadata migrations](docs/postgresql-migrations.md)
+- [Offline SQLite to PostgreSQL cutover](docs/postgresql-transfer.md)
+- [PostgreSQL native backup and restore](docs/postgresql-recovery.md)
+- [PostgreSQL deployment qualification](docs/postgresql-verification.md)
 - [S3 configuration, recovery, backup, and offline transfer](docs/s3.md)
 - [S07 verification evidence](docs/s07-verification.md)
 - [Generic and separate SQL application examples](docs/consumers.md)
@@ -44,14 +51,16 @@ MeldDB SQL and a direct SQLite adapter share the same relational schema.
 Default WAL mode requires a SQLite runtime containing the WAL-reset fix (normally
 3.51.3+); check SQLite's version, not only Python's. See the SQLite guide above
 for supported backports and explicit rollback mode.
-Local and S3 storage use obstore. S3 requires a local catalog and one persistent
-coordination directory shared by all participants on a single host.
+Local and S3 storage use obstore. The released SQLite deployment uses a local
+catalog. Unreleased, opt-in PostgreSQL metadata also permits a remote catalog;
+see its separate qualification record above. Both S3 deployments require one
+persistent coordination directory shared by every participant on a single host.
 On September 16, 2026, S07 acceptance was amended to permit a real Docker-local
 RustFS or Garage S3-compatible service. This does not establish AWS S3 support:
 AWS-specific qualification is deferred and remains unpassed.
 Runtime dependencies are locked. MeldDB is pinned to a public source commit;
 fresh installation requires Git. Optional extras are `parquet` (pandas), `arrow`,
-`polars`, `numpy`, and `blosc2`. Narwhals was evaluated but is not required.
+`polars`, `numpy`, and `blosc2`; the unreleased PostgreSQL adapter uses `postgres`. Narwhals was evaluated but is not required.
 
 ## Install the prerelease
 
@@ -92,6 +101,10 @@ objects. Explicit `prepare_file`/`finalize`/`publish` compose blob creation with
 application SQL in one shared commit. See the API guide for retry semantics,
 temporary space requirements, and recovery limits. Do not manually populate or
 garbage-collect blob bookkeeping tables/objects.
+
+Experimental PostgreSQL connection selection and catalog SQL are documented in
+[PostgreSQL catalog connections](docs/postgresql.md). Blob operations on that
+backend remain gated on the ongoing qualification milestone.
 
 ## Development
 

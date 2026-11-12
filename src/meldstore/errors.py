@@ -68,3 +68,7 @@ class IntegrityError(MeldStoreError):
 
 class StorageError(MeldStoreError):
     """Object I/O failed; this is not evidence that the object is absent."""
+
+
+class CatalogConnectionError(MeldStoreError):
+    """The metadata provider could not connect or lost its connection."""

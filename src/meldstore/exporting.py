@@ -20,12 +20,14 @@ def export_file(store, id, destination):
         if os.path.lexists(destination):
             raise ConflictError("Export destination already exists; it is never overwritten")
         target = canonical(destination)
-        catalog = canonical(store.catalog.path)
-        protected = {
-            base + suffix
-            for base in (catalog, catalog + ".meldstore-access")
-            for suffix in ("", "-wal", "-shm", "-journal")
-        }
+        protected = set()
+        if store.catalog.path is not None:
+            catalog = canonical(store.catalog.path)
+            protected = {
+                base + suffix
+                for base in (catalog, catalog + ".meldstore-access")
+                for suffix in ("", "-wal", "-shm", "-journal")
+            }
         if target in protected or Path(target).is_relative_to(Path(canonical(store.storage.root))):
             raise ValidationError("Export destination must be outside managed storage/catalog files")
         record = store.stat(id)

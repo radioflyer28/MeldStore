@@ -2,6 +2,7 @@
 
 from dataclasses import asdict, fields
 
+from .dialect import for_transaction
 from .errors import SchemaConflictError
 from .installation import _objects, _verify
 
@@ -25,6 +26,11 @@ DDL = {
 
 
 def install(tx):
+    if tx._catalog.adapter == "postgres":
+        from .postgres_extensions import ENCODING, install_group
+
+        return install_group(tx, ENCODING, "ms_encoding_format")
+
     objects = _objects(tx)
     if "ms_encoding_format" not in objects:
         if any(name in objects for name in DDL):
@@ -37,19 +43,43 @@ def install(tx):
 
 
 def verify(tx):
+    if for_transaction(tx).postgres:
+        from .postgres_extensions import ENCODING
+        from .postgres_schema import verify as verify_postgres
+
+        verify_postgres(tx, ENCODING)
+        if tx.sql("SELECT version FROM ms_encoding_format") != [{"version": 1}]:
+            raise SchemaConflictError("Unsupported encoding extension")
+        return
     _verify(_objects(tx), DDL)
     if tx.sql("SELECT version FROM ms_encoding_format") != [{"version": 1}]:
         raise SchemaConflictError("Unsupported encoding extension")
 
 
 def read(tx, token):
+    bind = for_transaction(tx).bind
+    if tx._catalog.adapter == "postgres":
+        from .postgres_extensions import ENCODING
+        from .postgres_schema import namespace_objects
+        from .postgres_schema import verify as verify_postgres
+
+        objects = namespace_objects(tx)
+        if "ms_encoding_format" not in objects:
+            if any(obj.name in objects for obj in ENCODING):
+                raise SchemaConflictError("Partial encoding extension")
+            return None
+        verify_postgres(tx, ENCODING)
+        if tx.sql("SELECT version FROM ms_encoding_format") != [{"version": 1}]:
+            raise SchemaConflictError("Unsupported encoding extension")
+        rows = tx.sql("SELECT * FROM ms_encodings WHERE token=%s", (token,))
+        return rows[0] if rows else None
     objects = _objects(tx)
     if "ms_encoding_format" not in objects:
         if any(name in objects for name in DDL):
             raise SchemaConflictError("Partial encoding extension")
         return None
     verify(tx)
-    rows = tx.sql("SELECT * FROM ms_encodings WHERE token=?", (token,))
+    rows = tx.sql(f"SELECT * FROM ms_encodings WHERE token={bind}", (token,))
     return rows[0] if rows else None
 
 
@@ -60,9 +90,10 @@ def physical(prepared):
 
 
 def matches(tx, prepared):
+    bind = for_transaction(tx).bind
     from .store import PreparedValue
 
-    if tx.sql("SELECT * FROM ms_prepared WHERE token=?", (prepared.token,)) != [physical(prepared)]:
+    if tx.sql(f"SELECT * FROM ms_prepared WHERE token={bind}", (prepared.token,)) != [physical(prepared)]:
         return False
     row = read(tx, prepared.token)
     if isinstance(prepared, PreparedValue):

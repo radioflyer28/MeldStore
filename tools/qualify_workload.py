@@ -46,9 +46,15 @@ def run(source_root, *, files, adapter, output, s3=False, min_bytes=100_000_000,
     counters = Counter()
     methods = {name: getattr(obstore, name) for name in ("get", "put", "copy", "delete", "list")}
     sql = Transaction.sql
+    sql_many = Transaction.sql_many
     def count_sql(self, *args, **kwargs):
         counters["sql_api_calls"] += 1
         return sql(self, *args, **kwargs)
+    def count_sql_many(self, *args, **kwargs):
+        counters["sql_many_api_calls"] += 1
+        result = sql_many(self, *args, **kwargs)
+        counters["sql_many_parameter_sets"] += result["parameter_sets"]
+        return result
     def counted(name):
         def call(*args, **kwargs):
             counters[name] += 1
@@ -66,6 +72,7 @@ def run(source_root, *, files, adapter, output, s3=False, min_bytes=100_000_000,
     originals = []
     try:
         Transaction.sql = count_sql
+        Transaction.sql_many = count_sql_many
         for name in methods:
             setattr(obstore, name, counted(name))
         with tempfile.TemporaryDirectory(prefix="s08-private-", dir=output.parent) as directory:
@@ -116,6 +123,9 @@ def run(source_root, *, files, adapter, output, s3=False, min_bytes=100_000_000,
                                           "elapsed_seconds": time.perf_counter() - started}), flush=True)
                 report["sensors"] = len(sensors)
                 report["import_and_retrieval_calls"] = dict(counters)
+                report["import_and_retrieval_public_sql_calls"] = (
+                    counters["sql_api_calls"] + counters["sql_many_api_calls"]
+                )
                 # Application-owned interval index; DISTINCT prevents per-track retrieval.
                 query = """SELECT DISTINCT o.blob_id FROM c_occurrence o
                     JOIN ms_blobs b ON b.id=o.blob_id AND b.state='ready'
@@ -179,6 +189,7 @@ def run(source_root, *, files, adapter, output, s3=False, min_bytes=100_000_000,
         return report
     finally:
         Transaction.sql = sql
+        Transaction.sql_many = sql_many
         for name, method in methods.items():
             setattr(obstore, name, method)
 

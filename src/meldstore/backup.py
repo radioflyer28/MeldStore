@@ -13,6 +13,7 @@ from tempfile import TemporaryDirectory
 
 from . import encodings, installation, lifecycle, migrations, payload_catalog
 from .access import Lease, canonical
+from .dialect import SQLITE
 from .errors import ConflictError, IntegrityError, ValidationError
 from .handlers import descriptor_json
 from .maintenance import _bound
@@ -84,6 +85,8 @@ def _database(path):
 
 class _Query:
     """Read-only SQL adapter for validating detached SQLite snapshots."""
+
+    _dialect = SQLITE
 
     def __init__(self, connection):
         self.connection = connection
@@ -269,7 +272,14 @@ def _copy_payloads(source, target, entries, stage):
         _checkpoint(stage)
 
 
-def backup(store, destination, *, application, max_entries=10000):
+def backup(store, destination, *, application, max_entries=10000, tools=None):
+    if store.catalog.adapter == "postgres":
+        from .postgres_archive import backup as backup_postgres
+
+        return backup_postgres(store, destination, application=application,
+                               tools=tools, max_entries=max_entries)
+    if tools is not None:
+        raise ValidationError("Native PostgreSQL tools require a PostgreSQL catalog")
     store.catalog.require_maintenance(store.storage.root)
     _bound(max_entries)
     application = _application(application)

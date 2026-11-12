@@ -1,6 +1,7 @@
 """Exclusive reporting and explicit, restartable object cleanup. No automatic GC."""
 
 from . import lifecycle
+from .dialect import for_transaction
 from .errors import ConflictError, IntegrityError, StorageError, ValidationError
 from .storage import CLEANUP_PATTERN
 
@@ -10,9 +11,23 @@ def _bound(value, maximum=1000000):
         raise ValidationError(f"Bound must be an integer between 1 and {maximum}")
 
 
+def _constraint_errors(tx, *, validate=True):
+    if for_transaction(tx).postgres:
+        # Ordinary SQL constraints are enforced by PostgreSQL. Refuse maintenance
+        # if unvalidated constraints or disabled triggers undermine that guarantee.
+        if validate:
+            tx.validate_constraints()
+        return tx.sql("""SELECT conname AS error FROM pg_constraint
+            WHERE connamespace=current_schema()::regnamespace AND NOT convalidated
+            UNION ALL SELECT tgname AS error FROM pg_trigger t
+            JOIN pg_class c ON c.oid=t.tgrelid
+            WHERE c.relnamespace=current_schema()::regnamespace AND t.tgenabled='D'""")
+    return tx.sql("SELECT * FROM pragma_foreign_key_check")
+
+
 def _check(store, tx):
     lifecycle.verify(tx)
-    if tx.sql("SELECT * FROM pragma_foreign_key_check LIMIT 1"):
+    if _constraint_errors(tx):
         raise IntegrityError("Catalog has foreign key violations; cleanup is unsafe")
 
 
@@ -22,19 +37,20 @@ def reconcile(store, *, verify=False, max_entries=10000):
     if type(verify) is not bool:
         raise ValidationError("verify must be boolean")
     with store.catalog.transaction() as tx:
+        bind = for_transaction(tx).bind
         lifecycle.verify(tx)
         prepared = tx.sql(
-            "SELECT p.*,o.blob_id,b.state AS blob_state FROM ms_prepared p LEFT JOIN ms_objects o ON o.token=p.token LEFT JOIN ms_blobs b ON b.id=o.blob_id WHERE p.storage_id=? LIMIT ?",
+            f"SELECT p.*,o.blob_id,b.state AS blob_state FROM ms_prepared p LEFT JOIN ms_objects o ON o.token=p.token LEFT JOIN ms_blobs b ON b.id=o.blob_id WHERE p.storage_id={bind} LIMIT {bind}",
             (store.storage.storage_id, max_entries + 1),
         )
         garbage = tx.sql(
-            "SELECT * FROM ms_gc WHERE storage_id=? LIMIT ?",
+            f"SELECT * FROM ms_gc WHERE storage_id={bind} LIMIT {bind}",
             (store.storage.storage_id, max_entries + 1),
         )
-        blobs = tx.sql("SELECT id FROM ms_blobs LIMIT ?", (max_entries + 1,))
+        blobs = tx.sql(f"SELECT id FROM ms_blobs LIMIT {bind}", (max_entries + 1,))
         if any(len(rows) > max_entries for rows in (prepared, garbage, blobs)):
             raise ValidationError("Catalog report exceeds max_entries")
-        errors = tx.sql("SELECT * FROM pragma_foreign_key_check LIMIT ?", (max_entries + 1,))
+        errors = _constraint_errors(tx)[:max_entries + 1]
         for blob in blobs:
             try:
                 store._record(blob["id"], tx, ready_only=False)
@@ -113,17 +129,18 @@ def queue_orphans(store, keys):
     for key in keys:
         store.storage.cleanup_key(key)
     with store.catalog.transaction() as tx:
+        bind = for_transaction(tx).bind
         _check(store, tx)
         for key in keys:
             if tx.sql(
-                "SELECT 1 FROM ms_prepared WHERE storage_id=? AND object_key=?",
+                f"SELECT 1 FROM ms_prepared WHERE storage_id={bind} AND object_key={bind}",
                 (store.storage.storage_id, key),
             ):
                 raise ConflictError(
                     "Known prepared objects are protected; resolve or discard their token explicitly"
                 )
             tx.sql(
-                "INSERT OR IGNORE INTO ms_gc(storage_id,object_key,reason) VALUES(?,?,'orphan')",
+                f"INSERT INTO ms_gc(storage_id,object_key,reason) VALUES({bind},{bind},'orphan') ON CONFLICT DO NOTHING",
                 (store.storage.storage_id, key),
             )
     return list(keys)
@@ -133,18 +150,19 @@ def cleanup(store, *, limit=100):
     store.catalog.require_maintenance(store.storage.root)
     _bound(limit, 1000)
     with store.catalog.transaction() as tx:
+        bind = for_transaction(tx).bind
         _check(store, tx)
         jobs = tx.sql(
-            "SELECT * FROM ms_gc WHERE storage_id=? AND state='pending' ORDER BY object_key LIMIT ?",
+            f"SELECT * FROM ms_gc WHERE storage_id={bind} AND state='pending' ORDER BY object_key LIMIT {bind}",
             (store.storage.storage_id, limit),
         )
         # Validate the entire selected batch before deleting any bytes.
         for job in jobs:
             if tx.sql(
-                "SELECT 1 FROM ms_prepared p JOIN ms_objects o ON o.token=p.token WHERE p.storage_id=? AND p.object_key=?",
+                f"SELECT 1 FROM ms_prepared p JOIN ms_objects o ON o.token=p.token WHERE p.storage_id={bind} AND p.object_key={bind}",
                 (job["storage_id"], job["object_key"]),
             ) or (
-                job["blob_id"] and tx.sql("SELECT 1 FROM ms_blobs WHERE id=?", (job["blob_id"],))
+                job["blob_id"] and tx.sql(f"SELECT 1 FROM ms_blobs WHERE id={bind}", (job["blob_id"],))
             ):
                 raise ConflictError("Queued object still has a live catalog reference")
     results = []
@@ -156,8 +174,9 @@ def cleanup(store, *, limit=100):
             error = str(exc)
         # A crash between deletion and this commit leaves a safely retryable job.
         with store.catalog.transaction() as tx:
+            bind = for_transaction(tx).bind
             tx.sql(
-                "UPDATE ms_gc SET state=?,last_error=? WHERE storage_id=? AND object_key=? AND state='pending'",
+                f"UPDATE ms_gc SET state={bind},last_error={bind} WHERE storage_id={bind} AND object_key={bind} AND state='pending'",
                 ("pending" if error else "done", error, job["storage_id"], job["object_key"]),
             )
         results.append(

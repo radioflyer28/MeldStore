@@ -71,6 +71,14 @@ Twenty-five annotation edits committed while the reader retained its original
 snapshot. Exclusive maintenance returned `busy=0`, with all three reported WAL
 frames checkpointed. Restored metadata retained version 26 and all occurrences.
 
+These values are the pre-bulk S08 baseline and remain historical evidence. The
+later transaction-scoped bulk-SQL adoption changes the synthetic publisher to one
+bulk occurrence call per recording and records both bulk calls and consumed
+parameter sets. CI exercises that generic path with synthetic Parquet input through
+both metadata adapters; it does not require or publish the private qualification
+files. No machine-independent speedup is claimed without a comparable rerun, and
+the interval-query plan below remains a separate tuning question.
+
 The integrated plan scanned `c_occurrence` using its `(blob_id, track_uuid)`
 primary-key index, then searched `ms_blobs` by ID. It did **not** select the
 declared start/end interval index. At this distribution and selectivity,

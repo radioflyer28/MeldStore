@@ -56,6 +56,11 @@ def guard(schema, *, evolved=False):
 
 
 def install(schema, tx):
+    if tx._catalog.adapter == "postgres":
+        from .postgres_extensions import install_payload
+
+        return install_payload(schema, tx)
+
     objects = _objects(tx)
     if "ms_payload_format" not in objects:
         if any(name in objects for name in DDL):

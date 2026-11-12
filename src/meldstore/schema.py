@@ -187,6 +187,14 @@ class BlobSchema:
     def table_name(self) -> str:
         return "ms_data_" + self.name.encode("utf-8").hex()
 
+    def table_name_for(self, adapter="sqlite") -> str:
+        """SQL table identifier for a backend; install_schema returns this name."""
+        from .dialect import POSTGRES
+
+        if adapter not in {"sqlite", "melddb", "postgres"}:
+            raise ValidationError("Unknown catalog adapter")
+        return POSTGRES.table(self) if adapter == "postgres" else self.table_name
+
     @property
     def definition(self) -> str:
         """Canonical full declaration, not a digest or executable Python serialization."""

@@ -5,6 +5,7 @@ from .backup import restore_backup, restore_backup_to_s3
 from .catalog import Catalog, Transaction
 from .errors import (
     BusyError,
+    CatalogConnectionError,
     CommitError,
     ConflictError,
     ConstraintError,
@@ -20,6 +21,13 @@ from .errors import (
 )
 from .handlers import Handler, HandlerRegistry, MissingDependencyError, UnsupportedHandlerError
 from .migrations import MetadataMigration
+from .postgres_archive import PostgresArchiveTools, restore_postgres_backup
+from .postgres_transfer import (
+    SQLTransferManifest,
+    TableTransfer,
+    preflight_sqlite_to_postgres,
+    transfer_sqlite_to_postgres,
+)
 from .query import FindCursor, Order, Predicate
 from .s3 import S3Storage
 from .schema import (
@@ -37,6 +45,12 @@ from .storage import LocalStorage
 from .store import PreparedFile, PreparedValue, Store
 
 __all__ = [
+    "PostgresArchiveTools",
+    "restore_postgres_backup",
+    "SQLTransferManifest",
+    "TableTransfer",
+    "preflight_sqlite_to_postgres",
+    "transfer_sqlite_to_postgres",
     "restore_backup",
     "restore_backup_to_s3",
     "S3Storage",
@@ -50,6 +64,7 @@ __all__ = [
     "Boolean",
     "BusyError",
     "Catalog",
+    "CatalogConnectionError",
     "CommitError",
     "ConflictError",
     "ConstraintError",

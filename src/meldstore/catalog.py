@@ -5,11 +5,13 @@ import re
 import sqlite3
 import threading
 from contextlib import contextmanager
+from itertools import chain
 from pathlib import Path
 
 from .access import Lease, canonical
 from .errors import (
     BusyError,
+    CatalogConnectionError,
     CommitError,
     ConstraintError,
     MeldStoreError,
@@ -79,6 +81,8 @@ def _check_sql(statement, *, write=True):
 def _translate(exc):
     if isinstance(exc, MeldStoreError):
         return exc
+    if type(exc).__name__ == "ConnectionError" and hasattr(exc, "provider_type"):
+        return CatalogConnectionError(str(exc))
     if isinstance(exc, sqlite3.IntegrityError) or type(exc).__name__ in {
         "AlreadyExistsError",
         "ConstraintError",
@@ -93,9 +97,11 @@ def _translate(exc):
 class Transaction:
     """Live only inside its owning Catalog.transaction() context."""
 
-    def __init__(self, catalog, execute, *, write=True):
+    def __init__(self, catalog, execute, execute_many, *, write=True, validate_constraints=None):
         self._catalog = catalog
         self._execute = execute
+        self._execute_many = execute_many
+        self._validate_constraints = validate_constraints
         self._failed = False
         self._live = True
         self._write = write
@@ -103,10 +109,75 @@ class Transaction:
     def sql(self, statement: str, params=()) -> list[dict]:
         self._catalog.require_transaction(self)
         try:
-            _check_sql(statement, write=self._write)
+            if self._catalog.adapter != "postgres":
+                _check_sql(statement, write=self._write)
             if not isinstance(params, (tuple, list, dict)):
                 raise ValidationError("Bindings must be a tuple, list, or dict")
             return self._execute(statement, params)
+        except BaseException as exc:
+            self._failed = True
+            if not isinstance(exc, Exception):
+                raise
+            raise _translate(exc) from exc
+
+    def validate_constraints(self):
+        """Validate pending checks without committing; PostgreSQL stays immediate."""
+        self._catalog.require_transaction(self)
+        try:
+            if not self._write:
+                raise ValidationError("Constraint validation requires a writable transaction")
+            if self._catalog.adapter == "sqlite":
+                if self._execute("PRAGMA foreign_key_check", ()):
+                    raise ConstraintError("Pending foreign key constraint violation")
+            elif self._validate_constraints is None:
+                raise ValidationError("Provider lacks public constraint validation")
+            else:
+                self._validate_constraints()
+        except BaseException as exc:
+            self._failed = True
+            if not isinstance(exc, Exception):
+                raise
+            raise _translate(exc) from exc
+
+    def sql_many(self, statement: str, parameter_sets) -> dict:
+        """Apply one statement to ordered bindings in this write transaction."""
+        self._catalog.require_transaction(self)
+        try:
+            if not self._write:
+                raise ValidationError("Bulk SQL requires a writable transaction")
+            if self._catalog.adapter == "postgres":
+                # Let the public provider validate controls before touching input.
+                source = parameter_sets
+            else:
+                _check_sql(statement, write=True)
+                iterator = iter(parameter_sets)
+                try:
+                    first = next(iterator)
+                except StopIteration:
+                    return {"parameter_sets": 0, "affected_rows": 0}
+                source = chain((first,), iterator)
+
+            consumed = 0
+
+            def counted_parameter_sets():
+                nonlocal consumed
+                for params in source:
+                    consumed += 1
+                    yield params
+
+            result = self._execute_many(statement, counted_parameter_sets())
+            if not isinstance(result, dict) or set(result) != {
+                "parameter_sets",
+                "affected_rows",
+            }:
+                raise ValidationError("Bulk SQL returned an invalid completion summary")
+            submitted = result["parameter_sets"]
+            affected = result["affected_rows"]
+            if type(submitted) is not int or submitted < 0 or submitted != consumed:
+                raise ValidationError("Bulk SQL returned an invalid parameter-set count")
+            if affected is not None and (type(affected) is not int or affected < 0):
+                raise ValidationError("Bulk SQL returned an invalid affected-row count")
+            return {"parameter_sets": submitted, "affected_rows": affected}
         except BaseException as exc:
             self._failed = True
             if not isinstance(exc, Exception):
@@ -136,6 +207,11 @@ class Catalog:
         maintenance: bool = False,
         journal_mode: str = "wal",
     ):
+        if isinstance(path, str) and (
+            path.lstrip().startswith(("postgres://", "postgresql://"))
+            or re.match(r"(?:host|hostaddr|dbname|user|password|service)\s*=", path.lstrip())
+        ):
+            raise ValidationError("Use Catalog.connect_postgres for PostgreSQL connection strings")
         if adapter not in {"sqlite", "melddb"}:
             raise ValidationError("adapter must be 'melddb' or 'sqlite'")
         if not isinstance(journal_mode, str) or journal_mode not in {"wal", "delete"}:
@@ -226,8 +302,76 @@ class Catalog:
         else:
             raise ValidationError("adapter must be 'melddb' or 'sqlite'")
 
+    @classmethod
+    def connect_postgres(
+        cls, dsn: str, *, timeout: float = 5.0, connect_timeout: int = 5,
+        storage=None, maintenance=False,
+    ):
+        """Open an experimental PostgreSQL SQL catalog; does not install schemas.
+
+        Requires meldstore[postgres]. Host, database and user must be explicit.
+        Supply storage to verify an existing single-host binding and acquire its lease.
+        """
+        from .postgres import connect
+
+        if type(maintenance) is not bool or (maintenance and storage is None):
+            raise ValidationError("PostgreSQL maintenance requires an explicit bound S3 storage")
+        connection = connect(dsn, timeout=timeout, connect_timeout=connect_timeout)
+        catalog = cls.__new__(cls)
+        catalog._owner = threading.get_ident()
+        catalog._active = None
+        catalog._closed = False
+        catalog._broken = False
+        catalog._outcome_error = None
+        catalog._readers = 0
+        catalog._exclusive = False
+        catalog._leases = {}
+        catalog.path = None
+        catalog._access = None
+        catalog.adapter = "postgres"
+        catalog._timeout = timeout
+        catalog._connection = connection
+        catalog._postgres_binding = None
+        try:
+            if storage is not None:
+                catalog.bind_postgres_storage(storage, maintenance=maintenance)
+        except BaseException as exc:
+            catalog._close(primary=exc)
+            raise
+        return catalog
+
+    def bind_postgres_storage(self, storage, *, initialize=False, maintenance=False):
+        """Explicitly bind a dedicated catalog to S3, or verify and lease it.
+
+        First install a BlobSchema on a quiesced, dedicated public schema, then
+        call with initialize=True once. Reopen never repairs missing artifacts.
+        """
+        from .postgres_coordination import bind
+
+        return bind(self, storage, initialize=initialize, maintenance=maintenance)
+
+    @contextmanager
+    def storage_access(self):
+        """Keep this bound catalog alive through external payload/SQL use.
+
+        The caller must retain the scope through closing its separate connection
+        and any derived readers. This is cooperative single-host exclusion.
+        """
+        self.require_idle()
+        if not self._leases:
+            raise TransactionError("Bind storage before entering storage_access")
+        self._readers += 1
+        try:
+            yield
+        finally:
+            self._readers -= 1
+
     def bind_storage(self, root):
         self.require_idle()
+        if self.adapter == "postgres":
+            if root is None or canonical(root) not in self._leases:
+                raise ValidationError("Bind PostgreSQL to explicit S3 storage first")
+            return
         if self.path is None:
             raise ValidationError("Blob storage requires a file-backed catalog")
         key = canonical(root)
@@ -283,7 +427,7 @@ class Catalog:
         if self._active is not None:
             self._active._failed = True
             raise TransactionError("Nested transactions are not supported")
-        if self.adapter == "melddb":
+        if self.adapter in {"melddb", "postgres"}:
             with self._melddb_transaction(write) as tx:
                 yield tx
             return
@@ -338,7 +482,27 @@ class Catalog:
             finally:
                 cursor.close()
 
-        tx = Transaction(self, execute, write=write)
+        def execute_many(statement, parameter_sets):
+            consumed = 0
+
+            def counted_parameter_sets():
+                nonlocal consumed
+                for params in parameter_sets:
+                    consumed += 1
+                    yield params
+
+            cursor = self._connection.executemany(statement, counted_parameter_sets())
+            try:
+                if cursor.description is not None:
+                    raise ValidationError("Bulk SQL does not support statements that produce rows")
+                affected = cursor.rowcount
+                if type(affected) is not int or affected < 0:
+                    affected = None
+                return {"parameter_sets": consumed, "affected_rows": affected}
+            finally:
+                cursor.close()
+
+        tx = Transaction(self, execute, execute_many, write=write)
         self._active = tx
         try:
             yield tx
@@ -408,7 +572,8 @@ class Catalog:
                 raise _translate(exc) from exc
             raise
 
-        tx = Transaction(self, raw.sql, write=write)
+        tx = Transaction(self, raw.sql, raw.sql_many, write=write,
+                         validate_constraints=getattr(raw, "validate_constraints", None))
         self._active = tx
         try:
             yield tx
@@ -549,7 +714,11 @@ class Catalog:
             control.close()
 
     def install_schema(self, schema, *, tx: Transaction | None = None) -> str:
-        from .installation import install
+        self._check()
+        if self.adapter == "postgres":
+            from .postgres_schema import install
+        else:
+            from .installation import install
 
         if tx is None:
             with self.transaction() as owned:

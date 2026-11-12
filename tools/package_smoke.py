@@ -25,7 +25,7 @@ def check_archive(artifact):
         assert not any(part == ".env" or part.startswith(".env.") for part in parts), name
         assert Path(name).suffix.lower() not in {
             ".parquet", ".npz", ".b2nd", ".db", ".sqlite", ".db-wal", ".db-shm",
-            ".sqlite-wal", ".sqlite-shm",
+            ".sqlite-wal", ".sqlite-shm", ".pgcustom",
         }, name
 
 
@@ -41,6 +41,7 @@ def release_artifacts(directory, version):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--formats", action="store_true")
+    parser.add_argument("--postgres", action="store_true", help="Verify optional PostgreSQL install")
     parser.add_argument("--dist-dir", type=Path, help="Artifact directory (default: checkout dist/)")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
@@ -50,12 +51,17 @@ def main():
     artifacts = release_artifacts(directory, version)
     code = """
 import importlib.metadata
+import json
 from pathlib import Path
 from meldstore import BlobSchema, Catalog, Integer, LocalStorage, MetadataMigration, Predicate, Store, Text, restore_backup
 distribution = importlib.metadata.distribution('meldstore')
 dependency = importlib.metadata.distribution('melddb')
 assert dependency.metadata['License-Expression'] == 'Apache-2.0'
 assert any(str(path).endswith('/licenses/LICENSE') for path in dependency.files)
+requirements = distribution.requires or []
+assert any('melddb @ git+https://github.com/radioflyer28/MeldDB.git@01e27441d7512f85663c8a86986429d62a69bff9'.lower() == requirement.lower() for requirement in requirements)
+origin = json.loads(dependency.read_text('direct_url.json'))
+assert origin['vcs_info']['commit_id'] == '01e27441d7512f85663c8a86986429d62a69bff9'
 assert distribution.metadata['License-Expression'] == 'Apache-2.0'
 assert any(str(path).endswith('/licenses/LICENSE') for path in distribution.files)
 assert not any(str(path).startswith('examples/') for path in distribution.files)
@@ -65,6 +71,8 @@ for adapter in ('sqlite', 'melddb'):
         schema = BlobSchema('smoke', {'title': Text(required=True)})
         assert catalog.install_schema(schema) == schema.table_name
         assert catalog.install_schema(schema) == schema.table_name
+        with catalog.transaction() as tx:
+            assert tx.validate_constraints() is None
         store = Store(catalog, LocalStorage(adapter + '-objects'))
         store.install_schema(schema)
         assert catalog.sql('SELECT * FROM pragma_journal_mode', write=False) == [{'journal_mode': 'wal'}]
@@ -85,6 +93,8 @@ for adapter in ('sqlite', 'melddb'):
         store.delete(blob['id'], expected_version=3)
         assert store.deletion_status(blob['id'])['state'] == 'pending'
     with Catalog(adapter + '.db', adapter=adapter, maintenance=True) as catalog:
+        with catalog.transaction() as tx:
+            assert tx.validate_constraints() is None
         store = Store(catalog, LocalStorage(adapter + '-objects'))
         assert catalog.maintain_sqlite()['checkpoint']['busy'] == 0
         assert len(store.reconcile()['pending']) == 1
@@ -144,6 +154,26 @@ for adapter in ('sqlite', 'melddb'):
                 assert result == value
 print('Every optional handler passed from installed artifact')
 """
+    dependency_probe = """
+import importlib.util
+import sys
+import meldstore
+assert 'psycopg' not in sys.modules
+assert callable(meldstore.Catalog.connect_postgres)
+assert callable(meldstore.PostgresArchiveTools)
+assert callable(meldstore.restore_postgres_backup)
+assert callable(meldstore.preflight_sqlite_to_postgres)
+assert callable(meldstore.transfer_sqlite_to_postgres)
+"""
+    if args.postgres:
+        dependency_probe += "assert importlib.util.find_spec('psycopg') is not None\n"
+    else:
+        dependency_probe += "assert importlib.util.find_spec('psycopg') is None\n"
+    code = dependency_probe + code
+    extras = ["parquet", "numpy", "blosc2", "polars", "arrow"] if args.formats else []
+    if args.postgres:
+        extras.append("postgres")
+    suffix = "[" + ",".join(extras) + "]" if extras else ""
     for artifact in artifacts:
         check_archive(artifact)
         with tempfile.TemporaryDirectory(prefix="meldstore-package-") as directory:
@@ -154,7 +184,7 @@ print('Every optional handler passed from installed artifact')
                     "--no-project",
                     "--isolated",
                     "--with",
-                    str(artifact) + ("[parquet,numpy,blosc2,polars,arrow]" if args.formats else ""),
+                    str(artifact) + suffix,
                     "python",
                     "-I",
                     "-c",

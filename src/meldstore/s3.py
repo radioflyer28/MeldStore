@@ -56,6 +56,65 @@ def _encode(data):
     return raw
 
 
+def _settings(bucket, prefix, config):
+    if (
+        not isinstance(bucket, str)
+        or not re.fullmatch(r"[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]", bucket)
+        or ".." in bucket
+    ):
+        raise ValidationError("An explicit S3 bucket name is required")
+    if not isinstance(prefix, str) or not prefix or any(
+        part in ("", ".", "..") or not _SEGMENT.fullmatch(part)
+        for part in prefix.split("/")
+    ):
+        raise ValidationError("S3 prefix requires nonempty canonical safe path segments")
+    if not isinstance(config, Mapping):
+        raise ValidationError("S3 config must explicitly specify endpoint")
+    settings = dict(config)
+    endpoint = settings.get("endpoint")
+    if not isinstance(endpoint, str) or any(ord(c) <= 32 for c in endpoint):
+        raise ValidationError("S3 endpoint must be an explicit HTTP(S) URL")
+    try:
+        url = urlsplit(endpoint)
+        if (
+            url.scheme not in ("http", "https")
+            or not url.hostname
+            or url.username is not None
+            or url.password is not None
+            or "?" in endpoint
+            or "#" in endpoint
+            or "\\" in endpoint
+        ):
+            raise ValueError("Invalid endpoint")
+        url.port  # Validate the port before any filesystem or network operations.
+    except ValueError as exc:
+        raise ValidationError("Invalid S3 endpoint URL") from exc
+    for name, required in (("copy_if_not_exists", "multipart"), ("conditional_put", "etag")):
+        if name in settings and settings[name] != required:
+            raise ValidationError(f"S3 requires {name}={required!r}")
+        settings[name] = required
+    # Do not allow config aliases to redirect the explicitly named location
+    # or override the required conditional-write behavior.
+    for name in settings:
+        if (
+            not isinstance(name, str)
+            or name != name.lower()
+            or name.startswith("aws_")
+            or name in ("bucket_name", "endpoint_url", "endpoint_url_s3")
+        ):
+            raise ValidationError("Use canonical obstore S3 config keys")
+    if "bucket" in settings and settings["bucket"] != bucket:
+        raise ValidationError("S3 config bucket conflicts with bucket argument")
+    # Supply the bucket exactly once; obstore rejects duplicate aliases even
+    # when their values match. Its explicit argument overrides environment.
+    settings.pop("bucket", None)
+    # The service-specific endpoint takes precedence over `endpoint`,
+    # including AWS_ENDPOINT_URL_S3 inherited from the environment. Pin both
+    # explicitly without changing process-wide environment or caller config.
+    settings["aws_endpoint_url_s3"] = endpoint
+    return settings
+
+
 class S3Storage(LocalStorage):
     """Remote objects; local staging and access gates, never local payload storage.
 
@@ -84,61 +143,8 @@ class S3Storage(LocalStorage):
         _storage_id=None,
         _fresh=False,
     ):
-        if (
-            not isinstance(bucket, str)
-            or not re.fullmatch(r"[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]", bucket)
-            or ".." in bucket
-        ):
-            raise ValidationError("An explicit S3 bucket name is required")
-        if not isinstance(prefix, str) or not prefix or any(
-            part in ("", ".", "..") or not _SEGMENT.fullmatch(part)
-            for part in prefix.split("/")
-        ):
-            raise ValidationError("S3 prefix requires nonempty canonical safe path segments")
-        if not isinstance(config, Mapping):
-            raise ValidationError("S3 config must explicitly specify endpoint")
-        settings = dict(config)
-        endpoint = settings.get("endpoint")
-        if not isinstance(endpoint, str) or any(ord(c) <= 32 for c in endpoint):
-            raise ValidationError("S3 endpoint must be an explicit HTTP(S) URL")
-        try:
-            url = urlsplit(endpoint)
-            if (
-                url.scheme not in ("http", "https")
-                or not url.hostname
-                or url.username is not None
-                or url.password is not None
-                or "?" in endpoint
-                or "#" in endpoint
-                or "\\" in endpoint
-            ):
-                raise ValueError("Invalid endpoint")
-            url.port  # Validate the port before any filesystem or network operations.
-        except ValueError as exc:
-            raise ValidationError("Invalid S3 endpoint URL") from exc
-        for name, required in (("copy_if_not_exists", "multipart"), ("conditional_put", "etag")):
-            if name in settings and settings[name] != required:
-                raise ValidationError(f"S3 requires {name}={required!r}")
-            settings[name] = required
-        # Do not allow config aliases to redirect the explicitly named location
-        # or override the required conditional-write behavior.
-        for name in settings:
-            if (
-                not isinstance(name, str)
-                or name != name.lower()
-                or name.startswith("aws_")
-                or name in ("bucket_name", "endpoint_url", "endpoint_url_s3")
-            ):
-                raise ValidationError("Use canonical obstore S3 config keys")
-        if "bucket" in settings and settings["bucket"] != bucket:
-            raise ValidationError("S3 config bucket conflicts with bucket argument")
-        # Supply the bucket exactly once; obstore rejects duplicate aliases even
-        # when their values match. Its explicit argument overrides environment.
-        settings.pop("bucket", None)
-        # The service-specific endpoint takes precedence over `endpoint`,
-        # including AWS_ENDPOINT_URL_S3 inherited from the environment. Pin both
-        # explicitly without changing process-wide environment or caller config.
-        settings["aws_endpoint_url_s3"] = endpoint
+        settings = _settings(bucket, prefix, config)
+        endpoint = settings["endpoint"]
         if _storage_id is not None and (not _fresh or not _identity(_storage_id)):
             raise ValidationError("Replica identity requires a fresh store and a valid identity")
         if coordination_directory is None or str(coordination_directory) == "":

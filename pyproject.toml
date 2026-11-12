@@ -11,7 +11,7 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
-    "melddb @ git+https://github.com/radioflyer28/melddb.git@adfc87fb9933412e67a2d4b7de316cd6db552d9c",
+    "melddb @ git+https://github.com/radioflyer28/melddb.git@01e27441d7512f85663c8a86986429d62a69bff9",
     "obstore>=0.11,<0.12",
     "xxhash>=3.5,<4",
 ]
@@ -22,6 +22,7 @@ Documentation = "https://github.com/radioflyer28/MeldStore/blob/main/README.md"
 Issues = "https://github.com/radioflyer28/MeldStore/issues"
 
 [project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2,<4"]
 parquet = ["pandas>=2.2,<4", "pyarrow>=19,<24"]
 arrow = ["pyarrow>=19,<24"]
 polars = ["polars>=1.30,<2"]
@@ -42,3 +43,8 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
+
+[dependency-groups]
+postgres-test = [
+    "psycopg[binary]>=3.2,<4",
+]
