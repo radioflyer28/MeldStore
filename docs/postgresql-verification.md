@@ -7,7 +7,7 @@ published `0.1.0rc2` artifacts. No new release is published by this work.
 
 ## Exact environment
 
-Final live run: `20261111T213648Z-166f7a`, November 11, 2026.
+Local live run: `20261111T213648Z-166f7a`, November 11, 2026.
 
 | Component | Qualified value |
 | --- | --- |
@@ -28,7 +28,7 @@ protocol. The lab removed its own PostgreSQL/RustFS containers and data volumes.
 
 ## Results
 
-- Final live PostgreSQL/RustFS run: **217 passed, zero skipped**, 220.24 seconds.
+- Local live PostgreSQL/RustFS run: **217 passed, zero skipped**, 220.24 seconds.
 - Full MeldStore regression suite: **654 passed, 250 skipped**. The skipped set
   comprises 217 separately qualified PostgreSQL cases, 27 opt-in S3 cases, and
   six Windows environment/permission cases. Both SQLite adapters passed.
@@ -43,11 +43,10 @@ protocol. The lab removed its own PostgreSQL/RustFS containers and data volumes.
 - Two subprocess tests prove mandatory acceptance fails for a missing database
   fixture or a skipped test. The live job also fails on zero collected cases.
 - CI YAML and the mandatory PostgreSQL job configuration were checked locally.
-  The new Ubuntu GitHub Actions job has not run remotely in this session; local
-  Windows results do not establish Linux PostgreSQL deployment qualification.
+  The Ubuntu live job subsequently passed in the November 12 closeout below.
 
-The build retains the existing package version solely for local verification;
-these artifacts are not replacements for the published release.
+The initial build retained 0.1.0rc2 solely for local verification. The closeout
+prepares unpublished 0.1.0rc3; neither replaces a published artifact.
 
 ## Task audit
 
@@ -113,3 +112,36 @@ earlier private S08 workload scale was not measured here; all new fixtures are
 synthetic. Native restore requires trusted artifacts and explicit operator setup
 of roles, privileges, extensions and external dependencies. XXH3 checks detect
 corruption; they are not cryptographic signatures or an authenticity mechanism.
+
+## GitHub closeout and rc3 candidate (2026-11-12)
+
+The [initial closeout run](https://github.com/radioflyer28/MeldStore/actions/runs/43263968673)
+passed all eight jobs at 7dc5c99b5f4dabbd6ef76ec64861c488430296d0. This includes
+Windows/Linux Python 3.12–3.14 regressions, format handlers, lint, wheel/sdist and
+isolated installations, standalone RustFS, and the new Linux PostgreSQL/RustFS job.
+The live Linux job passed 217 tests with zero skips on Python 3.13.15, PostgreSQL
+17.11 and the same pinned images/provider as the local run.
+
+Candidate 0.1.0rc3 at c3641341f51551dbec2f81dd5f246f7486c713c6 updates the locked
+optional dependencies certifi to 2026.10.18, msgpack to 1.2.3 and urllib3 to 2.8.0
+for four reported GitHub security alerts. The [candidate CI run](https://github.com/radioflyer28/MeldStore/actions/runs/43265145823)
+passed all eight jobs. Its live PostgreSQL/RustFS job passed 217 tests without
+skips in 50.62 seconds. Local regressions after these fixes passed 654 with 250
+expected skips; Ruff and core/all-format/postgres wheel and sdist installs passed.
+Candidate publication remains gated on explicit approval; all eight candidate jobs passed.
+
+MeldDB closeout commit 3ab9343c9b40e1c2f142a7af80c654ba9f69e42d passed all 12
+[provider CI jobs](https://github.com/radioflyer28/melddb/actions/runs/43264553576),
+including Windows/Linux/macOS Python 3.12–3.14 and PostgreSQL 17/18 proof jobs,
+and was merged into main. Its [main run](https://github.com/radioflyer28/melddb/actions/runs/43265227157)
+also passed all 12 jobs. CI exposed a preexisting SQLite test assumption about
+WAL availability; the test now explicitly covers safe and unsafe runtimes while
+checking that returned reports are independent data. Local MeldDB verification
+passed 379 tests with 25 environment/backend skips and Ruff. No production code
+changed relative to MeldStore's exact qualified 01e27441 pin, which remains intact.
+These provider proofs do not expand MeldStore's PostgreSQL 17 deployment claim.
+
+All PostgreSQL prerequisite changes are archived and their canonical specs synced.
+The three-member meld-platform workset remains configured without an IDE opener.
+The shared store is clean at local-only commit 39c0a46; it has no remote, as requested.
+No private payloads, paths, credentials or local handoff history were committed.

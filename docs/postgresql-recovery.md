@@ -119,7 +119,7 @@ after cutover require explicit reconciliation before switching back.
 ## Qualified scope and evidence
 
 The disposable lab uses pinned PostgreSQL 17.11/RustFS, the exact MeldDB Git pin,
-synthetic fixtures and one Windows coordinating host. No AWS, multi-host, arbitrary
+synthetic fixtures and one coordinating host (Windows locally and Linux in CI). No AWS, multi-host, arbitrary
 PostgreSQL-version or blanket MeldDB managed-schema portability claim follows.
 The lab's native tool versions are recorded in its environment report; each backup
 also records native versions. Use `uv run --frozen --all-extras python
