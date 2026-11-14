@@ -40,28 +40,32 @@ def probe_timeout(deadline):
 
 
 class Services:
-    def __init__(self, root, token, *, request_timeout_seconds=60):
+    def __init__(self, root, token, *, request_timeout_seconds=60, deadline=None):
         if not math.isfinite(request_timeout_seconds) or request_timeout_seconds <= 0:
             raise ValueError('Request timeout must be finite and positive')
+        self.deadline = deadline
         self.request_timeout_seconds = request_timeout_seconds
         self.root, self.token = owned_root(root, token), token
         self.pg = 'meldstore-workload-' + token
         self.rust = Lab(owner_label=f'{OWNER_LABEL}={token}', command_timeout=DOCKER_TIMEOUT)
         self.rust.name = 'meldstore-s07-' + token
-        self.pg_started = False
         self.max_volume_bytes = 0
         self.volume_samples_unavailable = 0
         self.password = secrets.token_hex(24)
+
+    def startup_timeout(self):
+        return DOCKER_TIMEOUT if self.deadline is None else probe_timeout(self.deadline)
 
     def __enter__(self):
         import psycopg
         try:
             for name in (self.pg + '-data', self.rust.name + '-data', self.rust.name + '-logs'):
-                if inspect_resource('volume', name) is not None:
+                if inspect_resource('volume', name, timeout=self.startup_timeout()) is not None:
                     raise ValueError('Disposable Docker volume already exists')
                 record_resource(self.root, self.token, 'volume', name)
-                docker('volume', 'create', '--label', f'{OWNER_LABEL}={self.token}', name)
-                details = inspect_resource('volume', name) or {}
+                docker('volume', 'create', '--label', f'{OWNER_LABEL}={self.token}', name,
+                       timeout=self.startup_timeout())
+                details = inspect_resource('volume', name, timeout=self.startup_timeout()) or {}
                 if (details.get('Labels') or {}).get(OWNER_LABEL) != self.token:
                     raise ValueError('Disposable Docker volume ownership mismatch')
             record_resource(self.root, self.token, 'container', self.pg)
@@ -72,30 +76,34 @@ class Services:
                 '--publish', '127.0.0.1::5432', '--env', 'POSTGRES_PASSWORD',
                 '--env', 'POSTGRES_USER=meldstore_lab', '--env', 'POSTGRES_DB=postgres',
                 '--mount', f'type=volume,source={self.pg}-data,target=/var/lib/postgresql/data',
-                POSTGRES_IMAGE, env={**os.environ, 'POSTGRES_PASSWORD': self.password},
+                POSTGRES_IMAGE, timeout=self.startup_timeout(), env={**os.environ, 'POSTGRES_PASSWORD': self.password},
             )
-            self.pg_started = True
             ports = json.loads(docker('inspect', '--format', '{{json .NetworkSettings.Ports}}',
-                                      self.pg))['5432/tcp']
+                                      self.pg, timeout=self.startup_timeout()))['5432/tcp']
             if len(ports) != 1 or ports[0]['HostIp'] != '127.0.0.1':
                 raise RuntimeError('Docker did not bind PostgreSQL exclusively to loopback')
             self.dsn = psycopg.conninfo.make_conninfo(
                 host='127.0.0.1', port=ports[0]['HostPort'], user='meldstore_lab',
                 password=self.password, dbname='postgres', connect_timeout=2)
-            deadline = time.monotonic() + 60
+            startup_deadline = time.monotonic() + 60
+            if self.deadline is not None:
+                startup_deadline = min(startup_deadline, self.deadline)
             while True:
-                try:
-                    with psycopg.connect(self.dsn, autocommit=True) as connection:
-                        self.server_version = connection.execute('SHOW server_version').fetchone()[0]
+                result = docker_run('exec', self.pg, 'pg_isready', '-h', '127.0.0.1',
+                                    '-U', 'meldstore_lab', '-t', '1', check=False,
+                                    timeout=probe_timeout(startup_deadline))
+                if result.returncode == 0:
                     break
-                except psycopg.OperationalError:
-                    if time.monotonic() > deadline:
-                        raise RuntimeError('Disposable PostgreSQL startup timed out') from None
-                    time.sleep(0.5)
+                time.sleep(min(0.5, probe_timeout(startup_deadline)))
+            self.server_version = docker('exec', self.pg, 'postgres', '--version',
+                                         timeout=self.startup_timeout()).removeprefix('postgres (PostgreSQL) ')
             record_resource(self.root, self.token, 'container', self.rust.name)
+            self.rust.startup_deadline = self.deadline
             self.rust.__enter__()
-            self.native_tools = {name: docker('exec', self.pg, name, '--version')
-                                 for name in ('pg_dump', 'pg_restore', 'psql')}
+            self.native_tools = {
+                name: docker('exec', self.pg, name, '--version', timeout=self.startup_timeout())
+                for name in ('pg_dump', 'pg_restore', 'psql')
+            }
             return self
         except BaseException:
             self.close()
@@ -207,8 +215,8 @@ class Services:
                 'topology': 'loopback PostgreSQL/RustFS; one persistent single-host coordinator'}
 
 
-def inspect_resource(kind, name):
-    result = docker_run(kind, 'inspect', name, check=False)
+def inspect_resource(kind, name, *, timeout=DOCKER_TIMEOUT):
+    result = docker_run(kind, 'inspect', name, check=False, timeout=timeout)
     if result.returncode == 0:
         return json.loads(result.stdout)[0]
     if 'no such' in result.stderr.lower():

@@ -218,7 +218,7 @@ def test_cleanup_uses_manifest_and_refuses_foreign_volume(tmp_path, monkeypatch)
     root, token = fresh_root(tmp_path / 'run')
     calls = []
 
-    def inspect(kind, name):
+    def inspect(kind, name, **kwargs):
         calls.append((kind, name))
         return {'Labels': {services.OWNER_LABEL: 'foreign'}}
 

@@ -81,7 +81,7 @@ def main(argv=None):
     try:
         report['provenance'] = provenance()
         with ExecutionGuard(keep_awake=args.keep_awake) as guard, Services(root, token,
-                request_timeout_seconds=args.request_timeout_seconds) as services:
+                request_timeout_seconds=args.request_timeout_seconds, deadline=budget.deadline) as services:
             budget.invariant = guard.check
             report['services'] = services.provenance()
             report['preflight'] = capacity(profile, shutil.disk_usage(root).free,
@@ -126,7 +126,6 @@ def main(argv=None):
                 result = json.loads((root / adapter / 'report.json').read_text(encoding='utf-8'))
                 report['adapters'][adapter] = result
                 write_report(report_path, report)
-                services.clear_payloads()
                 print(f'{adapter}: passed.', flush=True)
             guard.check()
             report['execution'] = guard.evidence()

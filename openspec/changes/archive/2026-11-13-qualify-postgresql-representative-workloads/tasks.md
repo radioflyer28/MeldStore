@@ -46,3 +46,8 @@ qualification limits. All run-owned Docker containers/volumes were removed;
 reviewed public evidence contains no payload data or private runtime paths.
 Implementation is complete. Canonical specs were synced and this change archived
 on 2026-11-13. Git publication remains separate.
+
+The checked task 5.1 records the November 13 run at the source revision in the
+evidence. PR review subsequently strengthened the rollback, concurrent-read
+and migration checks. The corrected runner passed smoke qualification. A full
+representative rerun with those additional checks remains pending.

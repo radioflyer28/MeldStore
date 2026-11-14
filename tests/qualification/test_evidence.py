@@ -150,9 +150,6 @@ def test_teardown_failure_cannot_publish_qualification(tmp_path, monkeypatch):
         def check_reserve(self, *_):
             pass
 
-        def clear_payloads(self):
-            pass
-
     target = tmp_path / 'run'
 
     def configure_process(*, target, args):

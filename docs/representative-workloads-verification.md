@@ -245,5 +245,7 @@ bulk and concurrency matrices. The workload validates complete concurrent read
 results, rollback of both application and publication rows, and durable migration
 progress after reopening. RustFS credentials are supplied through the environment.
 
-These executable changes were exercised at smoke scale. The 20.04 GB report
-above records the earlier runner and its original source fingerprints.
+The corrected runner passed the three-adapter smoke and its targeted failure
+regressions. The 20.04 GB report records the earlier runner and its original
+source fingerprints. Repeating all strengthened correctness checks at 20 GB
+remains pending.

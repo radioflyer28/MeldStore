@@ -76,6 +76,8 @@ def variant(adapter, root, manifest, services, limits):
             with opened(config, maintenance=True) as store, metrics.storage(), metrics.catalog(store.catalog):
                 finish_migration(store, manifest, metrics, plan, before)
             operational(config, manifest, work, services, metrics, budget)
+        # Run object cleanup within the process monitored by the supervisor.
+        services.clear_payloads()
         if failures:
             raise RuntimeError('Resource sampler failed: ' + failures[0])
         budget.check()
