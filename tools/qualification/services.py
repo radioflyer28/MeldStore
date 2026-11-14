@@ -9,10 +9,34 @@ import time
 from contextlib import contextmanager
 
 from tools.postgres_lab import IMAGE as POSTGRES_IMAGE
-from tools.postgres_lab import docker
 from tools.qualification.resources import ResourceLimit, owned_root, record_resource
 from tools.s3_lab import IMAGE as RUSTFS_IMAGE
 from tools.s3_lab import Lab
+
+OWNER_LABEL = 'meldstore.workload-run'
+DOCKER_TIMEOUT = 30
+
+
+def docker_run(*args, timeout=DOCKER_TIMEOUT, check=True, env=None):
+    try:
+        result = subprocess.run(['docker', *args], timeout=timeout, env=env,
+                                capture_output=True, text=True)
+    except subprocess.TimeoutExpired:
+        raise ResourceLimit(f'Docker {args[0]} exceeded its command deadline') from None
+    if check and result.returncode:
+        raise RuntimeError(f'Docker {args[0]} failed with exit code {result.returncode}')
+    return result
+
+
+def docker(*args, timeout=DOCKER_TIMEOUT):
+    return docker_run(*args, timeout=timeout).stdout.strip()
+
+
+def probe_timeout(deadline):
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise ResourceLimit('Runtime budget exceeded during Docker probe')
+    return min(DOCKER_TIMEOUT, remaining)
 
 
 class Services:
@@ -22,7 +46,7 @@ class Services:
         self.request_timeout_seconds = request_timeout_seconds
         self.root, self.token = owned_root(root, token), token
         self.pg = 'meldstore-workload-' + token
-        self.rust = Lab()
+        self.rust = Lab(owner_label=f'{OWNER_LABEL}={token}', command_timeout=DOCKER_TIMEOUT)
         self.rust.name = 'meldstore-s07-' + token
         self.pg_started = False
         self.max_volume_bytes = 0
@@ -32,19 +56,24 @@ class Services:
     def __enter__(self):
         import psycopg
         try:
-            for name in (self.pg, self.rust.name):
-                record_resource(self.root, self.token, 'container', name)
             for name in (self.pg + '-data', self.rust.name + '-data', self.rust.name + '-logs'):
+                if inspect_resource('volume', name) is not None:
+                    raise ValueError('Disposable Docker volume already exists')
                 record_resource(self.root, self.token, 'volume', name)
-            subprocess.run([
-                'docker', 'run', '--detach', '--name', self.pg,
+                docker('volume', 'create', '--label', f'{OWNER_LABEL}={self.token}', name)
+                details = inspect_resource('volume', name) or {}
+                if (details.get('Labels') or {}).get(OWNER_LABEL) != self.token:
+                    raise ValueError('Disposable Docker volume ownership mismatch')
+            record_resource(self.root, self.token, 'container', self.pg)
+            docker_run(
+                'run', '--detach', '--name', self.pg,
                 '--label', 'meldstore.qualifier=representative',
+                '--label', f'{OWNER_LABEL}={self.token}',
                 '--publish', '127.0.0.1::5432', '--env', 'POSTGRES_PASSWORD',
                 '--env', 'POSTGRES_USER=meldstore_lab', '--env', 'POSTGRES_DB=postgres',
                 '--mount', f'type=volume,source={self.pg}-data,target=/var/lib/postgresql/data',
-                POSTGRES_IMAGE,
-            ], env={**os.environ, 'POSTGRES_PASSWORD': self.password},
-                check=True, capture_output=True, text=True)
+                POSTGRES_IMAGE, env={**os.environ, 'POSTGRES_PASSWORD': self.password},
+            )
             self.pg_started = True
             ports = json.loads(docker('inspect', '--format', '{{json .NetworkSettings.Ports}}',
                                       self.pg))['5432/tcp']
@@ -63,6 +92,7 @@ class Services:
                     if time.monotonic() > deadline:
                         raise RuntimeError('Disposable PostgreSQL startup timed out') from None
                     time.sleep(0.5)
+            record_resource(self.root, self.token, 'container', self.rust.name)
             self.rust.__enter__()
             self.native_tools = {name: docker('exec', self.pg, name, '--version')
                                  for name in ('pg_dump', 'pg_restore', 'psql')}
@@ -104,27 +134,32 @@ class Services:
         prefix = ('docker', 'exec', '-i', *(v for name in names for v in ('--env', name)), self.pg)
         return PostgresArchiveTools(internal, prefix=prefix)
 
-    def free_bytes(self):
+    def free_bytes(self, *, deadline=None):
+        if deadline is None:
+            deadline = time.monotonic() + DOCKER_TIMEOUT
         # Query the mounted volumes, not overlay or host-drive free space.
         values = []
         for container, path in ((self.pg, '/var/lib/postgresql/data'), (self.rust.name, '/data')):
-            lines = docker('exec', container, 'df', '-Pk', path).splitlines()
+            lines = docker('exec', container, 'df', '-Pk', path,
+                           timeout=probe_timeout(deadline)).splitlines()
             values.append(int(lines[-1].split()[3]) * 1024)
         return min(values)
 
-    def check_reserve(self, reserve):
-        sample = self.volume_bytes()
+    def check_reserve(self, reserve, deadline):
+        sample = self.volume_bytes(deadline=deadline)
         if sample is not None:
             self.max_volume_bytes = max(self.max_volume_bytes, sample)
-        if self.free_bytes() < reserve:
+        if self.free_bytes(deadline=deadline) < reserve:
             raise ResourceLimit('Docker volume disk reserve exhausted')
 
-    def volume_bytes(self):
+    def volume_bytes(self, *, deadline=None):
+        if deadline is None:
+            deadline = time.monotonic() + DOCKER_TIMEOUT
         total = 0
         for container, path in ((self.pg, '/var/lib/postgresql/data'), (self.rust.name, '/data')):
             for attempt in range(3):
-                result = subprocess.run(['docker', 'exec', container, 'du', '-sk', path],
-                                        capture_output=True, text=True)
+                result = docker_run('exec', container, 'du', '-sk', path, check=False,
+                                    timeout=probe_timeout(deadline))
                 if result.returncode == 0:
                     total += int(result.stdout.split()[0]) * 1024
                     break
@@ -157,7 +192,7 @@ class Services:
         if self.rust.name != expected:
             raise ValueError('RustFS ownership mismatch')
         labels = json.loads(docker('inspect', '--format', '{{json .Config.Labels}}', expected))
-        if labels.get('meldstore.qualifier') != 's07':
+        if labels.get(OWNER_LABEL) != self.token or labels.get('meldstore.qualifier') != 's07':
             raise ValueError('RustFS ownership label mismatch')
         store = S3Store(self.rust.bucket, config=self.rust.config)
         for batch in obstore.list(store):
@@ -172,31 +207,40 @@ class Services:
                 'topology': 'loopback PostgreSQL/RustFS; one persistent single-host coordinator'}
 
 
+def inspect_resource(kind, name):
+    result = docker_run(kind, 'inspect', name, check=False)
+    if result.returncode == 0:
+        return json.loads(result.stdout)[0]
+    if 'no such' in result.stderr.lower():
+        return None
+    raise RuntimeError(f'Cannot establish disposable Docker {kind} state')
+
+
 def cleanup(root, token):
-    """Remove only names derived from this run's validated ownership token."""
+    """Remove only manifest resources bearing this run's Docker ownership label."""
     import re
-    owned_root(root, token)
+
+    root = owned_root(root, token)
     if not re.fullmatch('[0-9a-f]{32}', token):
         raise ValueError('Invalid ownership token')
-    containers = [('meldstore-workload-' + token, 'representative'),
-                  ('meldstore-s07-' + token, 's07')]
-    for name, label in containers:
-        inspected = subprocess.run(['docker', 'container', 'inspect', name],
-                                   capture_output=True, text=True)
-        if inspected.returncode:
-            # An unavailable daemon is not evidence of successful cleanup.
-            docker('info', '--format', '{{.ServerVersion}}')
-            if 'No such' not in inspected.stderr:
-                raise RuntimeError('Cannot establish disposable container state')
+    pg, rust = 'meldstore-workload-' + token, 'meldstore-s07-' + token
+    allowed = {'container': {pg, rust}, 'volume': {pg + '-data', rust + '-data', rust + '-logs'}}
+    record = json.loads((root / 'ownership.json').read_text(encoding='utf-8'))
+    resources = {(entry['kind'], entry['name']) for entry in record['resources']}
+    if any(name not in allowed.get(kind, set()) for kind, name in resources):
+        raise ValueError('Unexpected resource in workload ownership record')
+    removable = []
+    for kind, name in sorted(resources):
+        details = inspect_resource(kind, name)
+        if details is None:
             continue
-        details = json.loads(inspected.stdout)[0]
-        if details['Config']['Labels'].get('meldstore.qualifier') != label:
-            raise ValueError('Container ownership label mismatch')
-        docker('rm', '--force', name)
-    for name in (containers[0][0] + '-data', containers[1][0] + '-data', containers[1][0] + '-logs'):
-        inspected = subprocess.run(['docker', 'volume', 'inspect', name],
-                                   capture_output=True, text=True)
-        if inspected.returncode == 0:
-            docker('volume', 'rm', name)
-        elif 'No such' not in inspected.stderr:
-            raise RuntimeError('Cannot establish disposable volume state')
+        labels = (details['Config'] if kind == 'container' else details).get('Labels') or {}
+        if labels.get(OWNER_LABEL) != token:
+            raise ValueError(f'Docker {kind} ownership label mismatch')
+        # Container IDs are immutable. A replacement with the same name is not ours.
+        removable.append((kind, details['Id'] if kind == 'container' else name))
+    for kind, identifier in removable:
+        if kind == 'container':
+            docker('rm', '--force', identifier)
+        else:
+            docker('volume', 'rm', identifier)

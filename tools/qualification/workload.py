@@ -11,13 +11,16 @@ from meldstore import (
     S3Storage,
     Store,
 )
+from meldstore.dialect import for_transaction
 from tools.qualification.corpus import digest
 from tools.qualification.fixture import (
+    BATCH_SIZES,
     DDL,
     EVOLVED,
     SCHEMA,
     expected_query,
     instant,
+    interval_cases,
     metadata,
     query,
     relationships,
@@ -102,8 +105,7 @@ def ingest(store, manifest, corpus, metrics, budget):
 def metadata_workload(store, manifest, metrics, budget):
     catalog, b = store.catalog, bind(store)
     storage_before = {k: v for k, v in metrics.calls.items() if k.startswith('storage.')}
-    cases = [(0, 1), (120, 121), (30, len(manifest['files']) * 30),
-             (0, len(manifest['files']) * 60 + 120)]
+    cases = interval_cases(len(manifest['files']))
     for orientation in ('start', 'end'):
         if orientation == 'end':
             with metrics.operation('alternative_index_build'):
@@ -130,7 +132,7 @@ def metadata_workload(store, manifest, metrics, budget):
                 result['successes'], result['errors'] = 100, 0
         # Compare bounded insertion cost with each index arrangement, then rollback.
         count = min(10_000, manifest['profile']['relationships'])
-        for batch_size in (100, 1000, 10000):
+        for batch_size in BATCH_SIZES:
             with metrics.operation('bulk_sample', batch=batch_size, rows=count, index=orientation):
                 class Rollback(Exception):
                     pass
@@ -163,21 +165,29 @@ def metadata_workload(store, manifest, metrics, budget):
 def rollback_publication(store, manifest, corpus, metrics):
     entry = manifest['files'][0]
     prepared = store.prepare_file(corpus / entry['name'], schema=SCHEMA)
+    b = bind(store)
+    app_id = manifest['profile']['relationships']
     with metrics.operation('shared_publication_rollback'):
         try:
             with store.catalog.transaction() as tx:
                 store.finalize(prepared, tx=tx, schema=SCHEMA, metadata=metadata(entry), id='rollback-probe')
                 store.publish('rollback-probe', tx=tx)
-                b = bind(store)
                 tx.sql_many(f'INSERT INTO app_intervals VALUES({",".join([b] * 5)})',
-                            [(manifest['profile']['relationships'] + 1, 'rollback-probe', 'missing',
-                              instant(0), instant(1))])
+                            [(app_id, 'rollback-probe', 'config-0', instant(0), instant(1)),
+                             (app_id + 1, 'rollback-probe', 'missing', instant(0), instant(1))])
         except ConstraintError:
             pass
         else:
             raise AssertionError('Invalid relationship committed')
-        require(not store.catalog.sql("SELECT id FROM ms_blobs WHERE id='rollback-probe'", write=False),
-                'Failed transaction published blob')
+        with store.catalog.transaction(write=False) as tx:
+            metadata_table = for_transaction(tx).table(SCHEMA)
+            for table, column in (('ms_blobs', 'id'), ('ms_objects', 'blob_id'),
+                                  (metadata_table, 'id')):
+                require(not tx.sql(f'SELECT 1 FROM "{table}" WHERE {column}={b}',
+                                   ('rollback-probe',)), 'Publication rows survived rollback')
+            require(not tx.sql(f'SELECT 1 FROM app_intervals WHERE id IN ({b},{b})',
+                               (app_id, app_id + 1)), 'Application rows survived rollback')
+        require(verify_application(store.catalog, manifest), 'Rollback changed application rows')
     store.discard_prepared(prepared)
 
 
@@ -199,6 +209,16 @@ def migrations(store, manifest, metrics, budget):
 
 def finish_migration(store, manifest, metrics, plan, before):
     with metrics.operation('migration_resume'):
+        durable = store.migration_status(plan.name)
+        first = min(before, key=lambda row: row['id'])
+        require(durable['state'] == 'running' and durable['migrated_rows'] == 1
+                and durable['last_id'] == first['id'], 'Reopened migration progress differs')
+        for old in before:
+            expected = dict(old)
+            if old['id'] == first['id']:
+                expected.update(version=old['version'] + 1, schema_version=2,
+                                metadata=dict(old['metadata'], revision=1))
+            require(store.stat(old['id']) == expected, 'Reopened migration rows differ')
         progress = store.migrate(plan, batch_size=10)
         require(progress['state'] == 'complete', 'Migration incomplete')
         for entry, old in zip(manifest['files'], before, strict=True):

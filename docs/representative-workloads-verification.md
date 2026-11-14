@@ -236,3 +236,14 @@ After the whitespace-only closeout, the full uv regression rerun passed again:
 706 passed, 255 skipped in 68.39 seconds; Ruff passed. The companion MeldDB
 documentation check passed 363 tests with 41 skips in 29.92 seconds; Ruff passed.
 Its existing pytest cache-permission warning remains non-fatal.
+
+## PR review corrections
+
+Review added per-run Docker ownership labels, deadline-bound disk probes and a
+completion gate that runs after cleanup. The gate now checks the full interval,
+bulk and concurrency matrices. The workload validates complete concurrent read
+results, rollback of both application and publication rows, and durable migration
+progress after reopening. RustFS credentials are supplied through the environment.
+
+These executable changes were exercised at smoke scale. The 20.04 GB report
+above records the earlier runner and its original source fingerprints.

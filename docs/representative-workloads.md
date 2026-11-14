@@ -62,9 +62,11 @@ To clean Docker resources after interruption, use the original output directory:
 uv run --frozen --extra test --extra arrow --extra postgres python tools/qualify_representative.py --cleanup --output .qualification/workload-full
 ```
 
-Cleanup validates the ownership token and service labels. It removes only the
-container/volume names derived from that token, never arbitrary manifest paths,
-external endpoints or unrelated resources. Local evidence remains for inspection.
+Cleanup requires both a resource entry in the run manifest and a matching Docker
+ownership label. Run it after the owning workload process has exited. Older
+manifests may refer to resources created before per-run labels were added.
+Inspect those resources directly before removing them. Local evidence remains
+available for inspection.
 
 ## SQL fixture and operation boundaries
 

@@ -79,10 +79,14 @@ class Budget:
         self.last_service = 0
         self.max_rss = 0
 
+    @property
+    def deadline(self):
+        return self.started + self.seconds
+
     def check(self):
         if self.invariant is not None:
             self.invariant()
-        if time.monotonic() - self.started > self.seconds:
+        if time.monotonic() >= self.deadline:
             raise ResourceLimit('Runtime budget exceeded')
         self.max_rss = max(self.max_rss, peak_rss())
         if self.max_rss > self.memory_bytes:
@@ -90,5 +94,7 @@ class Budget:
         if shutil.disk_usage(self.root).free < self.reserve_bytes:
             raise ResourceLimit('Host disk reserve exhausted')
         if self.service_check and time.monotonic() - self.last_service > 2:
-            self.service_check(self.reserve_bytes)
+            self.service_check(self.reserve_bytes, self.deadline)
             self.last_service = time.monotonic()
+            if self.last_service >= self.deadline:
+                raise ResourceLimit('Runtime budget exceeded during Docker probe')

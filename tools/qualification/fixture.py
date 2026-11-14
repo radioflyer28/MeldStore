@@ -19,6 +19,13 @@ DDL = (
 )
 
 
+BATCH_SIZES = (100, 1000, 10000)
+
+
+def interval_cases(files):
+    return [(0, 1), (120, 121), (30, files * 30), (0, files * 60 + 120)]
+
+
 def instant(seconds):
     return (datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=seconds)).isoformat(
         timespec='microseconds').replace('+00:00', 'Z')

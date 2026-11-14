@@ -59,16 +59,28 @@ def test_interrupted_service_startup_cleans_only_owned_names(tmp_path, monkeypat
     root, token = fresh_root(tmp_path / 'run')
     calls = []
 
+    volumes = set()
+
     def run(args, **kwargs):
         calls.append(args)
         if args[:2] == ['docker', 'run']:
             raise RuntimeError('startup failed')
-        return SimpleNamespace(returncode=1, stderr='No such container', stdout='')
+        if args[1:3] == ['volume', 'create']:
+            volumes.add(args[-1])
+        elif args[1:3] == ['volume', 'rm']:
+            volumes.remove(args[-1])
+        elif args[1:3] == ['volume', 'inspect'] and args[-1] in volumes:
+            return SimpleNamespace(returncode=0, stderr='', stdout=json.dumps(
+                [{'Labels': {services.OWNER_LABEL: token}}]))
+        else:
+            return SimpleNamespace(returncode=1, stderr='No such resource', stdout='')
+        return SimpleNamespace(returncode=0, stderr='', stdout='')
 
     monkeypatch.setattr(services.subprocess, 'run', run)
-    monkeypatch.setattr(services, 'docker', lambda *args: 'running')
     with pytest.raises(RuntimeError, match='startup failed'):
         services.Services(root, token).__enter__()
+    assert not volumes
+    assert sum(call[1:3] == ['volume', 'rm'] for call in calls) == 3
     assert all(token in call[-1] for call in calls if 'inspect' in call)
     assert not any('prune' in call or 'unrelated' in call for call in calls)
 
@@ -79,6 +91,7 @@ def test_cleanup_refuses_foreign_container_label(tmp_path, monkeypatch):
     import tools.qualification.services as services
 
     root, token = fresh_root(tmp_path / 'run')
+    record_resource(root, token, 'container', 'meldstore-workload-' + token)
     monkeypatch.setattr(services.subprocess, 'run', lambda *a, **kw: SimpleNamespace(
         returncode=0, stdout=json.dumps([{'Config': {'Labels': {'meldstore.qualifier': 'foreign'}}}]),
         stderr=''))
@@ -197,3 +210,46 @@ def test_invalid_cli_request_timeout_does_not_create_output(tmp_path, seconds):
     with pytest.raises(SystemExit):
         main(['--output', str(target), '--request-timeout-seconds', seconds])
     assert not target.exists()
+
+
+def test_cleanup_uses_manifest_and_refuses_foreign_volume(tmp_path, monkeypatch):
+    import tools.qualification.services as services
+
+    root, token = fresh_root(tmp_path / 'run')
+    calls = []
+
+    def inspect(kind, name):
+        calls.append((kind, name))
+        return {'Labels': {services.OWNER_LABEL: 'foreign'}}
+
+    def forbidden(*args, **kwargs):
+        pytest.fail('Cleanup tried to remove an unowned resource')
+
+    monkeypatch.setattr(services, 'inspect_resource', inspect)
+    monkeypatch.setattr(services, 'docker', forbidden)
+    services.cleanup(root, token)
+    assert not calls
+    volume = 'meldstore-workload-' + token + '-data'
+    record_resource(root, token, 'volume', volume)
+    with pytest.raises(ValueError, match='volume ownership label'):
+        services.cleanup(root, token)
+    assert calls == [('volume', volume)]
+
+
+def test_probe_timeout_obeys_remaining_budget(tmp_path, monkeypatch):
+    import subprocess
+
+    import tools.qualification.services as services
+
+    root, token = fresh_root(tmp_path / 'run')
+    lab = services.Services(root, token)
+    budget = Budget(root, seconds=0.5, service_check=lab.check_reserve)
+
+    def stall(args, *, timeout, **kwargs):
+        assert args[3] == 'du'
+        assert 0 < timeout <= 0.5
+        raise subprocess.TimeoutExpired(args, timeout)
+
+    monkeypatch.setattr(services.subprocess, 'run', stall)
+    with pytest.raises(ResourceLimit, match='command deadline'):
+        budget.check()

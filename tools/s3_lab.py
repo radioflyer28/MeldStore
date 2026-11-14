@@ -77,7 +77,9 @@ class Admin:
 
 
 class Lab:
-    def __init__(self):
+    def __init__(self, *, owner_label=None, command_timeout=30):
+        self.owner_label = owner_label
+        self.command_timeout = command_timeout
         self.name = "meldstore-s07-" + secrets.token_hex(6)
         self.access_key = "test" + secrets.token_hex(12)
         self.secret_key = secrets.token_hex(32)
@@ -87,19 +89,21 @@ class Lab:
 
     def __enter__(self):
         try:
+            ownership = ["--label", self.owner_label] if self.owner_label else []
             subprocess.run([
                 "docker", "run", "--detach", "--name", self.name,
-                "--label", "meldstore.qualifier=s07", "--publish", "127.0.0.1::9000",
+                "--label", "meldstore.qualifier=s07", *ownership, "--publish", "127.0.0.1::9000",
                 "--mount", f"type=volume,source={self.name}-data,target=/data",
                 "--mount", f"type=volume,source={self.name}-logs,target=/logs",
-                "--env", f"RUSTFS_ACCESS_KEY={self.access_key}",
-                "--env", f"RUSTFS_SECRET_KEY={self.secret_key}",
+                "--env", "RUSTFS_ACCESS_KEY", "--env", "RUSTFS_SECRET_KEY",
                 "--env", "RUSTFS_CONSOLE_ENABLE=false", IMAGE,
-            ], check=True, capture_output=True, text=True)
+            ], env={**os.environ, "RUSTFS_ACCESS_KEY": self.access_key,
+                    "RUSTFS_SECRET_KEY": self.secret_key},
+                check=True, capture_output=True, text=True, timeout=self.command_timeout)
             self.started = True
             bindings = json.loads(subprocess.check_output([
                 "docker", "inspect", "--format", "{{json .NetworkSettings.Ports}}", self.name
-            ], text=True))["9000/tcp"]
+            ], text=True, timeout=self.command_timeout))["9000/tcp"]
             if len(bindings) != 1 or bindings[0]["HostIp"] != "127.0.0.1":
                 raise RuntimeError(f"Docker did not honor the loopback-only binding: {bindings!r}")
             self.endpoint = "http://127.0.0.1:" + bindings[0]["HostPort"]
@@ -122,7 +126,9 @@ class Lab:
             print(f"RustFS ready: {IMAGE}; endpoint={self.endpoint}", flush=True)
             return self
         except BaseException:
-            self.__exit__(None, None, None)
+            # The workload harness verifies its manifest and labels before cleanup.
+            if self.owner_label is None:
+                self.__exit__(None, None, None)
             raise
 
     def __exit__(self, *_):

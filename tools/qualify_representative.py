@@ -85,7 +85,9 @@ def main(argv=None):
             budget.invariant = guard.check
             report['services'] = services.provenance()
             report['preflight'] = capacity(profile, shutil.disk_usage(root).free,
-                                           services.free_bytes(), args.reserve_bytes)
+                                           services.free_bytes(deadline=budget.deadline),
+                                           args.reserve_bytes)
+            budget.check()
             write_report(report_path, report)
             if args.preflight_only:
                 report['status'] = 'preflight-only'
@@ -128,7 +130,9 @@ def main(argv=None):
                 print(f'{adapter}: passed.', flush=True)
             guard.check()
             report['execution'] = guard.evidence()
-            complete_report(report, manifest)
+        budget.service_check = None
+        budget.check()
+        complete_report(report, manifest)
         report['execution'] = guard.evidence()
         report['elapsed_seconds'] = time.monotonic() - budget.started
         write_report(report_path, report)
@@ -137,6 +141,7 @@ def main(argv=None):
         return 0
     except BaseException as exc:
         report['status'] = 'failed'
+        report['representative_qualified'] = False
         report['error_type'] = type(exc).__name__
         if 'guard' in locals():
             report['execution'] = guard.evidence()

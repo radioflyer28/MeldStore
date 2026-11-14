@@ -33,11 +33,26 @@ def admitted(config, startup_lock):
         manager.__exit__(None, None, None)
 
 
-def client(config, number, ids, barrier, startup_lock, pipe):
+def expected_records(before, clients, winner):
+    expected = []
+    for number, old in enumerate(before):
+        row = dict(old, metadata=dict(old['metadata']))
+        if number < clients:
+            row['version'] += 1
+            row['metadata']['source_id'] = f'client-{number}'
+        if number == 0:
+            row['version'] += 1
+            row['metadata']['source_id'] = f'winner-{winner}'
+        expected.append(row)
+    return expected
+
+
+def client(config, number, before, clients, winner, barrier, startup_lock, pipe):
     try:
         metrics = Measurements()
         with admitted(config, startup_lock) as store, metrics.catalog(store.catalog), metrics.storage():
-            own = store.stat(ids[number])
+            ids = [row['id'] for row in before]
+            own = before[number]
             store.update_metadata(ids[number], schema=SCHEMA, expected_version=own['version'],
                                   changes={'source_id': f'client-{number}'})
             barrier.wait(timeout=60)
@@ -47,15 +62,19 @@ def client(config, number, ids, barrier, startup_lock, pipe):
             try:
                 store.update_metadata(ids[0], schema=SCHEMA, expected_version=shared['version'],
                                       changes={'source_id': f'winner-{number}'})
+                winner.value = number
                 success = 1
             except ConflictError:
                 conflict = 1
+            barrier.wait(timeout=60)
+            require(0 <= winner.value < clients, 'Missing successful edit')
+            expected = expected_records(before, clients, winner.value)
             samples = []
             for n in range(105):
                 started = time.perf_counter()
                 rows = store.find(schema=SCHEMA, limit=1000)
                 elapsed = time.perf_counter() - started
-                require([r['id'] for r in rows] == ids, 'Concurrent read oracle mismatch')
+                require(rows == expected, 'Concurrent read oracle mismatch')
                 if n >= 5:
                     samples.append(elapsed)
             require(not any(k.startswith('storage.') for k in metrics.calls),
@@ -79,16 +98,17 @@ def concurrent(config, manifest, metrics, budget):
     for count in manifest['profile']['clients']:
         require(len(ids) >= count, 'Corpus needs at least as many blobs as clients')
         with opened(config) as store:
-            before = {id: store.stat(id)['version'] for id in ids}
+            before = [store.stat(id) for id in ids]
         with metrics.operation('concurrent_clients', clients=count) as result:
             barrier = context.Barrier(count)
+            winner = context.Value('i', -1)
             startup_lock = context.Lock()
             processes, readers = [], []
             try:
                 for number in range(count):
                     reader, writer = context.Pipe(duplex=False)
                     process = context.Process(target=client,
-                                              args=(config, number, ids, barrier, startup_lock, writer))
+                                              args=(config, number, before, count, winner, barrier, startup_lock, writer))
                     process.start()
                     writer.close()
                     processes.append(process)
@@ -125,6 +145,5 @@ def concurrent(config, manifest, metrics, budget):
                 for reader in readers:
                     reader.close()
         with opened(config) as store:
-            for number, id in enumerate(ids):
-                expected = before[id] + int(number < count) + int(number == 0)
-                require(store.stat(id)['version'] == expected, 'Concurrent version advancement differs')
+            require([store.stat(id) for id in ids] == expected_records(before, count, winner.value),
+                    'Persisted concurrent metadata and versions differ')
