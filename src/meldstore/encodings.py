@@ -56,31 +56,77 @@ def verify(tx):
         raise SchemaConflictError("Unsupported encoding extension")
 
 
-def read(tx, token):
-    bind = for_transaction(tx).bind
-    if tx._catalog.adapter == "postgres":
+def inspect(tx):
+    """Verify the optional extension in this transaction; return whether installed."""
+    if for_transaction(tx).postgres:
         from .postgres_extensions import ENCODING
         from .postgres_schema import namespace_objects
-        from .postgres_schema import verify as verify_postgres
 
         objects = namespace_objects(tx)
-        if "ms_encoding_format" not in objects:
-            if any(obj.name in objects for obj in ENCODING):
-                raise SchemaConflictError("Partial encoding extension")
-            return None
-        verify_postgres(tx, ENCODING)
-        if tx.sql("SELECT version FROM ms_encoding_format") != [{"version": 1}]:
-            raise SchemaConflictError("Unsupported encoding extension")
-        rows = tx.sql("SELECT * FROM ms_encodings WHERE token=%s", (token,))
-        return rows[0] if rows else None
-    objects = _objects(tx)
+        names = (obj.name for obj in ENCODING)
+    else:
+        objects = _objects(tx)
+        names = DDL
     if "ms_encoding_format" not in objects:
-        if any(name in objects for name in DDL):
+        if any(name in objects for name in names):
             raise SchemaConflictError("Partial encoding extension")
-        return None
+        return False
     verify(tx)
+    return True
+
+
+def read(tx, token):
+    if not inspect(tx):
+        return None
+    bind = for_transaction(tx).bind
     rows = tx.sql(f"SELECT * FROM ms_encodings WHERE token={bind}", (token,))
     return rows[0] if rows else None
+
+
+# Bound transient descriptor text separately from the returned decoded page.
+_BATCH_BYTES = 1024 * 1024
+
+
+def _descriptor_groups(ids, records):
+    group, used = [], 0
+    for id in ids:
+        row = records.get(id)
+        size = (row.pop("descriptor_bytes") or 0) if row is not None else 0
+        # Healthy descriptors are at most 64 KiB through the public writer.
+        # SQLite length(TEXT) stops at NUL, so malformed SQL-written data can
+        # be much larger. The query below withholds that raw text.
+        size = min(size, _BATCH_BYTES)
+        if group and used + size > _BATCH_BYTES:
+            yield tuple(group)
+            group, used = [], 0
+        group.append(id)
+        used += size
+    if group:
+        yield tuple(group)
+
+
+def batches(tx, ids, records, *, installed):
+    """Yield in-order ID groups and their bounded raw encoding rows."""
+    if not installed:
+        yield ids, {}
+        return
+    bind = for_transaction(tx).bind
+    for group in _descriptor_groups(ids, records):
+        placeholders = ",".join(bind for _ in group)
+        rows = {row["token"]: row for row in tx.sql(
+            "SELECT e.token, e.encoding_id, e.encoding_version, "
+            f"CASE WHEN {descriptor_size(tx)} <= {_BATCH_BYTES} "
+            "THEN e.descriptor END AS descriptor "
+            "FROM ms_encodings e JOIN ms_objects o ON e.token=o.token "
+            f"WHERE o.blob_id IN ({placeholders})", group
+        )}
+        yield group, rows
+
+
+def descriptor_size(tx):
+    if for_transaction(tx).postgres:
+        return "octet_length(e.descriptor)"
+    return "length(CAST(e.descriptor AS BLOB))"
 
 
 def physical(prepared):

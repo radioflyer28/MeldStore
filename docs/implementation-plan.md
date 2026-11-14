@@ -1,6 +1,6 @@
 # MeldStore MVP implementation plan
 
-Current checkpoint (2026-11-13): S01-S09 are complete. PostgreSQL metadata and
+Current checkpoint (2026-11-14): S01-S09 are complete. PostgreSQL metadata and
 its provider prerequisites are implemented, synced and archived. GitHub prerelease
 [v0.1.0rc3](https://github.com/radioflyer28/MeldStore/releases/tag/v0.1.0rc3)
 includes opt-in PostgreSQL 17 metadata with pinned RustFS and one persistent
@@ -338,21 +338,26 @@ See the [qualification guide](representative-workloads.md) and
 [measured verification record](representative-workloads-verification.md).
 Small CI profiles retain a separate, non-representative qualification status.
 
-Ranked follow-ups from the measured workload:
+Implemented follow-up (2026-11-14): **batched Store.find() record loading**.
+Selected records now load in 256-ID batches inside the existing read snapshot,
+with schema/encoding validation reused only within that call. Metadata key order,
+legacy catalogs, descriptors, corruption detection, pagination and zero payload
+I/O retain their existing behavior. The complete metadata comparison passed all
+18 adapter/cardinality/client cases and 8,400 measured reads. PostgreSQL public
+SQL calls fell from 3,023 to 52 for 100 records and 30,023 to 61 for 1,000 records;
+no material latency or memory regression was found. See the
+[verification and exact-source evidence](batch-find-verification.md).
+This is implemented work, not a package release; the MeldDB pin and shared
+contract remain unchanged.
 
-1. **Batch Store.find() record loading.** The existing per-record path repeatedly
-   loads descriptors and validates schemas. The 105-call/100-record fixture makes
-   about 74,000 public SQL calls per SQLite client and 318,000 per PostgreSQL
-   client, including a few stat/edit checks. Plan bounded set-based reads with
-   validation once per distinct schema in one explicit read snapshot. Preserve
-   schema-drift/corruption checks, pagination, detached values and zero payload
-   I/O; qualify all adapters. Existing provider SQL is sufficient.
-2. **Application-owned interval query tuning.** Record controlled experiments
+Remaining follow-ups from the measured workload:
+
+1. **Application-owned interval query tuning.** Record controlled experiments
    with covering indexes, statistics and cache budgets. Current plans show that
    an additional end-first index can worsen narrow SQLite queries while broad
    PostgreSQL joins use parallel scans. Do not impose fixture-specific indexes
    or global tuning defaults on library users.
-3. **Deployment budgets and additional topologies.** Keep explicit large-file
+2. **Deployment budgets and additional topologies.** Keep explicit large-file
    request timeouts and finite transfer row allowances in operator guidance.
    The measured deployment uses 300-second whole-response S3 requests with zero
    retries. Full-scale Linux, AWS and multi-host coordination remain separate

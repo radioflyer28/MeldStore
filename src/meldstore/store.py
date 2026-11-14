@@ -4,6 +4,7 @@ import json
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from functools import wraps
+from itertools import batched
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
@@ -319,6 +320,65 @@ class Store:
             record["descriptor"] = json.loads(encoding["descriptor"])
         return record
 
+    def _records(self, ids, schema, tx):
+        """Load a selected page in bounded batches within its selection snapshot."""
+        if not ids:
+            return []
+        dialect = for_transaction(tx)
+        bind = dialect.bind
+        table = dialect.quote(dialect.table(schema))
+        # _schema already checked this exact declaration in the same transaction.
+        has_encodings = encodings.inspect(tx)
+        size_column = f", {encodings.descriptor_size(tx)} AS descriptor_bytes" if has_encodings else ""
+        encoding_join = " LEFT JOIN ms_encodings e ON e.token=p.token" if has_encodings else ""
+        # Stored declarations are canonical JSON with sorted field names.
+        field_names = sorted(schema.fields)
+        result = []
+        for chunk in batched(ids, 256):
+            placeholders = ",".join(bind for _ in chunk)
+            records = {row["id"]: row for row in tx.sql(
+                "SELECT b.*, p.token, p.storage_id, p.object_key, p.byte_size, p.digest, "
+                "p.hash_algorithm, p.handler_id, p.handler_version, "
+                "p.schema_name AS prepared_schema_name, p.schema_version AS prepared_schema_version"
+                + size_column + " FROM ms_blobs b LEFT JOIN ms_objects o ON b.id=o.blob_id "
+                "LEFT JOIN ms_prepared p ON o.token=p.token"
+                + encoding_join + f" WHERE b.id IN ({placeholders}) AND b.state='ready'", chunk
+            )}
+            fields = {row["id"]: row for row in tx.sql(
+                f"SELECT * FROM {table} WHERE id IN ({placeholders})", chunk
+            )}
+            for group, encoded in encodings.batches(tx, chunk, records, installed=has_encodings):
+                for id in group:
+                    if id not in records:
+                        raise NotFoundError(f"No ready blob: {id}")
+                    record = records[id]
+                    prepared_name = record.pop("prepared_schema_name")
+                    prepared_version = record.pop("prepared_schema_version")
+                    if (
+                        record["token"] is None
+                        or prepared_name != record["schema_name"]
+                        or prepared_version > record["schema_version"]
+                    ):
+                        raise IntegrityError("Blob object association is missing or inconsistent")
+                    if id not in fields:
+                        raise IntegrityError("Blob metadata is missing")
+                    values = fields[id]
+                    if values["schema_version"] != record["schema_version"]:
+                        raise IntegrityError("Blob metadata version is inconsistent")
+                    record["version"] = values["version"]
+                    record["metadata"] = {name: values[name] for name in field_names}
+                    encoding = encoded.pop(record["token"], None)
+                    if encoding is not None:
+                        record["handler_id"] = encoding["encoding_id"]
+                        record["handler_version"] = encoding["encoding_version"]
+                        descriptor = encoding["descriptor"]
+                        if descriptor is None:
+                            raise json.JSONDecodeError("Oversized stored encoding descriptor", "", 0)
+                        record["descriptor"] = json.loads(descriptor)
+                        del descriptor, encoding
+                    result.append(record)
+        return result
+
     @contextmanager
     def _serialize(self, value, schema, handler, handler_version):
         codec = self.handlers.get(handler, handler_version)
@@ -405,7 +465,7 @@ class Store:
                 dialect=for_transaction(tx),
             )
             rows = tx.sql(sql, params)
-            return [self._record(row["id"], tx) for row in rows]
+            return self._records([row["id"] for row in rows], schema, tx)
 
     @staticmethod
     def cursor(record, *, schema, order_by=()):

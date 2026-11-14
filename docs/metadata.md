@@ -54,6 +54,31 @@ snapshot across calls: concurrent edits/imports/migrations may move records
 across the cursor and cause omissions/repeats. Use application SQL in one
 transaction when snapshot semantics are required. Do not modify cursor values.
 
+Each `find` call selects and loads its page in one explicit read-only transaction.
+PostgreSQL uses the pinned provider's repeatable-read snapshot; SQLite WAL readers
+retain their original snapshot while another connection commits. This guarantee
+ends when the call returns, so it does not extend across cursor pages.
+
+Selected IDs are loaded in batches of up to 256. Large encoded descriptors may
+require additional reads so each query returns at most 1 MiB of raw descriptor
+text. Results retain query order and independent metadata and descriptor dictionaries. Metadata field keys retain
+the canonical order used by scalar reads. No payload is accessed.
+Any loading or transaction-finalization failure fails the whole call; no partial
+page is returned. Public page limits and scalar `stat` behavior are unchanged.
+
+Schema checks retain each adapter's existing scope: both SQLite adapters validate
+the installed declaration and publication guard; PostgreSQL additionally performs
+its existing metadata-schema structural verification. A nonempty page verifies
+the optional encoding extension once in that same transaction. There is no
+cross-call validation cache. Legacy catalogs without the extension and file tokens
+without encoding rows remain readable, with the descriptor field omitted. Empty
+selections and invalid queries preserve their prior validation order and do not
+inspect the encoding extension. Missing/inconsistent selected associations fail;
+partial extensions, unsupported formats, and covered structural drift fail.
+Malformed stored descriptor JSON retains its JSON decoding error. Precedence
+between simultaneous independent corruptions is unspecified. See the
+[batching verification record](batch-find-verification.md) for tests and measurements.
+
 `Index("source", "captured_at")` creates a composite SQL index. The tests check
 an actual range-query plan using it. Richer OR expressions, joins, aggregations,
 and cross-version projections belong in explicit application SQL.
