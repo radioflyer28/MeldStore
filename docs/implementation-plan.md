@@ -1,9 +1,16 @@
 # MeldStore MVP implementation plan
 
-Status: S01-S07, including S06a, complete with local and Windows/Linux CI evidence.
-S07 qualifies pinned RustFS, not AWS. S08 consumer and operational qualification
-passed. S09 closes the MVP with an approved `0.1.0rc1` GitHub prerelease;
-PyPI distribution remains separate.
+Current checkpoint (2026-11-13): S01-S09 are complete. PostgreSQL metadata and
+its provider prerequisites are implemented, synced and archived. GitHub prerelease
+[v0.1.0rc3](https://github.com/radioflyer28/MeldStore/releases/tag/v0.1.0rc3)
+includes opt-in PostgreSQL 17 metadata with pinned RustFS and one persistent
+single-host coordinator. Both SQLite adapters remain supported. Apache-2.0 and
+GitHub artifact distribution are resolved; the exact MeldDB Git pin is retained.
+See [PostgreSQL qualification](postgresql-verification.md) for scope and evidence.
+AWS, multi-host coordination and PyPI distribution remain separate.
+
+The S01-S09 sections below preserve the original delivery sequence and gates;
+the current checkpoint supersedes their historical pending-release statements.
 The MVP specification is authoritative.
 This plan starts with a local file workflow and closes with operational evidence.
 
@@ -308,7 +315,7 @@ and resolve dependency licensing/distribution. See the
 explicit approval; a version bump or green CI is not a release announcement.
 
 The S08/S09 release deferred PostgreSQL metadata and cross-host coordination.
-The subsequent, unreleased `add-postgresql-metadata-support` milestone implements
+The subsequent `add-postgresql-metadata-support` milestone, released in v0.1.0rc3, implements
 PostgreSQL metadata plus remote payloads with a single-host coordinator; see
 [its qualification record](postgresql-verification.md). Both SQLite adapters
 remain supported. Cross-host coordination remains deferred.
@@ -320,6 +327,40 @@ No green unit suite substitutes for real S3-compatible service or process recove
 mark the MVP complete with missing integrated acceptance. Implementation is not
 authorization to publish a package or use arbitrary cloud storage resources.
 
-Next action: resolve dependency licensing/distribution before considering a
-package release. Consumer qualification does not itself authorize publication.
-AWS-specific qualification remains deferred.
+## Representative PostgreSQL workloads and next steps
+
+Completed 2026-11-13; all three adapters passed the full representative profile:
+[qualify-postgresql-representative-workloads](../openspec/changes/archive/2026-11-13-qualify-postgresql-representative-workloads/proposal.md).
+The generic synthetic harness compares all three adapters against pinned RustFS:
+100 Parquet files, 100-300 MB per file, 300,000 application SQL relationships,
+1/2/4 clients, migration, recovery and both SQLite-to-PostgreSQL cutovers.
+See the [qualification guide](representative-workloads.md) and
+[measured verification record](representative-workloads-verification.md).
+Small CI profiles retain a separate, non-representative qualification status.
+
+Ranked follow-ups from the measured workload:
+
+1. **Batch Store.find() record loading.** The existing per-record path repeatedly
+   loads descriptors and validates schemas. The 105-call/100-record fixture makes
+   about 74,000 public SQL calls per SQLite client and 318,000 per PostgreSQL
+   client, including a few stat/edit checks. Plan bounded set-based reads with
+   validation once per distinct schema in one explicit read snapshot. Preserve
+   schema-drift/corruption checks, pagination, detached values and zero payload
+   I/O; qualify all adapters. Existing provider SQL is sufficient.
+2. **Application-owned interval query tuning.** Record controlled experiments
+   with covering indexes, statistics and cache budgets. Current plans show that
+   an additional end-first index can worsen narrow SQLite queries while broad
+   PostgreSQL joins use parallel scans. Do not impose fixture-specific indexes
+   or global tuning defaults on library users.
+3. **Deployment budgets and additional topologies.** Keep explicit large-file
+   request timeouts and finite transfer row allowances in operator guidance.
+   The measured deployment uses 300-second whole-response S3 requests with zero
+   retries. Full-scale Linux, AWS and multi-host coordination remain separate
+   qualification work; smaller Linux tests do not satisfy those gates.
+
+The meld-platform workset keeps provider findings coordinated. No shared contract
+or exact MeldDB pin change is needed for measurements using existing public
+APIs. MeldDB's separate next feature is stronger PostgreSQL structural inspection
+before broader managed-schema migration; a stable JSON loader is a smaller
+provider cleanup candidate. Keep meld-platform-specs local-only. Release and
+package publication remain separately authorized.

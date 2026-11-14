@@ -5,48 +5,56 @@ import json
 import sys
 import tempfile
 import time
+from functools import cache
 from pathlib import Path
 
 from meldstore import BlobSchema, Catalog, LocalStorage, Store, Text
 
 
-def peak_rss():
-    if sys.platform == "win32":
-        import ctypes
-        from ctypes import wintypes
+@cache
+def _windows_memory_api():
+    """Build ctypes types once: POINTER caches retain dynamically created classes."""
+    import ctypes
+    from ctypes import wintypes
 
-        class Counters(ctypes.Structure):
-            _fields_ = [("cb", wintypes.DWORD), ("faults", wintypes.DWORD)] + [
-                (name, ctypes.c_size_t)
-                for name in (
-                    "peak",
-                    "working",
-                    "paged_peak",
-                    "paged",
-                    "nonpaged_peak",
-                    "nonpaged",
-                    "pagefile",
-                    "pagefile_peak",
-                )
-            ]
-
-        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
-        psapi = ctypes.WinDLL("psapi", use_last_error=True)
-        kernel.GetCurrentProcess.restype = wintypes.HANDLE
-        psapi.GetProcessMemoryInfo.argtypes = [
-            wintypes.HANDLE,
-            ctypes.POINTER(Counters),
-            wintypes.DWORD,
+    class Counters(ctypes.Structure):
+        _fields_ = [("cb", wintypes.DWORD), ("faults", wintypes.DWORD)] + [
+            (name, ctypes.c_size_t)
+            for name in ("peak", "working", "paged_peak", "paged", "nonpaged_peak",
+                         "nonpaged", "pagefile", "pagefile_peak")
         ]
+
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    psapi = ctypes.WinDLL("psapi", use_last_error=True)
+    kernel.GetCurrentProcess.restype = wintypes.HANDLE
+    kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel.OpenProcess.restype = wintypes.HANDLE
+    kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+    psapi.GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+    return Counters, kernel, psapi
+
+
+def windows_memory(pid=None):
+    import ctypes
+    Counters, kernel, psapi = _windows_memory_api()
+    handle = kernel.GetCurrentProcess() if pid is None else kernel.OpenProcess(0x1000 | 0x10, False, pid)
+    if not handle:
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
         counters = Counters()
         counters.cb = ctypes.sizeof(counters)
-        if not psapi.GetProcessMemoryInfo(
-            kernel.GetCurrentProcess(), ctypes.byref(counters), counters.cb
-        ):
+        if not psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb):
             raise ctypes.WinError(ctypes.get_last_error())
-        return counters.peak
-    import resource
+        return counters.peak, counters.working
+    finally:
+        if pid is not None:
+            kernel.CloseHandle(handle)
 
+
+def peak_rss():
+    if sys.platform == "win32":
+        return windows_memory()[0]
+    import resource
     value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     return value if sys.platform == "darwin" else value * 1024
 

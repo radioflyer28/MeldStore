@@ -17,8 +17,6 @@ from datetime import datetime, timezone
 from importlib.metadata import distribution, version
 from pathlib import Path
 
-import psycopg
-
 IMAGE = "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675"
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,6 +26,7 @@ def docker(*args):
 
 
 def main():
+    import psycopg
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report-dir", type=Path, default=ROOT / ".qualification/postgres-provider")
     parser.add_argument('--with-rustfs', action='store_true',

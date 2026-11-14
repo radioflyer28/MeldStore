@@ -1,0 +1,2700 @@
+{
+  "version": 1,
+  "status": "passed",
+  "profile": "representative",
+  "representative_qualified": true,
+  "adapters": {
+    "sqlite": {
+      "adapter": "sqlite",
+      "status": "passed",
+      "operations": [
+        {
+          "name": "import",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 394.26492699999653,
+          "calls": {
+            "sql": 5300,
+            "storage.put": 100,
+            "storage.copy": 100,
+            "storage.delete": 100
+          }
+        },
+        {
+          "name": "relationship_load",
+          "rows": 300000,
+          "batch": 1000,
+          "status": "passed",
+          "seconds": 27.23510659999738,
+          "calls": {
+            "sql_many": 300,
+            "parameter_sets": 300000
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.00021610000112559646,
+            "p95": 0.00027740000223275274
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 0.8841144999896642,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.0010938000050373375,
+            "p95": 0.0014929000026313588
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 0.9447270999953616,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 1.3932744999910938,
+            "p95": 1.6282803999929456
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 185.46756240000832,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 2.908011000006809,
+            "p95": 3.1385445999912918
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 331.49501529999543,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 1.0269490000064252,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.18760720000136644,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.15777939998952206,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.22080549999373034,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "alternative_index_build",
+          "status": "passed",
+          "seconds": 0.5857412999903318,
+          "calls": {
+            "sql": 1
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.05655300000216812,
+            "p95": 0.07330969999020454
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 8.49143589999585,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.05427540000528097,
+            "p95": 0.07256820000475273
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 8.41312339999422,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 1.426133499990101,
+            "p95": 1.576099300000351
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 174.28845380000712,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 2.722800499992445,
+            "p95": 2.9087912999966647
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 368.0014119999978,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 1.0702530999988085,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.2089345999993384,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.1980698000115808,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.2623601000086637,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "shared_publication_rollback",
+          "status": "passed",
+          "seconds": 0.008792099994025193,
+          "calls": {
+            "sql": 39,
+            "sql_many": 1,
+            "parameter_sets": 1
+          }
+        },
+        {
+          "name": "export_verify",
+          "status": "passed",
+          "seconds": 277.7027058000094,
+          "calls": {
+            "sql": 2402,
+            "storage.get": 100
+          }
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 1,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.01527160000114236,
+                "p95": 0.018551400004071184
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41541632
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 87867392,
+          "sample_interval_seconds": 0.05,
+          "attempts": 2,
+          "successes": 2,
+          "conflicts": 0,
+          "errors": 0,
+          "seconds": 2.0029162999999244,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 2,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.015543800007435493,
+                "p95": 0.021468999999342486
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41603072
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.014983899993239902,
+                "p95": 0.022676499997032806
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41660416
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 128032768,
+          "sample_interval_seconds": 0.05,
+          "attempts": 4,
+          "successes": 3,
+          "conflicts": 1,
+          "errors": 0,
+          "seconds": 2.33745189999172,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 4,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.01739389999420382,
+                "p95": 0.022846199994091876
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41500672
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.01682369998889044,
+                "p95": 0.023167000006651506
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41046016
+            },
+            {
+              "status": "passed",
+              "client": 2,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.017470299993874505,
+                "p95": 0.02372210001340136
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41463808
+            },
+            {
+              "status": "passed",
+              "client": 3,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.017768799996702,
+                "p95": 0.024186999988160096
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41373696
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 210083840,
+          "sample_interval_seconds": 0.05,
+          "attempts": 8,
+          "successes": 5,
+          "conflicts": 3,
+          "errors": 0,
+          "seconds": 2.8421140999998897,
+          "calls": {}
+        },
+        {
+          "name": "uncertain_publication",
+          "status": "passed",
+          "seconds": 1.8104249000025447,
+          "calls": {}
+        },
+        {
+          "name": "migration_dry_run",
+          "status": "passed",
+          "seconds": 0.1807251999998698,
+          "calls": {
+            "sql": 1600
+          }
+        },
+        {
+          "name": "migration_first_batch",
+          "status": "passed",
+          "seconds": 0.0772648999991361,
+          "calls": {
+            "sql": 62
+          }
+        },
+        {
+          "name": "migration_resume",
+          "status": "passed",
+          "seconds": 1.9114020999986678,
+          "calls": {
+            "sql": 1512
+          }
+        },
+        {
+          "name": "interrupted_backup",
+          "status": "passed",
+          "seconds": 1.6096664000069723,
+          "calls": {}
+        },
+        {
+          "name": "backup",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 292.72556190000614,
+          "calls": {}
+        },
+        {
+          "name": "corrupt_restore_refused",
+          "status": "passed",
+          "seconds": 3.873514699997031,
+          "calls": {}
+        },
+        {
+          "name": "restore",
+          "status": "passed",
+          "seconds": 910.1512618999986,
+          "calls": {}
+        },
+        {
+          "name": "occupied_restore_refused",
+          "status": "passed",
+          "seconds": 0.0038292999961413443,
+          "calls": {}
+        },
+        {
+          "name": "cutover_preflight",
+          "max_entries": 100,
+          "max_rows": 302000,
+          "status": "passed",
+          "seconds": 49.213380100001814,
+          "calls": {}
+        },
+        {
+          "name": "cutover",
+          "max_entries": 100,
+          "max_rows": 302000,
+          "status": "passed",
+          "seconds": 667.4585391,
+          "calls": {}
+        }
+      ],
+      "sampling_interval_seconds": 0.25,
+      "sampled_disk_bytes": 20718923754,
+      "resource_scope": "client RSS; variant staging/catalog/archive disk; corpus excluded",
+      "peak_rss_bytes": 348561408,
+      "sampled_service_volume_bytes": 66780717056,
+      "service_disk_unavailable_samples": 1,
+      "service_disk_unavailable_reason": "Files disappeared during live volume traversal",
+      "call_count_scope": "Wrapped public APIs only; missing counts are unmeasured, not zero or wire round trips",
+      "service_resource_snapshot": {
+        "postgres": {
+          "memory_usage": "95.17MiB / 50.98GiB",
+          "cpu_percent": "0.02%"
+        },
+        "rustfs": {
+          "memory_usage": "455.8MiB / 50.98GiB",
+          "cpu_percent": "2.65%"
+        }
+      },
+      "elapsed_seconds": 4373.862479000003,
+      "pid_recorded": false
+    },
+    "melddb": {
+      "adapter": "melddb",
+      "status": "passed",
+      "operations": [
+        {
+          "name": "import",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 466.91552039999806,
+          "calls": {
+            "sql": 5300,
+            "storage.put": 100,
+            "storage.copy": 100,
+            "storage.delete": 100
+          }
+        },
+        {
+          "name": "relationship_load",
+          "rows": 300000,
+          "batch": 1000,
+          "status": "passed",
+          "seconds": 37.51992160000373,
+          "calls": {
+            "sql_many": 300,
+            "parameter_sets": 300000
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.0002787000121315941,
+            "p95": 0.0004681999998865649
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 0.9372716000070795,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.0008583999879192561,
+            "p95": 0.0011199000000488013
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 1.0106914000061806,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 1.5239062000036938,
+            "p95": 1.6736563999875216
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 174.55383150000125,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_start (start_time<?)"
+            },
+            {
+              "id": 19,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 23,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 27,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 3.0269895999954315,
+            "p95": 3.238084600001457
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 334.2101013999927,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.21480469999369234,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.18564759999571834,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.17699829999764916,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 0.30896360000770073,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "alternative_index_build",
+          "status": "passed",
+          "seconds": 0.8798011000035331,
+          "calls": {
+            "sql": 1
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.05648260000452865,
+            "p95": 0.0717879999865545
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 8.708563000007416,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.05779610000899993,
+            "p95": 0.07434340000327211
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 8.800379699998302,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 1.489863199996762,
+            "p95": 1.6688659000064945
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 173.20454900000186,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "id": 10,
+              "parent": 0,
+              "notused": 205,
+              "detail": "SEARCH a USING INDEX app_interval_end (end_time>?)"
+            },
+            {
+              "id": 18,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)"
+            },
+            {
+              "id": 22,
+              "parent": 0,
+              "notused": 45,
+              "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)"
+            },
+            {
+              "id": 26,
+              "parent": 0,
+              "notused": 0,
+              "detail": "USE TEMP B-TREE FOR GROUP BY"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 2.8596893999929307,
+            "p95": 3.1034960000106366
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 351.89949359999446,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.23624449998897035,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.21532970000407659,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.17823340000177268,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 0.32852170000842307,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "shared_publication_rollback",
+          "status": "passed",
+          "seconds": 0.012495599992689677,
+          "calls": {
+            "sql": 39,
+            "sql_many": 1,
+            "parameter_sets": 1
+          }
+        },
+        {
+          "name": "export_verify",
+          "status": "passed",
+          "seconds": 298.9138992999942,
+          "calls": {
+            "sql": 2402,
+            "storage.get": 100
+          }
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 1,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.017282800006796606,
+                "p95": 0.023462500001187436
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41844736
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 89681920,
+          "sample_interval_seconds": 0.05,
+          "attempts": 2,
+          "successes": 2,
+          "conflicts": 0,
+          "errors": 0,
+          "seconds": 2.3054051999934018,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 2,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.018926399992778897,
+                "p95": 0.027795400004833937
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41705472
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.01876010000705719,
+                "p95": 0.026283400002284907
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41549824
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 130822144,
+          "sample_interval_seconds": 0.05,
+          "attempts": 4,
+          "successes": 3,
+          "conflicts": 1,
+          "errors": 0,
+          "seconds": 2.3889905999967596,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 4,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.021138299998710863,
+                "p95": 0.028488600000855513
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41963520
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.02082689999951981,
+                "p95": 0.03030320000834763
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41635840
+            },
+            {
+              "status": "passed",
+              "client": 2,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.02098600000317674,
+                "p95": 0.029398200000287034
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73964
+              },
+              "peak_rss_bytes": 41881600
+            },
+            {
+              "status": "passed",
+              "client": 3,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 0.02071270000305958,
+                "p95": 0.028652299995883368
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 73972
+              },
+              "peak_rss_bytes": 41578496
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 213581824,
+          "sample_interval_seconds": 0.05,
+          "attempts": 8,
+          "successes": 5,
+          "conflicts": 3,
+          "errors": 0,
+          "seconds": 2.728676300001098,
+          "calls": {}
+        },
+        {
+          "name": "uncertain_publication",
+          "status": "passed",
+          "seconds": 2.407791500008898,
+          "calls": {}
+        },
+        {
+          "name": "migration_dry_run",
+          "status": "passed",
+          "seconds": 0.3540569000033429,
+          "calls": {
+            "sql": 1600
+          }
+        },
+        {
+          "name": "migration_first_batch",
+          "status": "passed",
+          "seconds": 0.12794320000102744,
+          "calls": {
+            "sql": 62
+          }
+        },
+        {
+          "name": "migration_resume",
+          "status": "passed",
+          "seconds": 4.276129899997613,
+          "calls": {
+            "sql": 1512
+          }
+        },
+        {
+          "name": "interrupted_backup",
+          "status": "passed",
+          "seconds": 7.482348700010334,
+          "calls": {}
+        },
+        {
+          "name": "backup",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 357.5037835000112,
+          "calls": {}
+        },
+        {
+          "name": "corrupt_restore_refused",
+          "status": "passed",
+          "seconds": 3.943401199998334,
+          "calls": {}
+        },
+        {
+          "name": "restore",
+          "status": "passed",
+          "seconds": 904.6108340000064,
+          "calls": {}
+        },
+        {
+          "name": "occupied_restore_refused",
+          "status": "passed",
+          "seconds": 0.004333799995947629,
+          "calls": {}
+        },
+        {
+          "name": "cutover_preflight",
+          "max_entries": 100,
+          "max_rows": 302000,
+          "status": "passed",
+          "seconds": 56.225331699999515,
+          "calls": {}
+        },
+        {
+          "name": "cutover",
+          "max_entries": 100,
+          "max_rows": 302000,
+          "status": "passed",
+          "seconds": 633.3745981999964,
+          "calls": {}
+        }
+      ],
+      "sampling_interval_seconds": 0.25,
+      "sampled_disk_bytes": 20718898093,
+      "resource_scope": "client RSS; variant staging/catalog/archive disk; corpus excluded",
+      "peak_rss_bytes": 349372416,
+      "sampled_service_volume_bytes": 68108185600,
+      "service_disk_unavailable_samples": 1,
+      "service_disk_unavailable_reason": "Files disappeared during live volume traversal",
+      "call_count_scope": "Wrapped public APIs only; missing counts are unmeasured, not zero or wire round trips",
+      "service_resource_snapshot": {
+        "postgres": {
+          "memory_usage": "95.75MiB / 50.98GiB",
+          "cpu_percent": "2.31%"
+        },
+        "rustfs": {
+          "memory_usage": "462.6MiB / 50.98GiB",
+          "cpu_percent": "3.07%"
+        }
+      },
+      "elapsed_seconds": 4348.361102299998,
+      "pid_recorded": false
+    },
+    "postgres": {
+      "adapter": "postgres",
+      "status": "passed",
+      "operations": [
+        {
+          "name": "import",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 413.5549059999903,
+          "calls": {
+            "sql": 20700,
+            "storage.put": 100,
+            "storage.copy": 100,
+            "storage.delete": 100
+          }
+        },
+        {
+          "name": "relationship_load",
+          "rows": 300000,
+          "batch": 1000,
+          "status": "passed",
+          "seconds": 49.81517049999093,
+          "calls": {
+            "sql_many": 300,
+            "parameter_sets": 300000
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "GroupAggregate  (cost=19.04..19.06 rows=1 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Sort  (cost=19.04..19.04 rows=1 width=10)"
+            },
+            {
+              "QUERY PLAN": "        Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "        ->  Nested Loop  (cost=8.60..19.03 rows=1 width=10)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash Join  (cost=8.45..10.84 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                    Hash Cond: (b.id = (a.blob_id)::text)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash  (cost=8.44..8.44 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Index Scan using app_interval_start on app_intervals a  (cost=0.42..8.44 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "              ->  Index Only Scan using app_configs_pkey on app_configs c  (cost=0.15..8.17 rows=1 width=32)"
+            },
+            {
+              "QUERY PLAN": "                    Index Cond: (id = a.config_id)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.0027802999975392595,
+            "p95": 0.00325209999573417
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 0.3252626000030432,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Sort  (cost=4795.03..4795.28 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  HashAggregate  (cost=4790.71..4791.71 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "        ->  Hash Join  (cost=129.97..4761.77 rows=5788 width=10)"
+            },
+            {
+              "QUERY PLAN": "              Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash Join  (cost=126.72..4742.68 rows=5788 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Bitmap Heap Scan on app_intervals a  (cost=96.92..4697.61 rows=5788 width=19)"
+            },
+            {
+              "QUERY PLAN": "                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..95.47 rows=5788 width=0)"
+            },
+            {
+              "QUERY PLAN": "                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.0032559999963268638,
+            "p95": 0.004133800001000054
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 0.3757047000108287,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Finalize GroupAggregate  (cost=7847.24..7872.57 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Gather Merge  (cost=7847.24..7870.57 rows=200 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Workers Planned: 2"
+            },
+            {
+              "QUERY PLAN": "        ->  Sort  (cost=6847.21..6847.46 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "              Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "              ->  Partial HashAggregate  (cost=6842.89..6843.89 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "                    Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash Join  (cost=33.05..6530.22 rows=62534 width=10)"
+            },
+            {
+              "QUERY PLAN": "                          Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash Join  (cost=29.80..6355.87 rows=62534 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.12 rows=62534 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                                ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                                      ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.047170400008326396,
+            "p95": 0.05545929999789223
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 7.6013635999988765,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "start",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Finalize GroupAggregate  (cost=8495.01..8520.34 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Gather Merge  (cost=8495.01..8518.34 rows=200 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Workers Planned: 2"
+            },
+            {
+              "QUERY PLAN": "        ->  Sort  (cost=7494.98..7495.23 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "              Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "              ->  Partial HashAggregate  (cost=7490.66..7491.66 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "                    Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash Join  (cost=33.05..6865.72 rows=124988 width=10)"
+            },
+            {
+              "QUERY PLAN": "                          Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash Join  (cost=29.80..6520.47 rows=124988 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=124988 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                                ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                                      ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.06674920000659768,
+            "p95": 0.07665579998865724
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 10.566127300000517,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 2.292010000004666,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 1.2869266000052448,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 1.2479344000021229,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "start",
+          "status": "passed",
+          "seconds": 9.034588299997267,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "alternative_index_build",
+          "status": "passed",
+          "seconds": 0.5075300000025891,
+          "calls": {
+            "sql": 1
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            1
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "GroupAggregate  (cost=19.04..19.06 rows=1 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Sort  (cost=19.04..19.04 rows=1 width=10)"
+            },
+            {
+              "QUERY PLAN": "        Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "        ->  Nested Loop  (cost=8.60..19.03 rows=1 width=10)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash Join  (cost=8.45..10.84 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                    Hash Cond: (b.id = (a.blob_id)::text)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash  (cost=8.44..8.44 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Index Scan using app_interval_start on app_intervals a  (cost=0.42..8.44 rows=1 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "              ->  Index Only Scan using app_configs_pkey on app_configs c  (cost=0.15..8.17 rows=1 width=32)"
+            },
+            {
+              "QUERY PLAN": "                    Index Cond: (id = a.config_id)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.002990299995872192,
+            "p95": 0.0035309999948367476
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 1.1808715000079246,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            120,
+            121
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Sort  (cost=5387.01..5387.26 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  HashAggregate  (cost=5382.69..5383.69 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "        ->  Hash Join  (cost=129.92..5353.77 rows=5783 width=10)"
+            },
+            {
+              "QUERY PLAN": "              Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash Join  (cost=126.67..5334.70 rows=5783 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Bitmap Heap Scan on app_intervals a  (cost=96.87..5289.64 rows=5783 width=19)"
+            },
+            {
+              "QUERY PLAN": "                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..95.42 rows=5783 width=0)"
+            },
+            {
+              "QUERY PLAN": "                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "              ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                    ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.002738900002441369,
+            "p95": 0.003388400000403635
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 1.1593558000022313,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            30,
+            3000
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Finalize GroupAggregate  (cost=8418.94..8444.27 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Gather Merge  (cost=8418.94..8442.27 rows=200 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Workers Planned: 2"
+            },
+            {
+              "QUERY PLAN": "        ->  Sort  (cost=7418.91..7419.16 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "              Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "              ->  Partial HashAggregate  (cost=7414.59..7415.59 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "                    Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash Join  (cost=33.05..7102.01 rows=62517 width=10)"
+            },
+            {
+              "QUERY PLAN": "                          Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash Join  (cost=29.80..6927.70 rows=62517 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6733.00 rows=62517 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                                ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                                      ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.04854749998776242,
+            "p95": 0.05662079999456182
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 7.754744300007587,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "interval_query",
+          "index": "end",
+          "selectivity": [
+            0,
+            6120
+          ],
+          "warmup": 5,
+          "status": "passed",
+          "plan": [
+            {
+              "QUERY PLAN": "Finalize GroupAggregate  (cost=9067.13..9092.47 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "  Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "  ->  Gather Merge  (cost=9067.13..9090.47 rows=200 width=18)"
+            },
+            {
+              "QUERY PLAN": "        Workers Planned: 2"
+            },
+            {
+              "QUERY PLAN": "        ->  Sort  (cost=8067.11..8067.36 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "              Sort Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "              ->  Partial HashAggregate  (cost=8062.79..8063.79 rows=100 width=18)"
+            },
+            {
+              "QUERY PLAN": "                    Group Key: a.blob_id"
+            },
+            {
+              "QUERY PLAN": "                    ->  Hash Join  (cost=33.05..7437.79 rows=125000 width=10)"
+            },
+            {
+              "QUERY PLAN": "                          Hash Cond: ((a.blob_id)::text = b.id)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash Join  (cost=29.80..7092.50 rows=125000 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                Hash Cond: (a.config_id = c.id)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6733.00 rows=125000 width=19)"
+            },
+            {
+              "QUERY PLAN": "                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))"
+            },
+            {
+              "QUERY PLAN": "                                ->  Hash  (cost=18.80..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                                      ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)"
+            },
+            {
+              "QUERY PLAN": "                          ->  Hash  (cost=2.00..2.00 rows=100 width=10)"
+            },
+            {
+              "QUERY PLAN": "                                ->  Seq Scan on ms_blobs b  (cost=0.00..2.00 rows=100 width=10)"
+            }
+          ],
+          "latency": {
+            "unit": "seconds",
+            "samples": 100,
+            "p50": 0.06753990000288468,
+            "p95": 0.07559880000189878
+          },
+          "successes": 100,
+          "errors": 0,
+          "seconds": 9.694684000001871,
+          "calls": {
+            "sql": 106
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 100,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 2.188123400002951,
+          "calls": {
+            "sql_many": 100,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 1000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 1.2231652999907965,
+          "calls": {
+            "sql_many": 10,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "bulk_sample",
+          "batch": 10000,
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 1.2203919000021415,
+          "calls": {
+            "sql_many": 1,
+            "parameter_sets": 10000
+          }
+        },
+        {
+          "name": "repeated_sql_sample",
+          "rows": 10000,
+          "index": "end",
+          "status": "passed",
+          "seconds": 9.391187700006412,
+          "calls": {
+            "sql": 10000
+          }
+        },
+        {
+          "name": "shared_publication_rollback",
+          "status": "passed",
+          "seconds": 0.20145769999362528,
+          "calls": {
+            "sql": 152,
+            "sql_many": 1,
+            "parameter_sets": 1
+          }
+        },
+        {
+          "name": "export_verify",
+          "status": "passed",
+          "seconds": 273.8319033000007,
+          "calls": {
+            "sql": 9302,
+            "storage.get": 100
+          }
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 1,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.64986879999924,
+                "p95": 3.257096100001945
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317643
+              },
+              "peak_rss_bytes": 51290112
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 108425216,
+          "sample_interval_seconds": 0.05,
+          "attempts": 2,
+          "successes": 2,
+          "conflicts": 0,
+          "errors": 0,
+          "seconds": 279.24953699999605,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 2,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.7931944000010844,
+                "p95": 3.412345799995819
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317613
+              },
+              "peak_rss_bytes": 51073024
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.801624500003527,
+                "p95": 3.385615399995004
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317643
+              },
+              "peak_rss_bytes": 51122176
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 159395840,
+          "sample_interval_seconds": 0.05,
+          "attempts": 4,
+          "successes": 3,
+          "conflicts": 1,
+          "errors": 0,
+          "seconds": 301.24623749998864,
+          "calls": {}
+        },
+        {
+          "name": "concurrent_clients",
+          "clients": 4,
+          "status": "passed",
+          "results": [
+            {
+              "status": "passed",
+              "client": 0,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.857674800005043,
+                "p95": 3.3090433000033954
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317613
+              },
+              "peak_rss_bytes": 51482624
+            },
+            {
+              "status": "passed",
+              "client": 1,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.8630775999918114,
+                "p95": 3.284414800000377
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317613
+              },
+              "peak_rss_bytes": 51204096
+            },
+            {
+              "status": "passed",
+              "client": 2,
+              "shared_success": 1,
+              "shared_conflict": 0,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.857286099999328,
+                "p95": 3.30776280000282
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317643
+              },
+              "peak_rss_bytes": 51253248
+            },
+            {
+              "status": "passed",
+              "client": 3,
+              "shared_success": 0,
+              "shared_conflict": 1,
+              "disjoint_success": 1,
+              "latency": {
+                "unit": "seconds",
+                "samples": 100,
+                "p50": 2.8614847999997437,
+                "p95": 3.313663399996585
+              },
+              "warmup": 5,
+              "calls": {
+                "sql": 317613
+              },
+              "peak_rss_bytes": 51257344
+            }
+          ],
+          "sampled_aggregate_rss_bytes": 262348800,
+          "sample_interval_seconds": 0.05,
+          "attempts": 8,
+          "successes": 5,
+          "conflicts": 3,
+          "errors": 0,
+          "seconds": 303.79145679999783,
+          "calls": {}
+        },
+        {
+          "name": "uncertain_publication",
+          "status": "passed",
+          "seconds": 2.6449267999996664,
+          "calls": {}
+        },
+        {
+          "name": "migration_dry_run",
+          "status": "passed",
+          "seconds": 8.955345200010925,
+          "calls": {
+            "sql": 6261
+          }
+        },
+        {
+          "name": "migration_first_batch",
+          "status": "passed",
+          "seconds": 0.5588791000045603,
+          "calls": {
+            "sql": 317
+          }
+        },
+        {
+          "name": "migration_resume",
+          "status": "passed",
+          "seconds": 7.258630399999674,
+          "calls": {
+            "sql": 4502
+          }
+        },
+        {
+          "name": "interrupted_backup",
+          "status": "passed",
+          "seconds": 2.3513987000042107,
+          "calls": {}
+        },
+        {
+          "name": "backup",
+          "bytes": 20038514268,
+          "status": "passed",
+          "seconds": 286.6690946000017,
+          "calls": {}
+        },
+        {
+          "name": "corrupt_restore_refused",
+          "status": "passed",
+          "seconds": 1.2233215000014752,
+          "calls": {}
+        },
+        {
+          "name": "restore",
+          "status": "passed",
+          "seconds": 949.5555124999955,
+          "calls": {}
+        },
+        {
+          "name": "occupied_restore_refused",
+          "status": "passed",
+          "seconds": 0.027660500010824762,
+          "calls": {}
+        }
+      ],
+      "sampling_interval_seconds": 0.25,
+      "sampled_disk_bytes": 20339590775,
+      "resource_scope": "client RSS; variant staging/catalog/archive disk; corpus excluded",
+      "peak_rss_bytes": 77791232,
+      "sampled_service_volume_bytes": 82908413952,
+      "service_disk_unavailable_samples": 2,
+      "service_disk_unavailable_reason": "Files disappeared during live volume traversal",
+      "call_count_scope": "Wrapped public APIs only; missing counts are unmeasured, not zero or wire round trips",
+      "service_resource_snapshot": {
+        "postgres": {
+          "memory_usage": "144.8MiB / 50.98GiB",
+          "cpu_percent": "3.06%"
+        },
+        "rustfs": {
+          "memory_usage": "511.5MiB / 50.98GiB",
+          "cpu_percent": "3.24%"
+        }
+      },
+      "elapsed_seconds": 3316.9573589999927,
+      "pid_recorded": false
+    }
+  },
+  "limits": {
+    "memory_bytes": 4000000000,
+    "seconds": 14400,
+    "reserve_bytes": 2000000000
+  },
+  "provenance": {
+    "meldstore_revision": "4aebe955bd4cc7518409786d279889cf7e95f8c2",
+    "working_tree_dirty": true,
+    "melddb_revision": "01e27441d7512f85663c8a86986429d62a69bff9",
+    "python": "3.13.15",
+    "sqlite_version": "3.53.1",
+    "os": "Windows",
+    "os_release": "11",
+    "architecture": "AMD64",
+    "logical_cpus": 22,
+    "lock_xxh3_128": "3f6c63366a3b2852b5cae7f4cc9d14f2",
+    "packages": {
+      "meldstore": "0.1.0rc3",
+      "pyarrow": "23.0.1",
+      "obstore": "0.11.1",
+      "xxhash": "3.8.1",
+      "psycopg": "3.3.8",
+      "psycopg-binary": "3.3.8"
+    },
+    "interpreter_implementation": "cpython",
+    "source_xxh3_128": {
+      "src/meldstore/__init__.py": "2c5cfc86d2138e0b622b1ddc1d7b49f2",
+      "src/meldstore/access.py": "56ec83d1d33d031849ecea6cc4fe255b",
+      "src/meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
+      "src/meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
+      "src/meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
+      "src/meldstore/encodings.py": "de2f0c544bff8a7c2e60afbd1d9a89ea",
+      "src/meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
+      "src/meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
+      "src/meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
+      "src/meldstore/installation.py": "306aad8881d11b75918f72ba48245ee5",
+      "src/meldstore/lifecycle.py": "6da00246e74e50d7a932faca3fc3a764",
+      "src/meldstore/maintenance.py": "33fb3d80b43d3d49424c54fa27b6d38b",
+      "src/meldstore/metadata.py": "27f94f0348067a570eac80d9678dd0ff",
+      "src/meldstore/migrations.py": "1371bafc82c272ff02062e5baa6dcb3c",
+      "src/meldstore/payload_catalog.py": "b8cc277900594e6afaad5cb253ef20e0",
+      "src/meldstore/postgres.py": "8362acee928ddc6c683bc562af7c43de",
+      "src/meldstore/postgres_archive.py": "ecd55f9c9fb6dcfbf406a9a52e6a89eb",
+      "src/meldstore/postgres_coordination.py": "686612d131cfa256d4d83daf336465ee",
+      "src/meldstore/postgres_extensions.py": "43960224ae00c9c030085f9ae9cd51b3",
+      "src/meldstore/postgres_migrations.py": "8b88a783dfbc55e95ba29499deb7d902",
+      "src/meldstore/postgres_schema.py": "29036f210554ae8af2dcdb18895dc202",
+      "src/meldstore/postgres_transfer.py": "c72bd5610459af628af620e396afad9c",
+      "src/meldstore/query.py": "a8b5f3192e47ae0fc549b469424ab4b6",
+      "src/meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
+      "src/meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
+      "src/meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
+      "src/meldstore/store.py": "12e34f169b16204737a7fe674012a0fb",
+      "tools/postgres_lab.py": "23ee484d74bcc76fdbf6b1161f92c47c",
+      "tools/qualification/__init__.py": "17b2be46dba0ebe0cbaa70fdda656ee4",
+      "tools/qualification/concurrency.py": "b007d30031d095722243e22a08688653",
+      "tools/qualification/corpus.py": "0fd698a824e5e4ef9b9a74bff765009d",
+      "tools/qualification/evidence.py": "71fc971be75fc5832e63ec198010ab2a",
+      "tools/qualification/execution.py": "53f83d6240421818e380dfcb98a06b35",
+      "tools/qualification/fixture.py": "f057ecf23b4b2700578372a8a8b75b76",
+      "tools/qualification/measurements.py": "2bcf4fada01536f8b91232cbf98fa7a1",
+      "tools/qualification/operations.py": "28c14c00564aa16323a2edbb514f6dbe",
+      "tools/qualification/resources.py": "0051ee6daad8a127a11053d9c1b12d8e",
+      "tools/qualification/runner.py": "7b77a180b4fe0d2d38dd85851e1b83db",
+      "tools/qualification/services.py": "ae8556a187ff13d31d43f54ba71e497a",
+      "tools/qualification/workload.py": "814c7aaf368cee2124573b2dfd6fd1ec",
+      "tools/qualify_local.py": "ee87354b19f9158ba8db5a6e77b7e02e",
+      "tools/qualify_representative.py": "e4d855b46aafdf09977ac501c6d58b3c",
+      "tools/s3_lab.py": "7a62a8e15a43dadc479b4d0c2b22228d"
+    }
+  },
+  "services": {
+    "postgres_image": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+    "rustfs_image": "rustfs/rustfs:1.0.0-rc.6@sha256:97171b3d72cd47dc81000f92ea84de25608bfc35a94c965501afaeb5d99f6035",
+    "postgres_version": "17.11 (Debian 17.11-1.pgdg13+2)",
+    "native_tools": {
+      "pg_dump": "pg_dump (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+      "pg_restore": "pg_restore (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+      "psql": "psql (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)"
+    },
+    "client_policy": {
+      "request_timeout_seconds": 300.0,
+      "max_retries": 0
+    },
+    "topology": "loopback PostgreSQL/RustFS; one persistent single-host coordinator"
+  },
+  "preflight": {
+    "corpus_upper_bytes": 30000000000,
+    "host_required_bytes": 152000000000,
+    "docker_required_bytes": 122000000000,
+    "host_free_bytes": 905746337792,
+    "docker_free_bytes": 903368982528,
+    "reserve_bytes": 2000000000
+  },
+  "corpus": {
+    "files": 100,
+    "bytes": 20038514268,
+    "min_bytes": 103161284,
+    "max_bytes": 297494487,
+    "relationships": 300000,
+    "seed": 20261112
+  },
+  "execution": {
+    "idle_sleep_hold": true,
+    "maximum_scheduling_gap_seconds": 1.1767618656158447,
+    "gap_limit_seconds": 30,
+    "continuity_lost": false,
+    "scope": "Idle sleep only; explicit sleep and lid-close remain possible"
+  },
+  "elapsed_seconds": 12981.268374499996
+}
