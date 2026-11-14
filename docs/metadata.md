@@ -59,9 +59,9 @@ PostgreSQL uses the pinned provider's repeatable-read snapshot; SQLite WAL reade
 retain their original snapshot while another connection commits. This guarantee
 ends when the call returns, so it does not extend across cursor pages.
 
-Selected IDs are loaded in internal batches of 256, with at most three retrieval
-statements per batch plus fixed schema/encoding verification. Results retain query
-order and independent metadata/descriptor dictionaries. Metadata field keys retain
+Selected IDs are loaded in batches of up to 256. Large encoded descriptors may
+require additional reads so each query returns at most 1 MiB of raw descriptor
+text. Results retain query order and independent metadata and descriptor dictionaries. Metadata field keys retain
 the canonical order used by scalar reads. No payload is accessed.
 Any loading or transaction-finalization failure fails the whole call; no partial
 page is returned. Public page limits and scalar `stat` behavior are unchanged.

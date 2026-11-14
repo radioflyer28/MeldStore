@@ -83,6 +83,52 @@ def read(tx, token):
     return rows[0] if rows else None
 
 
+# Bound transient descriptor text separately from the returned decoded page.
+_BATCH_BYTES = 1024 * 1024
+
+
+def _descriptor_groups(ids, records):
+    group, used = [], 0
+    for id in ids:
+        row = records.get(id)
+        size = (row.pop("descriptor_bytes") or 0) if row is not None else 0
+        # Healthy descriptors are at most 64 KiB through the public writer.
+        # SQLite length(TEXT) stops at NUL, so malformed SQL-written data can
+        # be much larger. The query below withholds that raw text.
+        size = min(size, _BATCH_BYTES)
+        if group and used + size > _BATCH_BYTES:
+            yield tuple(group)
+            group, used = [], 0
+        group.append(id)
+        used += size
+    if group:
+        yield tuple(group)
+
+
+def batches(tx, ids, records, *, installed):
+    """Yield in-order ID groups and their bounded raw encoding rows."""
+    if not installed:
+        yield ids, {}
+        return
+    bind = for_transaction(tx).bind
+    for group in _descriptor_groups(ids, records):
+        placeholders = ",".join(bind for _ in group)
+        rows = {row["token"]: row for row in tx.sql(
+            "SELECT e.token, e.encoding_id, e.encoding_version, "
+            f"CASE WHEN {descriptor_size(tx)} <= {_BATCH_BYTES} "
+            "THEN e.descriptor END AS descriptor "
+            "FROM ms_encodings e JOIN ms_objects o ON e.token=o.token "
+            f"WHERE o.blob_id IN ({placeholders})", group
+        )}
+        yield group, rows
+
+
+def descriptor_size(tx):
+    if for_transaction(tx).postgres:
+        return "octet_length(e.descriptor)"
+    return "length(CAST(e.descriptor AS BLOB))"
+
+
 def physical(prepared):
     from .store import PreparedFile
 

@@ -2,7 +2,7 @@
   "status": "completed_measurements",
   "scope": "metadata-only, fabricated payload descriptors",
   "provenance": {
-    "meldstore_revision": "51bc084dcaf80db602bc870898ed7537c51a1735",
+    "meldstore_revision": "ec94810bdb37b9c3ae9da5bbd83bd12959d47277",
     "working_tree_dirty": true,
     "melddb_revision": "01e27441d7512f85663c8a86986429d62a69bff9",
     "python": "3.13.15",
@@ -27,7 +27,7 @@
       "src/meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
       "src/meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
       "src/meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-      "src/meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+      "src/meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
       "src/meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
       "src/meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
       "src/meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -48,25 +48,25 @@
       "src/meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
       "src/meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
       "src/meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-      "src/meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f",
+      "src/meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc",
       "tools/postgres_lab.py": "23ee484d74bcc76fdbf6b1161f92c47c",
       "tools/qualification/__init__.py": "17b2be46dba0ebe0cbaa70fdda656ee4",
-      "tools/qualification/concurrency.py": "b64ac8c152148374791a64a1289bb080",
+      "tools/qualification/concurrency.py": "104c00d5922bb3170708bb3b0982b970",
       "tools/qualification/corpus.py": "355d70cfbeeb6018f3d4d49b82b6521e",
-      "tools/qualification/evidence.py": "b2371b2cc8914e3c47ea7401d7452dc6",
+      "tools/qualification/evidence.py": "499892e3d2b747468da1c255bcc335d2",
       "tools/qualification/execution.py": "53f83d6240421818e380dfcb98a06b35",
-      "tools/qualification/find_checks.py": "a1309e34d19cc44538c1d33ac268a51b",
+      "tools/qualification/find_checks.py": "0ecbed9b8fa902024762bc8cdc027da3",
       "tools/qualification/find_fixture.py": "655acbf1e04d81a8dc0cb8ff08a766a8",
-      "tools/qualification/fixture.py": "f057ecf23b4b2700578372a8a8b75b76",
+      "tools/qualification/fixture.py": "66d055a8d8551d4a09b7abdfb78c9677",
       "tools/qualification/measurements.py": "bcb279175fa18b8d33a909f4272dbe41",
       "tools/qualification/operations.py": "9137d819d36f7e8738629e85d1b59696",
-      "tools/qualification/resources.py": "0051ee6daad8a127a11053d9c1b12d8e",
-      "tools/qualification/runner.py": "6323c01f6d4e64166e17faa0ca5e58c0",
-      "tools/qualification/services.py": "08c87ea74d52b85953eae4bc3c40cb6b",
-      "tools/qualification/workload.py": "271925e01577ca52c4dbb569f8ee2490",
+      "tools/qualification/resources.py": "43bf6ea06a82a3ec4a47ce24873481d4",
+      "tools/qualification/runner.py": "9f3e02f75c53a9c5ba78ae5cd41524aa",
+      "tools/qualification/services.py": "29bca69d0bb41e875344266719cd59eb",
+      "tools/qualification/workload.py": "d8a8e4725dd08430a2a980a72f64e465",
       "tools/qualify_local.py": "ee87354b19f9158ba8db5a6e77b7e02e",
-      "tools/qualify_representative.py": "e4d855b46aafdf09977ac501c6d58b3c",
-      "tools/s3_lab.py": "7a62a8e15a43dadc479b4d0c2b22228d"
+      "tools/qualify_representative.py": "3766cb61b57de6b5dcb9eb17961e5af1",
+      "tools/s3_lab.py": "a96d76239b7846dbcf6d1a66791dda59"
     }
   },
   "baseline": "51bc084dcaf80db602bc870898ed7537c51a1735",
@@ -167,7 +167,7 @@
     "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
     "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
     "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-    "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+    "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
     "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
     "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
     "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -188,7 +188,7 @@
     "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
     "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
     "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-    "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+    "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
   },
   "requested": {
     "adapters": [
@@ -256,10 +256,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0008992270013550296,
-              "p95": 0.0010790790111059323
+              "p50": 0.0009747840085765347,
+              "p95": 0.0011240340099902824
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -298,7 +298,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -319,12 +319,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 91914240
+        "sampled_aggregate_rss_bytes": 89456640
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -387,10 +387,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009493159886915237,
-              "p95": 0.0010883840004680678
+              "p50": 0.0009662619995651767,
+              "p95": 0.0011315529991406947
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -429,7 +429,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -450,7 +450,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -463,10 +463,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009190309938276187,
-              "p95": 0.0011363310040906072
+              "p50": 0.001060380003764294,
+              "p95": 0.0012078310101060197
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -505,7 +505,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -526,12 +526,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 125616128
+        "sampled_aggregate_rss_bytes": 122798080
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -628,10 +628,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009560940088704228,
-              "p95": 0.001149688003351912
+              "p50": 0.0011399609938962385,
+              "p95": 0.001625875011086464
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -670,7 +670,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -691,7 +691,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -704,10 +704,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009155859879683703,
-              "p95": 0.0011801849905168638
+              "p50": 0.001178809005068615,
+              "p95": 0.0016918710025493056
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -746,7 +746,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -767,7 +767,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -780,10 +780,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0008796900074230507,
-              "p95": 0.0010521789954509586
+              "p50": 0.0011033699993276969,
+              "p95": 0.0017966240120586008
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -822,7 +822,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -843,7 +843,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -856,10 +856,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009722430113470182,
-              "p95": 0.001151150994701311
+              "p50": 0.0011165319883730263,
+              "p95": 0.0018751910101855174
             },
-            "peak_rss_bytes": 58392576,
+            "peak_rss_bytes": 56475648,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -898,7 +898,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -919,12 +919,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 192479232
+        "sampled_aggregate_rss_bytes": 188579840
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -970,10 +970,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.00665119499899447,
-              "p95": 0.008205008009099402
+              "p50": 0.008122920000459999,
+              "p95": 0.00934155800496228
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1012,7 +1012,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1033,12 +1033,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 97841152
+        "sampled_aggregate_rss_bytes": 95764480
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -1101,10 +1101,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006966921006096527,
-              "p95": 0.00850772600097116
+              "p50": 0.008482937992084771,
+              "p95": 0.009502300003077835
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1143,7 +1143,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1164,7 +1164,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -1177,10 +1177,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006527737001306377,
-              "p95": 0.007905024991487153
+              "p50": 0.008524557008058764,
+              "p95": 0.009545257009449415
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1219,7 +1219,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1240,12 +1240,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 136429568
+        "sampled_aggregate_rss_bytes": 134152192
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -1342,10 +1342,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006882757996208966,
-              "p95": 0.010880750007345341
+              "p50": 0.009002927006804384,
+              "p95": 0.012437251993105747
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1384,7 +1384,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1405,7 +1405,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -1418,10 +1418,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.008143203987856396,
-              "p95": 0.009704037991468795
+              "p50": 0.009112073996220715,
+              "p95": 0.012284694996196777
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1460,7 +1460,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1481,7 +1481,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -1494,10 +1494,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.007285586994839832,
-              "p95": 0.010250450010062195
+              "p50": 0.009215719997882843,
+              "p95": 0.01326657400932163
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1536,7 +1536,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1557,7 +1557,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -1570,10 +1570,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.007362317002844065,
-              "p95": 0.01070550900476519
+              "p50": 0.009208638002746738,
+              "p95": 0.013241002990980633
             },
-            "peak_rss_bytes": 59473920,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1612,7 +1612,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1633,12 +1633,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 213565440
+        "sampled_aggregate_rss_bytes": 211468288
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -1684,10 +1684,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0008682869956828654,
-              "p95": 0.0010542589880060405
+              "p50": 0.000991919994703494,
+              "p95": 0.001183970001875423
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1726,7 +1726,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1747,12 +1747,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 93356032
+        "sampled_aggregate_rss_bytes": 91258880
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -1815,10 +1815,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.000834592996397987,
-              "p95": 0.0009840999991865829
+              "p50": 0.000910294009372592,
+              "p95": 0.0010897500033024698
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1857,7 +1857,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1878,7 +1878,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -1891,10 +1891,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009878819982986897,
-              "p95": 0.0011335569870425388
+              "p50": 0.000996602000668645,
+              "p95": 0.0011734330037143081
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -1933,7 +1933,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -1954,12 +1954,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 127057920
+        "sampled_aggregate_rss_bytes": 124575744
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -2056,10 +2056,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0010196139919571579,
-              "p95": 0.0015190170088317245
+              "p50": 0.0009818339894991368,
+              "p95": 0.0015392209897981957
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2098,7 +2098,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2119,7 +2119,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2132,10 +2132,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0008494109933963045,
-              "p95": 0.002041783998720348
+              "p50": 0.0009673749882495031,
+              "p95": 0.0018672890000743791
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2174,7 +2174,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2195,7 +2195,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2208,10 +2208,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0009496520069660619,
-              "p95": 0.0011090259940829128
+              "p50": 0.0009887070045806468,
+              "p95": 0.0015622990031260997
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2250,7 +2250,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2271,7 +2271,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2284,10 +2284,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.0011241150059504434,
-              "p95": 0.0020617359987227246
+              "p50": 0.0009904349863063544,
+              "p95": 0.0016162120009539649
             },
-            "peak_rss_bytes": 59654144,
+            "peak_rss_bytes": 57556992,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2326,7 +2326,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2347,12 +2347,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 194072576
+        "sampled_aggregate_rss_bytes": 190742528
       },
       "sql_reduction": 0.9857954545454546
     },
@@ -2398,10 +2398,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006425258005037904,
-              "p95": 0.007018926000455394
+              "p50": 0.006590215998585336,
+              "p95": 0.007901071992819197
             },
-            "peak_rss_bytes": 60194816,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2440,7 +2440,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2461,12 +2461,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 99483648
+        "sampled_aggregate_rss_bytes": 97206272
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -2529,10 +2529,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006073227996239439,
-              "p95": 0.007102604999090545
+              "p50": 0.00687202499830164,
+              "p95": 0.008010434990865178
             },
-            "peak_rss_bytes": 60194816,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2571,7 +2571,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2592,7 +2592,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2605,10 +2605,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.005605211001238786,
-              "p95": 0.00714253299520351
+              "p50": 0.006965357999433763,
+              "p95": 0.008320808003190905
             },
-            "peak_rss_bytes": 60194816,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2647,7 +2647,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2668,12 +2668,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 139132928
+        "sampled_aggregate_rss_bytes": 136110080
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -2770,10 +2770,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006695574993500486,
-              "p95": 0.011233219993300736
+              "p50": 0.009099278002395295,
+              "p95": 0.012275753004360013
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2812,7 +2812,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2833,7 +2833,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2846,10 +2846,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006519335001939908,
-              "p95": 0.009351433996926062
+              "p50": 0.009002455000882037,
+              "p95": 0.012168629007646814
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2888,7 +2888,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2909,7 +2909,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2922,10 +2922,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.005941354000242427,
-              "p95": 0.00912279900512658
+              "p50": 0.00900528700731229,
+              "p95": 0.011809954012278467
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -2964,7 +2964,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -2985,7 +2985,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -2998,10 +2998,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.006562083988683298,
-              "p95": 0.00892373500391841
+              "p50": 0.009742253008880652,
+              "p95": 0.012536278998595662
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58097664,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3040,7 +3040,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3061,12 +3061,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 214802432
+        "sampled_aggregate_rss_bytes": 213270528
       },
       "sql_reduction": 0.9972872644203312
     },
@@ -3112,10 +3112,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.01767050800845027,
-              "p95": 0.02031411899952218
+              "p50": 0.018573592009488493,
+              "p95": 0.02209077098814305
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58277888,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3155,7 +3155,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3176,12 +3176,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 108830720
+        "sampled_aggregate_rss_bytes": 106745856
       },
       "sql_reduction": 0.9827985444922263
     },
@@ -3244,10 +3244,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.017441489006159827,
-              "p95": 0.018388039999990724
+              "p50": 0.018669920988031663,
+              "p95": 0.020441183994989842
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58277888,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3287,7 +3287,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3308,7 +3308,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -3321,10 +3321,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.017437294009141624,
-              "p95": 0.018890605002525263
+              "p50": 0.01893238499178551,
+              "p95": 0.020827568994718604
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58277888,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3364,7 +3364,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3385,12 +3385,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 157835264
+        "sampled_aggregate_rss_bytes": 155582464
       },
       "sql_reduction": 0.9827985444922263
     },
@@ -3487,10 +3487,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.02285685199603904,
-              "p95": 0.026344447003793903
+              "p50": 0.02336705700145103,
+              "p95": 0.025363856999319978
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58277888,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3530,7 +3530,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3551,7 +3551,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -3564,10 +3564,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.022763649991247803,
-              "p95": 0.025854553998215124
+              "p50": 0.02465917200606782,
+              "p95": 0.027160699988598935
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58277888,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3607,7 +3607,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3628,7 +3628,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -3641,10 +3641,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.022877208000863902,
-              "p95": 0.02619705200777389
+              "p50": 0.024049692990956828,
+              "p95": 0.026279766010702588
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58458112,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3684,7 +3684,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3705,7 +3705,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -3718,10 +3718,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.022874539004988037,
-              "p95": 0.026613201000145636
+              "p50": 0.024649635000969283,
+              "p95": 0.02674931799992919
             },
-            "peak_rss_bytes": 60375040,
+            "peak_rss_bytes": 58458112,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3761,7 +3761,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3782,12 +3782,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 254722048
+        "sampled_aggregate_rss_bytes": 252850176
       },
       "sql_reduction": 0.9827985444922263
     },
@@ -3833,10 +3833,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.02994531800504774,
-              "p95": 0.03530858900921885
+              "p50": 0.03330955299315974,
+              "p95": 0.0387629629985895
             },
-            "peak_rss_bytes": 60735488,
+            "peak_rss_bytes": 58818560,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -3876,7 +3876,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -3897,12 +3897,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 114073600
+        "sampled_aggregate_rss_bytes": 112173056
       },
       "sql_reduction": 0.9979682243613229
     },
@@ -4085,10 +4085,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.03433619000134058,
-              "p95": 0.04774662099953275
+              "p50": 0.03345997900760267,
+              "p95": 0.03549494099570438
             },
-            "peak_rss_bytes": 60735488,
+            "peak_rss_bytes": 58818560,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4128,7 +4128,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4149,7 +4149,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -4162,10 +4162,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.03378894799971022,
-              "p95": 0.04181883099954575
+              "p50": 0.03391234899754636,
+              "p95": 0.03661000600550324
             },
-            "peak_rss_bytes": 60735488,
+            "peak_rss_bytes": 58818560,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4205,7 +4205,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4226,12 +4226,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 167784448
+        "sampled_aggregate_rss_bytes": 165289984
       },
       "sql_reduction": 0.9979682243613229
     },
@@ -4568,10 +4568,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.03962947199761402,
-              "p95": 0.06380026999977417
+              "p50": 0.04637622399604879,
+              "p95": 0.053443554003024474
             },
-            "peak_rss_bytes": 60915712,
+            "peak_rss_bytes": 58818560,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4611,7 +4611,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4632,7 +4632,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -4645,10 +4645,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.040328399001737125,
-              "p95": 0.06238627398852259
+              "p50": 0.04728946300747339,
+              "p95": 0.05581324899685569
             },
-            "peak_rss_bytes": 60915712,
+            "peak_rss_bytes": 58818560,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4688,7 +4688,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4709,7 +4709,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -4722,10 +4722,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.04024474600737449,
-              "p95": 0.05996594000316691
+              "p50": 0.04697295298683457,
+              "p95": 0.054313942993758246
             },
-            "peak_rss_bytes": 60915712,
+            "peak_rss_bytes": 58998784,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4765,7 +4765,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4786,7 +4786,7 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           },
@@ -4799,10 +4799,10 @@
             "latency": {
               "unit": "seconds",
               "samples": 100,
-              "p50": 0.04007144199567847,
-              "p95": 0.0648219269933179
+              "p50": 0.04708595799456816,
+              "p95": 0.056149216994526796
             },
-            "peak_rss_bytes": 60915712,
+            "peak_rss_bytes": 58998784,
             "storage_calls": 0,
             "errors": 0,
             "conflicts": 0,
@@ -4842,7 +4842,7 @@
                 "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
                 "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
                 "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-                "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+                "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
                 "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
                 "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
                 "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4863,12 +4863,12 @@
                 "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
                 "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
                 "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-                "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+                "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
               }
             }
           }
         ],
-        "sampled_aggregate_rss_bytes": 274444288
+        "sampled_aggregate_rss_bytes": 271478784
       },
       "sql_reduction": 0.9979682243613229
     }
@@ -4902,14 +4902,38 @@
     "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
     "meldstore/store.py": "12e34f169b16204737a7fe674012a0fb"
   },
-  "harness_xxh3_128": "423071c60c043402794b3ff206c1cd87",
-  "reused_baseline_report_xxh3_128": "ce701e1f36c36b0b305d4d2494a77181",
+  "harness_xxh3_128": "3d89ba0eb6ea7dc865014b53e2cf2d30",
+  "reused_baseline_report_xxh3_128": "55921155f42f6ab6bfab5be5b0c19252",
   "reused_baseline_fixture_audit": {
     "tools/qualification/find_fixture.py": {
       "recorded_xxh3_128": "bad1310cf3a76c4f90669aa4da7e7a00",
       "final_xxh3_128": "655acbf1e04d81a8dc0cb8ff08a766a8",
       "ast_identical": true,
       "change": "Import-list line wrapping only; original byte hash reconstructed exactly"
+    },
+    "tools/qualification/fixture.py": {
+      "recorded_xxh3_128": "f057ecf23b4b2700578372a8a8b75b76",
+      "final_xxh3_128": "66d055a8d8551d4a09b7abdfb78c9677",
+      "change": "Reviewed merged qualification helper differences",
+      "measurement_equivalence_review": "Main added workload-only interval case and bulk batch helpers. The relationship generator, DDL, and relationship verification used here are unchanged."
+    },
+    "tools/qualification/services.py": {
+      "recorded_xxh3_128": "08c87ea74d52b85953eae4bc3c40cb6b",
+      "final_xxh3_128": "29bca69d0bb41e875344266719cd59eb",
+      "change": "Reviewed merged qualification helper differences",
+      "measurement_equivalence_review": "Main changed service startup, ownership and cleanup. The pinned image, server version, database creation, client connection/lock settings and timed read path are identical."
+    },
+    "tools/s3_lab.py": {
+      "recorded_xxh3_128": "7a62a8e15a43dadc479b4d0c2b22228d",
+      "final_xxh3_128": "a96d76239b7846dbcf6d1a66791dda59",
+      "change": "Reviewed merged qualification helper differences",
+      "measurement_equivalence_review": "Main changed disposable RustFS startup and credentials handling. The timed find benchmark uses no RustFS I/O."
+    },
+    "tools/qualification/concurrency.py": {
+      "recorded_xxh3_128": "b64ac8c152148374791a64a1289bb080",
+      "final_xxh3_128": "104c00d5922bb3170708bb3b0982b970",
+      "change": "Main strengthened the separate mixed reader and writer workload.",
+      "measurement_equivalence_review": "Verified identical current_rss function AST. The find benchmark does not call the changed mixed workload client."
     }
   },
   "source_audit": {
@@ -4950,7 +4974,7 @@
       "meldstore/backup.py": "98008ebd9c9016726bcff0bcc8f93ed1",
       "meldstore/catalog.py": "8b4c79680ffc3f4c2e9fa58009306703",
       "meldstore/dialect.py": "711a0f235c917cca479f69a2ba70948f",
-      "meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725",
+      "meldstore/encodings.py": "411fed21496db21fc01e75350c41166e",
       "meldstore/errors.py": "dc0b836c13510398a88f472b4d972473",
       "meldstore/exporting.py": "96f446617d768ce846802ed68881bd80",
       "meldstore/handlers.py": "a9808231506f5c48cb6877008ef44388",
@@ -4971,7 +4995,7 @@
       "meldstore/s3.py": "65e77ebd1e55ee25e0f8781521443733",
       "meldstore/schema.py": "2ffde9b8b284f312e5979081b010b811",
       "meldstore/storage.py": "a772cc846e615d8c45d435c4ff1c48b3",
-      "meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f"
+      "meldstore/store.py": "a0769477ad4dd55b1ed229dc81d1c5fc"
     },
     "notes": "Baseline reads reused after Git source, complete profile and identical runtime checks. Historical missing worker attestations remain missing. Candidate source imports and bytes are attested by every new worker."
   },
@@ -4980,12 +5004,11 @@
   "worker_attestations_complete": false,
   "source_provenance_verified": true,
   "review": {
-    "date": "2026-11-14",
-    "scope": "Explicit implementation review of all 18 comparisons and 8400 measured reads",
-    "maximum_paired_client_p95_ratio": 0.08093839441891341,
-    "maximum_worker_peak_rss_increase_bytes": 2592768,
-    "maximum_sampled_aggregate_rss_increase_bytes": 6103040,
-    "assessment": "No material regression: every measured client latency improves; worker peak increase stays below 2.5 MiB and aggregate increase below 6 MiB. Final candidate measurements are fresh and source-attested. Baseline measurements retain their recorded source audit and missing historical worker attestations.",
-    "limits": "Metadata-only synthetic fixture, one Linux WSL development host, 300000 application relationships; no payload/capacity, isolated-hardware SLA, AWS or multi-host claim."
+    "scope": "All 18 comparisons and 8400 measured baseline and candidate reads. Timed candidate source includes the descriptor byte limit.",
+    "maximum_paired_client_p95_ratio": 0.1100720267500435,
+    "maximum_worker_peak_rss_increase_bytes": 315392,
+    "maximum_sampled_aggregate_rss_increase_bytes": 4231168,
+    "assessment": "Every client median and p95 improved. Reviewed peak memory on the metadata benchmark and separately reproduced the encoded descriptor case.",
+    "limits": "Synthetic file-record metadata measurements on one WSL Linux development host. The separate descriptor stress check records tracemalloc results for the SQLite adapters."
   }
 }

@@ -18,6 +18,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if __package__ in (None, ''):
     sys.path.insert(0, str(ROOT))
 
+RUNTIME_FIELDS = (
+    'melddb_revision', 'python', 'sqlite_version', 'os', 'os_release',
+    'architecture', 'logical_cpus', 'lock_xxh3_128', 'packages',
+)
+
 BASELINE_REVISION = '51bc084dcaf80db602bc870898ed7537c51a1735'
 REQUIRED_MATRIX = {
     (adapter, count, clients)
@@ -118,10 +123,9 @@ def acceptance_profile(report):
 def validate_report(report):
     """Validate measurements without mutating raw evidence, including older reports.
 
-    Returns an audit summary. Old reports without per-worker attestations need an
-    explicit source_audit: status='verified', notes, baseline_revision, and exact
-    baseline_sources/candidate_sources maps. This records an external audit; it
-    does not manufacture historical worker attestations. latency_memory_review
+    Returns an audit summary. An explicit source audit can cover missing worker
+    attestations for historical baseline reads. Candidate attestations and runtime
+    provenance are required for full acceptance. latency_memory_review
     remains 'pending' unless an explicit reviewer records 'approved' or 'rejected'.
     """
     import math
@@ -139,7 +143,7 @@ def validate_report(report):
     comparisons = report.get('comparisons')
     require(isinstance(comparisons, list), 'Missing comparisons')
     keys = []
-    attestations_complete = True
+    attested = {'baseline': True, 'candidate': True}
     baseline_sources = report.get('baseline_sources', {})
     candidate_sources = report.get('candidate_sources') or {
         name.removeprefix('src/'): value
@@ -178,7 +182,7 @@ def validate_report(report):
                 require(integer(result.get('peak_rss_bytes'), 1), 'Missing worker memory evidence')
                 attestation = result.get('source_attestation')
                 if attestation is None:
-                    attestations_complete = False
+                    attested[label] = False
                 else:
                     require(bool(sources) and attestation.get('sources') == sources,
                             'Worker source fingerprints differ from the report manifest')
@@ -209,12 +213,12 @@ def validate_report(report):
     review = report.get('latency_memory_review', 'pending')
     require(review in {'pending', 'approved', 'rejected'}, 'Invalid latency/memory review state')
     baseline_verified = report.get('baseline_verification', {})
-    source_verified = (
+    baseline_verified_by_workers = (
         report.get('baseline') == BASELINE_REVISION
         and baseline_verified.get('verified') is True
         and baseline_verified.get('revision') == BASELINE_REVISION
         and bool(baseline_sources) and baseline_verified.get('sources') == baseline_sources
-        and attestations_complete and bool(keys)
+        and attested['baseline']
     )
     audit = report.get('source_audit')
     if audit is not None:
@@ -226,13 +230,19 @@ def validate_report(report):
                 and audit.get('baseline_sources') == baseline_sources
                 and audit.get('candidate_sources') == candidate_sources,
                 'Source audit does not match the recorded manifests')
-        source_verified = True
+    source_verified = bool(keys) and attested['candidate'] and (
+        baseline_verified_by_workers or audit is not None
+    )
+    runtime = report.get('provenance') or {}
+    runtime_verified = (all(runtime.get(key) for key in RUNTIME_FIELDS)
+                        and bool(report.get('postgres_version'))
+                        and bool(report.get('harness_xxh3_128')))
     profile = acceptance_profile(report)
     return dict(completed_measurements=completed, acceptance_profile=profile,
-                worker_attestations_complete=attestations_complete and bool(keys),
+                worker_attestations_complete=all(attested.values()) and bool(keys),
                 source_provenance_verified=source_verified, latency_memory_review=review,
                 full_acceptance=completed and profile == 'full' and source_verified
-                and review == 'approved')
+                and runtime_verified and review == 'approved')
 
 
 
@@ -245,12 +255,12 @@ def reusable_baseline(report, sources, runtime, *, samples, warmups, relationshi
             or report.get('status') not in {'passed', 'completed_measurements'}
             or report.get('owned_services_removed') is not True):
         raise ValueError('Baseline report source or completion does not match')
-    for key in ('melddb_revision', 'python', 'sqlite_version', 'os', 'os_release',
-                'architecture', 'logical_cpus', 'lock_xxh3_128', 'packages'):
+    for key in RUNTIME_FIELDS:
         if key not in runtime or report.get('provenance', {}).get(key) != runtime[key]:
             raise ValueError('Baseline report runtime differs: ' + key)
     for name in ('tools/qualification/find_fixture.py', 'tools/qualification/fixture.py',
-                 'tools/qualification/measurements.py', 'tools/qualification/services.py',
+                 'tools/qualification/measurements.py', 'tools/qualification/concurrency.py',
+                 'tools/qualification/services.py',
                  'tools/postgres_lab.py', 'tools/s3_lab.py', 'tools/qualify_local.py'):
         before = report.get('provenance', {}).get('source_xxh3_128', {}).get(name)
         after = runtime.get('source_xxh3_128', {}).get(name)
@@ -259,7 +269,9 @@ def reusable_baseline(report, sources, runtime, *, samples, warmups, relationshi
         if before != after:
             audit = report.get('fixture_source_audit', {}).get(name, {})
             if (audit.get('recorded_xxh3_128') != before or audit.get('final_xxh3_128') != after
-                    or audit.get('ast_identical') is not True or not audit.get('change')):
+                    or (audit.get('ast_identical') is not True
+                        and not audit.get('measurement_equivalence_review'))
+                    or not audit.get('change')):
                 raise ValueError('Baseline fixture changed without an explicit equivalence audit')
     if any(report.get(k) != v for k, v in dict(samples=samples, warmups=warmups,
                                                relationships=relationships).items()):

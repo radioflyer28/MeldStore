@@ -3,15 +3,15 @@
 ## ADDED Requirements
 
 ### Requirement: Bounded metadata page loading
-The system SHALL load a find result page using bounded batches of selected record identifiers. For a fixed schema and encoding layout, metadata SQL work SHALL grow with the number of batches rather than requiring a separate retrieval sequence for each record. Existing limits, filters, ordering, schema-version selection and cursor behavior SHALL be preserved across all supported catalog adapters.
+The system SHALL load a find result page using bounded batches of selected record identifiers. Metadata SQL work SHALL grow with the number of identifier and descriptor batches. Descriptor queries SHALL bound the raw descriptor bytes they return. Existing limits, filters, ordering, schema-version selection and cursor behavior SHALL be preserved across all supported catalog adapters.
 
 #### Scenario: A page fits within one batch
-- **WHEN** a nonempty page grows while remaining within the same identifier batch and schema layout
+- **WHEN** a nonempty page grows while remaining within the same identifier and descriptor batch bounds and schema layout
 - **THEN** record-loading SQL call count remains constant and every selected record is returned in query order
 
 #### Scenario: A page spans multiple batches
 - **WHEN** a valid page exceeds the internal identifier batch size
-- **THEN** queries respect parameter bounds and the assembled result preserves every selected record exactly once in query order
+- **THEN** queries respect parameter and raw descriptor byte bounds and the assembled result preserves every selected record exactly once in query order
 
 #### Scenario: Selection is empty or invalid
 - **WHEN** selection produces an empty page or the request violates the existing query contract

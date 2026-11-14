@@ -7,9 +7,10 @@ Change: `batch-find-record-loading`. Baseline: MeldStore `51bc084dcaf80db602bc87
 
 `Store.find` retains the existing query compiler and one read-only transaction,
 then loads selected rows in 256-ID chunks. Metadata key order remains canonical,
-matching scalar reads even when the supplied declaration uses a different order. Each chunk uses two retrieval statements
-without the legacy-optional encoding extension, or three with it. Schema and
-encoding validation work is independent of page size. Scalar `stat` and publication
+matching scalar reads. Each chunk uses two metadata retrieval statements.
+Descriptor reads use a separate 1 MiB raw text budget per query, so pages with
+large descriptors can require additional reads. Schema and encoding validation
+work is independent of page size. Scalar `stat` and publication
 keep their existing `_record` path. There is no public API or catalog migration.
 
 The proposal review clarified empty-page encoding checks, existing adapter-specific
@@ -24,11 +25,10 @@ read-only transaction boundaries. The exact MeldDB pin remains
 behavioral contract is introduced. The snapshot guarantee is verified against that
 pin. MeldDB's broader PostgreSQL status remains experimental.
 
-The PR branch includes qualification PR #2's merged revision `30f11bc`. The full
-performance report retains the original comparison baseline and candidate source
-fingerprints. All production Python files on the PR branch match the measured
-candidate. The merged workload changes affected the lab helpers and required
-fresh integration checks.
+The PR branch includes qualification PR #2's merged revision `30f11bc`.
+The performance report compares the original baseline with a fresh run of the
+reviewed candidate on this base. It records the production source fingerprints
+and the review of the merged lab helper differences.
 
 ## Reproducible metadata comparison
 
@@ -67,10 +67,11 @@ true, diagnostic profile, and full acceptance false, as intended.
 A completed baseline can be reused with `--reuse-baseline REPORT.json` while
 measuring every candidate case afresh. Reuse requires matching baseline Git
 content, runtime/dependency lock, fixture source, complete matrix and sample
-profile, plus successful baseline observations. A source change confined to
-formatting requires an explicit matching AST-equivalence audit; it is never
-silently treated as the same fixture. The report identifies its baseline input
-by fingerprint and preserves missing historical worker attestations as missing.
+profile, plus successful baseline observations. Helper differences require a
+review tied to both source fingerprints. The report identifies its baseline input
+by fingerprint and records any missing historical baseline worker attestations.
+Full acceptance requires verified attestations from every candidate worker plus
+runtime and harness provenance.
 
 The acceptance gate is at least 90% fewer PostgreSQL SQL calls for a 100-record
 page, complete correct samples and zero unexpected read errors. Material same-host
@@ -80,8 +81,9 @@ metadata change unless evidence exposes a payload/recovery/resource impact.
 
 ## Regression and integration results
 
-[Sanitized check evidence](evidence/batch-find-checks-2026-11-14.json) records test
-counts, service versions, integration phases and source/artifact checks.
+[Initial check evidence](evidence/batch-find-checks-2026-11-14.json) records test
+counts, service versions and artifact checks before the PR review fixes. The
+review reruns are recorded below.
 
 - Windows / Python 3.13.15: `uv run --frozen --extra test pytest -q`:
   **871 passed, 314 skipped**; `uv run --frozen --extra test ruff check .`: passed.
@@ -134,30 +136,25 @@ Single-client observations (SQL counts are per find; timings are milliseconds):
 
 | Adapter | Records | Baseline SQL | Batched SQL | Baseline p50 | Batched p50 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Direct SQLite | 100 | 704 | 10 | 11.46 | 0.90 |
-| Direct SQLite | 1000 | 7,004 | 19 | 115.30 | 6.65 |
-| MeldDB SQLite | 100 | 704 | 10 | 13.33 | 0.87 |
-| MeldDB SQLite | 1000 | 7,004 | 19 | 136.71 | 6.43 |
-| PostgreSQL | 100 | 3,023 | 52 | 1,085.70 | 17.67 |
-| PostgreSQL | 1000 | 30,023 | 61 | 8,477.00 | 29.95 |
+| Direct SQLite | 100 | 704 | 10 | 11.46 | 0.97 |
+| Direct SQLite | 1000 | 7,004 | 19 | 115.30 | 8.12 |
+| MeldDB SQLite | 100 | 704 | 10 | 13.33 | 0.99 |
+| MeldDB SQLite | 1000 | 7,004 | 19 | 136.71 | 6.59 |
+| PostgreSQL | 100 | 3,023 | 52 | 1,085.70 | 18.57 |
+| PostgreSQL | 1000 | 30,023 | 61 | 8,477.00 | 33.31 |
 
 The same SQL counts held with two and four clients. PostgreSQL reductions were
 **98.3% at 100 records** and **99.8% at 1,000 records**. Every measured client p50
-and p95 improved. Review found no material memory regression: the largest worker
-peak increase was under 2.5 MiB, and the largest sampled aggregate increase was
-under 6 MiB. All observed memory remained well below the 4 GB harness ceiling.
+and p95 improved. The largest paired worker peak RSS change was +0.30 MiB. The largest
+sampled aggregate RSS change was +4.04 MiB. All observed memory remained well below the 4 GB harness ceiling.
 These are same-host observations, not a portable latency or capacity promise.
 
-The baseline matrix was captured first; every final candidate case was measured
-afresh with verified baseline reuse after the compatibility closeout. Exact
-baseline Git contents, locked runtime, service helpers/server version and fixture
-identity were checked. The one fixture edit was import-list line wrapping: its
-original recorded byte hash was reconstructed and AST equivalence verified.
-Windows archive CRLF normalization is recorded explicitly. All final candidate
-imports and Python source fingerprints were attested and match the working tree;
-the production files also match the built wheel and integrated smoke evidence.
-Historical baseline workers without import attestations remain labeled as such,
-with explicit source-audit evidence rather than invented attestations.
+The candidate matrix was measured afresh with verified baseline reuse. The
+comparison checked the baseline Git contents, dependency lock, runtime, server
+version and fixture fingerprints. The report records the reviewed helper
+differences, including the unchanged RSS sampler. Candidate workers attest their
+import paths and source bytes. An external source audit covers the historical
+baseline workers that predate worker attestations.
 
 All owned disposable services were removed. No private inputs, generated payloads,
 credentials, provider changes or package publication are part of this change.
@@ -169,7 +166,15 @@ tests with 314 skips, and Ruff passed. The required Linux PostgreSQL 17.11 and
 RustFS provider suite passed all 276 tests. The corrected workload smoke passed
 100 operations across all three adapters.
 
-A diagnostic comparison with the updated lab checked 100- and 1,000-record
-pages on each adapter and reproduced every SQL count above. The stored full
-benchmark still validates against the exact production source fingerprints.
-The diagnostic comparison checks the merged workload helpers at small scale.
+PR review added a byte limit to descriptor retrieval and tightened the evidence
+validator. A 256-record page with 65,534-byte stored descriptors returned the same
+values on both SQLite adapters and reduced traced Python peak from 19.43 MiB on
+the initial PR to about 4.2 MiB. Regressions verify the raw byte budget, order and
+scalar parity on all adapters, and the SQLite error for oversized malformed
+descriptors. The original benchmark uses file records. The large-descriptor check
+is separate.
+
+The review fixes passed the Windows regression suite (883 tests and 315 skips),
+49 focused benchmark tests after the final provenance tightening, all 277
+required PostgreSQL/RustFS cases, and the 100-operation integration smoke.
+Ruff and OpenSpec validation passed.

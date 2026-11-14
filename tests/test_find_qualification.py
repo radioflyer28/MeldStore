@@ -148,6 +148,8 @@ def report_fixture():
         baseline_sources=baseline, candidate_sources=candidate,
         baseline_verification=dict(verified=True, revision=runner.BASELINE_REVISION,
                                    sources=baseline),
+        provenance={key: 'recorded' for key in runner.RUNTIME_FIELDS},
+        postgres_version='17', harness_xxh3_128='recorded',
         samples=100, warmups=5, relationships=300000, comparisons=[],
         owned_services_removed=True, latency_memory_review='pending',
         requested=dict(adapters=['sqlite', 'melddb', 'postgres'],
@@ -264,11 +266,10 @@ def test_old_report_requires_explicit_external_source_audit_without_mutation():
     report['status'] = 'passed'
     del report['requested'], report['baseline_verification']
     candidate = report.pop('candidate_sources')
-    report['provenance'] = {'source_xxh3_128': {'src/' + k: v for k, v in candidate.items()}}
+    report['provenance']['source_xxh3_128'] = {'src/' + k: v for k, v in candidate.items()}
     for case in report['comparisons']:
-        for label in ('baseline', 'candidate'):
-            for result in case[label]['results']:
-                del result['source_attestation']
+        for result in case['baseline']['results']:
+            del result['source_attestation']
     report['latency_memory_review'] = 'approved'
     original = copy.deepcopy(report)
     summary = runner.validate_report(report)
@@ -283,6 +284,15 @@ def test_old_report_requires_explicit_external_source_audit_without_mutation():
         candidate_sources=candidate,
     )
     assert runner.validate_report(report)['full_acceptance']
+    report['candidate_sources'] = candidate
+    for field in ('provenance', 'postgres_version', 'harness_xxh3_128'):
+        damaged = copy.deepcopy(report)
+        del damaged[field]
+        assert not runner.validate_report(damaged)['full_acceptance']
+    damaged = copy.deepcopy(report)
+    del damaged['comparisons'][0]['candidate']['results'][0]['source_attestation']
+    assert not runner.validate_report(damaged)['full_acceptance']
+
     report['source_audit']['candidate_sources'] = {'wrong': 'wrong'}
     with pytest.raises(ValueError, match='audit'):
         runner.validate_report(report)
@@ -339,7 +349,8 @@ def reusable_fixture():
                    lock_xxh3_128='lock', packages={'melddb': 'test'},
                    source_xxh3_128={name: 'fixture' for name in (
                        'tools/qualification/find_fixture.py', 'tools/qualification/fixture.py',
-                       'tools/qualification/measurements.py', 'tools/qualification/services.py',
+                       'tools/qualification/measurements.py', 'tools/qualification/concurrency.py',
+                       'tools/qualification/services.py',
                        'tools/postgres_lab.py', 'tools/s3_lab.py', 'tools/qualify_local.py')})
     report['provenance'] = copy.deepcopy(runtime)
     options = dict(samples=100, warmups=5, relationships=300000, matrix=runner.REQUIRED_MATRIX)
@@ -388,9 +399,11 @@ def test_reuse_rejects_incompatible_or_incomplete_baseline(damage):
         runner.reusable_baseline(report, sources, runtime, **options)
 
 
-def test_baseline_fixture_change_requires_matching_explicit_equivalence_audit():
+@pytest.mark.parametrize('name', [
+    'tools/qualification/find_fixture.py', 'tools/qualification/concurrency.py',
+])
+def test_baseline_fixture_change_requires_matching_explicit_equivalence_audit(name):
     report, runtime, options = reusable_fixture()
-    name = 'tools/qualification/find_fixture.py'
     runtime['source_xxh3_128'][name] = 'reformatted'
     with pytest.raises(ValueError, match='fixture changed'):
         runner.reusable_baseline(report, report['baseline_sources'], runtime, **options)
@@ -398,5 +411,22 @@ def test_baseline_fixture_change_requires_matching_explicit_equivalence_audit():
         final_xxh3_128='reformatted', ast_identical=True, change='Reviewed import wrapping only')}
     assert len(runner.reusable_baseline(report, report['baseline_sources'], runtime, **options)) == 18
     report['fixture_source_audit'][name]['ast_identical'] = False
+    with pytest.raises(ValueError, match='fixture changed'):
+        runner.reusable_baseline(report, report['baseline_sources'], runtime, **options)
+
+
+
+def test_baseline_service_change_requires_fingerprint_bound_measurement_review():
+    report, runtime, options = reusable_fixture()
+    name = 'tools/qualification/services.py'
+    runtime['source_xxh3_128'][name] = 'changed'
+    report['fixture_source_audit'] = {name: {
+        'recorded_xxh3_128': 'fixture',
+        'final_xxh3_128': 'changed',
+        'change': 'Disposable-service teardown',
+        'measurement_equivalence_review': 'Teardown runs outside the timed reads.',
+    }}
+    assert len(runner.reusable_baseline(report, report['baseline_sources'], runtime, **options)) == 18
+    report['fixture_source_audit'][name]['final_xxh3_128'] = 'other'
     with pytest.raises(ValueError, match='fixture changed'):
         runner.reusable_baseline(report, report['baseline_sources'], runtime, **options)

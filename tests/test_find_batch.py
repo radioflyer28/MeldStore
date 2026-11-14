@@ -19,3 +19,21 @@ def harness(request, tmp_path):
 
 class TestSQLiteFind(FindChecks):
     pass
+
+
+def test_oversized_nul_descriptor_is_rejected_without_transferring_its_text(harness, monkeypatch):
+    import json
+
+    from tools.qualification.find_checks import observe_sql, setup_find
+
+    malformed = "{}\x00" + "x" * (1024 * 1024)
+    store, schema = setup_find(harness, count=2, encoding="all", descriptor=malformed)
+    seen = []
+
+    def capture(tx, statement, params, rows):
+        if rows and "descriptor" in rows[0]:
+            seen.extend(row["descriptor"] for row in rows)
+
+    with observe_sql(monkeypatch, harness.catalog, capture), pytest.raises(json.JSONDecodeError):
+        store.find(schema=schema)
+    assert seen == [None]

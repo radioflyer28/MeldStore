@@ -119,6 +119,26 @@ class FindChecks:
         assert 0 < counts[1000] - counts[257] <= 6
         assert retrievals == {1: 1, 100: 1, 255: 1, 256: 1, 257: 2, 1000: 4}
 
+    def test_large_descriptors_use_bounded_reads_and_keep_order(self, harness, monkeypatch):
+        from meldstore.handlers import descriptor_json
+
+        value = {"x": "\x00" * 10921}
+        store, schema = setup_find(harness, count=40, encoding="all",
+                                   descriptor=descriptor_json(value))
+        read_sizes = []
+
+        def capture(tx, statement, params, rows):
+            if rows and "descriptor" in rows[0]:
+                read_sizes.append(sum(len(row["descriptor"].encode("utf-8")) for row in rows))
+
+        with observe_sql(monkeypatch, harness.catalog, capture):
+            page = store.find(schema=schema, limit=40, order_by=(Order("id", descending=True),))
+        assert [row["id"] for row in page] == [record_id(i) for i in reversed(range(40))]
+        assert all(row["descriptor"] == value for row in page)
+        assert len(read_sizes) > 1
+        assert max(read_sizes) <= 1024 * 1024
+        assert page[0] == store.stat(record_id(39))
+
     @pytest.mark.parametrize("op,value", [
         ("eq", 2), ("ne", 2), ("lt", 2), ("lte", 2), ("gt", 2), ("gte", 2),
         ("in", [1, 2]), ("not_in", [1, 2]), ("is_null", None), ("not_null", None),

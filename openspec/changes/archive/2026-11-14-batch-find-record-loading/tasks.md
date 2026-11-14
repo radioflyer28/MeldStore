@@ -4,7 +4,7 @@
 
 - [x] 1.1 Add independent result-parity and SQL/storage instrumentation fixtures for direct SQLite, MeldDB SQLite and PostgreSQL. Cover legacy file-only catalogs, mixed file/encoded records, schema-version evolution, descriptor presence, existing filters/order/cursors and page sizes 0/1/100/255/256/257/1000. Verify expected records against stable scalar reads and capture baseline find-only SQL counts against the preserved pre-change source.
 - [x] 1.2 Factor call-scoped encoding inspection and implement bounded selected-record loading through existing transaction/dialect APIs. Preserve scalar encoding readers and _record callers. Verify absent/partial/installed extension cases, selected association failures and public stat/publication parity with focused uv tests.
-- [x] 1.3 Wire Store.find to the batched path with a 256-ID internal chunk and ordered reassembly. Verify constant retrieval query counts within a chunk, at most three additional retrieval statements per extra chunk, page limits/validation and zero payload I/O. Update docs/metadata.md to describe bounded page loading and the existing per-call transaction scope.
+- [x] 1.3 Wire Store.find to the batched path with a 256-ID internal chunk and ordered reassembly. Verify constant retrieval query counts within the identifier and descriptor bounds, at most three additional retrieval statements per ordinary chunk, bounded raw text for large descriptors, page limits and zero payload I/O. Update docs/metadata.md to describe bounded page loading and the existing per-call transaction scope.
 
 ## 2. Snapshot and integrity regression coverage
 
