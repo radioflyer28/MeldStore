@@ -1,0 +1,468 @@
+{
+  "date": "2026-11-14",
+  "scope": "batch-find-record-loading regression and integration; no release publication",
+  "core_sources_xxh3_128": {
+    "src/meldstore/store.py": "926ca46fcdc3d99866e8c3948da61b0f",
+    "src/meldstore/encodings.py": "2216b0d94899d9877f28161dd649f725"
+  },
+  "python": "3.13.15",
+  "tests": {
+    "Windows": {
+      "passed": 871,
+      "skipped": 314
+    },
+    "Linux": {
+      "passed": 874,
+      "skipped": 311
+    }
+  },
+  "provider": {
+    "tests": 276,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "server_version": "17.11 (Debian 17.11-1.pgdg13+2)",
+    "postgres_image": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+    "rustfs_image": "rustfs/rustfs:1.0.0-rc.6@sha256:97171b3d72cd47dc81000f92ea84de25608bfc35a94c965501afaeb5d99f6035",
+    "melddb_revision": "01e27441d7512f85663c8a86986429d62a69bff9"
+  },
+  "smoke": {
+    "status": "passed",
+    "profile": "smoke",
+    "representative_qualified": false,
+    "source_report_xxh3_128": "b406a6425f81bac31388e19f06099fe3",
+    "adapters": {
+      "sqlite": {
+        "status": "passed",
+        "operations": 34,
+        "operation_statuses": [
+          {
+            "name": "import",
+            "status": "passed"
+          },
+          {
+            "name": "relationship_load",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "alternative_index_build",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "shared_publication_rollback",
+            "status": "passed"
+          },
+          {
+            "name": "export_verify",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "uncertain_publication",
+            "status": "passed"
+          },
+          {
+            "name": "migration_dry_run",
+            "status": "passed"
+          },
+          {
+            "name": "migration_first_batch",
+            "status": "passed"
+          },
+          {
+            "name": "migration_resume",
+            "status": "passed"
+          },
+          {
+            "name": "interrupted_backup",
+            "status": "passed"
+          },
+          {
+            "name": "backup",
+            "status": "passed"
+          },
+          {
+            "name": "corrupt_restore_refused",
+            "status": "passed"
+          },
+          {
+            "name": "restore",
+            "status": "passed"
+          },
+          {
+            "name": "occupied_restore_refused",
+            "status": "passed"
+          },
+          {
+            "name": "cutover_preflight",
+            "status": "passed"
+          },
+          {
+            "name": "cutover",
+            "status": "passed"
+          }
+        ]
+      },
+      "melddb": {
+        "status": "passed",
+        "operations": 34,
+        "operation_statuses": [
+          {
+            "name": "import",
+            "status": "passed"
+          },
+          {
+            "name": "relationship_load",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "alternative_index_build",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "shared_publication_rollback",
+            "status": "passed"
+          },
+          {
+            "name": "export_verify",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "uncertain_publication",
+            "status": "passed"
+          },
+          {
+            "name": "migration_dry_run",
+            "status": "passed"
+          },
+          {
+            "name": "migration_first_batch",
+            "status": "passed"
+          },
+          {
+            "name": "migration_resume",
+            "status": "passed"
+          },
+          {
+            "name": "interrupted_backup",
+            "status": "passed"
+          },
+          {
+            "name": "backup",
+            "status": "passed"
+          },
+          {
+            "name": "corrupt_restore_refused",
+            "status": "passed"
+          },
+          {
+            "name": "restore",
+            "status": "passed"
+          },
+          {
+            "name": "occupied_restore_refused",
+            "status": "passed"
+          },
+          {
+            "name": "cutover_preflight",
+            "status": "passed"
+          },
+          {
+            "name": "cutover",
+            "status": "passed"
+          }
+        ]
+      },
+      "postgres": {
+        "status": "passed",
+        "operations": 32,
+        "operation_statuses": [
+          {
+            "name": "import",
+            "status": "passed"
+          },
+          {
+            "name": "relationship_load",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "alternative_index_build",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "interval_query",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "bulk_sample",
+            "status": "passed"
+          },
+          {
+            "name": "repeated_sql_sample",
+            "status": "passed"
+          },
+          {
+            "name": "shared_publication_rollback",
+            "status": "passed"
+          },
+          {
+            "name": "export_verify",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "concurrent_clients",
+            "status": "passed"
+          },
+          {
+            "name": "uncertain_publication",
+            "status": "passed"
+          },
+          {
+            "name": "migration_dry_run",
+            "status": "passed"
+          },
+          {
+            "name": "migration_first_batch",
+            "status": "passed"
+          },
+          {
+            "name": "migration_resume",
+            "status": "passed"
+          },
+          {
+            "name": "interrupted_backup",
+            "status": "passed"
+          },
+          {
+            "name": "backup",
+            "status": "passed"
+          },
+          {
+            "name": "corrupt_restore_refused",
+            "status": "passed"
+          },
+          {
+            "name": "restore",
+            "status": "passed"
+          },
+          {
+            "name": "occupied_restore_refused",
+            "status": "passed"
+          }
+        ]
+      }
+    }
+  },
+  "packaging": {
+    "build": "uv build",
+    "artifacts": [
+      "wheel",
+      "sdist"
+    ],
+    "fresh_installs": "passed",
+    "both_sqlite_adapters": "passed",
+    "optional_handlers": "passed",
+    "postgres_dependency_pin": "passed",
+    "wheel_core_byte_match": true
+  },
+  "lint": "uv run --frozen --extra test ruff check .: passed"
+}

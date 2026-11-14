@@ -56,29 +56,29 @@ def verify(tx):
         raise SchemaConflictError("Unsupported encoding extension")
 
 
-def read(tx, token):
-    bind = for_transaction(tx).bind
-    if tx._catalog.adapter == "postgres":
+def inspect(tx):
+    """Verify the optional extension in this transaction; return whether installed."""
+    if for_transaction(tx).postgres:
         from .postgres_extensions import ENCODING
         from .postgres_schema import namespace_objects
-        from .postgres_schema import verify as verify_postgres
 
         objects = namespace_objects(tx)
-        if "ms_encoding_format" not in objects:
-            if any(obj.name in objects for obj in ENCODING):
-                raise SchemaConflictError("Partial encoding extension")
-            return None
-        verify_postgres(tx, ENCODING)
-        if tx.sql("SELECT version FROM ms_encoding_format") != [{"version": 1}]:
-            raise SchemaConflictError("Unsupported encoding extension")
-        rows = tx.sql("SELECT * FROM ms_encodings WHERE token=%s", (token,))
-        return rows[0] if rows else None
-    objects = _objects(tx)
+        names = (obj.name for obj in ENCODING)
+    else:
+        objects = _objects(tx)
+        names = DDL
     if "ms_encoding_format" not in objects:
-        if any(name in objects for name in DDL):
+        if any(name in objects for name in names):
             raise SchemaConflictError("Partial encoding extension")
-        return None
+        return False
     verify(tx)
+    return True
+
+
+def read(tx, token):
+    if not inspect(tx):
+        return None
+    bind = for_transaction(tx).bind
     rows = tx.sql(f"SELECT * FROM ms_encodings WHERE token={bind}", (token,))
     return rows[0] if rows else None
 
