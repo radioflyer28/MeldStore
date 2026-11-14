@@ -37,6 +37,7 @@ The library has no caching policies and no built-in cUAS concepts.
 - [Offline SQLite to PostgreSQL cutover](docs/postgresql-transfer.md)
 - [PostgreSQL native backup and restore](docs/postgresql-recovery.md)
 - [PostgreSQL deployment qualification](docs/postgresql-verification.md)
+- [Representative workload harness and evidence limits](docs/representative-workloads.md)
 - [S3 configuration, recovery, backup, and offline transfer](docs/s3.md)
 - [S07 verification evidence](docs/s07-verification.md)
 - [Generic and separate SQL application examples](docs/consumers.md)
@@ -103,9 +104,9 @@ application SQL in one shared commit. See the API guide for retry semantics,
 temporary space requirements, and recovery limits. Do not manually populate or
 garbage-collect blob bookkeeping tables/objects.
 
-Experimental PostgreSQL connection selection and catalog SQL are documented in
-[PostgreSQL catalog connections](docs/postgresql.md). Blob operations on that
-backend remain gated on the ongoing qualification milestone.
+Opt-in PostgreSQL connection selection and catalog SQL are documented in
+[PostgreSQL catalog connections](docs/postgresql.md). The released deployment
+qualification and representative workload measurements have separate evidence records.
 
 ## Development
 

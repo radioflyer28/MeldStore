@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "qualification_report": "representative-workloads-2026-11-13.json",
+  "change": "Remove trailing blank lines only after qualification; no executable-code changes",
+  "files": {
+    "tools/qualification/concurrency.py": {
+      "qualified_xxh3_128": "b007d30031d095722243e22a08688653",
+      "committed_source_xxh3_128": "b64ac8c152148374791a64a1289bb080",
+      "ast_unchanged": true
+    },
+    "tools/qualification/corpus.py": {
+      "qualified_xxh3_128": "0fd698a824e5e4ef9b9a74bff765009d",
+      "committed_source_xxh3_128": "355d70cfbeeb6018f3d4d49b82b6521e",
+      "ast_unchanged": true
+    },
+    "tools/qualification/evidence.py": {
+      "qualified_xxh3_128": "71fc971be75fc5832e63ec198010ab2a",
+      "committed_source_xxh3_128": "b2371b2cc8914e3c47ea7401d7452dc6",
+      "ast_unchanged": true
+    },
+    "tools/qualification/measurements.py": {
+      "qualified_xxh3_128": "2bcf4fada01536f8b91232cbf98fa7a1",
+      "committed_source_xxh3_128": "bcb279175fa18b8d33a909f4272dbe41",
+      "ast_unchanged": true
+    },
+    "tools/qualification/operations.py": {
+      "qualified_xxh3_128": "28c14c00564aa16323a2edbb514f6dbe",
+      "committed_source_xxh3_128": "9137d819d36f7e8738629e85d1b59696",
+      "ast_unchanged": true
+    },
+    "tools/qualification/runner.py": {
+      "qualified_xxh3_128": "7b77a180b4fe0d2d38dd85851e1b83db",
+      "committed_source_xxh3_128": "6323c01f6d4e64166e17faa0ca5e58c0",
+      "ast_unchanged": true
+    },
+    "tools/qualification/services.py": {
+      "qualified_xxh3_128": "ae8556a187ff13d31d43f54ba71e497a",
+      "committed_source_xxh3_128": "08c87ea74d52b85953eae4bc3c40cb6b",
+      "ast_unchanged": true
+    },
+    "tools/qualification/workload.py": {
+      "qualified_xxh3_128": "814c7aaf368cee2124573b2dfd6fd1ec",
+      "committed_source_xxh3_128": "271925e01577ca52c4dbb569f8ee2490",
+      "ast_unchanged": true
+    }
+  }
+}

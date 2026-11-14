@@ -27,6 +27,8 @@ jobs:
           uv sync --frozen --all-extras --python-preference only-managed
       - name: Required fresh deployment, cutover, native recovery and failure qualification
         run: uv run --frozen --all-extras python tools/postgres_lab.py --with-rustfs
+      - name: Required generic workload smoke across all catalog adapters
+        run: uv run --frozen --all-extras python tools/qualify_representative.py --profile smoke --seconds 900 --output .qualification/workload-ci
   s3:
     name: RustFS S3-compatible qualification
     runs-on: ubuntu-latest
