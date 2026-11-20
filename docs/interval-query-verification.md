@@ -253,3 +253,7 @@ to startup before treatments and audit validation outside measured worker calls;
 all other attested source files, including query/fixture/worker code, are unchanged.
 No full metadata matrix was rerun after these review fixes. Historical measured
 results retain their original provenance and cross-session limitations.
+
+Interval evidence JSON files are excluded from Git text normalization so their
+published bytes retain the artifact checksums. The staged full report was checked
+against its original XXH3-128 digest, `0068977bd658f9e73d69f8f96e7cd701`.
