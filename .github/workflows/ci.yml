@@ -29,6 +29,10 @@ jobs:
         run: uv run --frozen --all-extras python tools/postgres_lab.py --with-rustfs
       - name: Required generic workload smoke across all catalog adapters
         run: uv run --frozen --all-extras python tools/qualify_representative.py --profile smoke --seconds 900 --output .qualification/workload-ci
+      - name: Required controlled interval metadata pause and resume
+        run: |
+          uv run --frozen --all-extras python tools/qualify_intervals.py --profile smoke --pause-after 12 --seconds 900 --output .qualification/interval-ci-paused
+          uv run --frozen --all-extras python tools/qualify_intervals.py --resume-from .qualification/interval-ci-paused/report.json --seconds 900 --output .qualification/interval-ci
   s3:
     name: RustFS S3-compatible qualification
     runs-on: ubuntu-latest

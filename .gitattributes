@@ -1,0 +1,2 @@
+# Qualification checksums refer to exact bytes, including line endings.
+docs/evidence/interval-*.json -text whitespace=cr-at-eol

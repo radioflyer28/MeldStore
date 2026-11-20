@@ -1,0 +1,3593 @@
+[
+  {
+    "adapter": "sqlite",
+    "treatment": "fresh",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.08500006515532732,
+          0.07200008258223534,
+          0.06800005212426186
+        ],
+        "median_p50_ms": 0.07200008258223534,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.8396999910473824,
+          0.43349992483854294,
+          0.435599940828979
+        ],
+        "median_p50_ms": 0.435599940828979,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          837.0392000069842,
+          723.5747000668198,
+          867.3080999869853
+        ],
+        "median_p50_ms": 837.0392000069842,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1697.039799997583,
+          1457.7155000297353,
+          1787.0368000585586
+        ],
+        "median_p50_ms": 1697.039799997583,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      331.2560999765992,
+      314.36760001815856,
+      334.47560004424304
+    ],
+    "database_bytes": [
+      49827840,
+      49827840,
+      49827840
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        28.917700052261353,
+        29.441600083373487,
+        49.42940000910312
+      ],
+      "1000": [
+        30.705500044859946,
+        27.583800023421645,
+        37.82059997320175
+      ],
+      "10000": [
+        27.176800067536533,
+        28.353999950923026,
+        37.77230007108301
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "fresh",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          67.36360001377761,
+          47.615399999813235,
+          31.744399922899902
+        ],
+        "median_p50_ms": 47.615399999813235,
+        "round_ratios": [
+          792.5123338514952,
+          661.3242414747097,
+          466.829052790884
+        ],
+        "ratio_range": [
+          466.829052790884,
+          792.5123338514952
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          59.34839998371899,
+          50.44800000041505,
+          28.893399983644485
+        ],
+        "median_p50_ms": 50.44800000041505,
+        "round_ratios": [
+          70.67810005534476,
+          116.3737226003082,
+          66.330128348177
+        ],
+        "ratio_range": [
+          66.330128348177,
+          116.3737226003082
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1794.7299000807106,
+          1493.6073999997461,
+          1816.9930999865755
+        ],
+        "median_p50_ms": 1794.7299000807106,
+        "round_ratios": [
+          2.144140800174873,
+          2.0642062248193813,
+          2.0949799731074124
+        ],
+        "ratio_range": [
+          2.0642062248193813,
+          2.144140800174873
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          3338.5713999159634,
+          3306.3883999998325,
+          3108.1482999725267
+        ],
+        "median_p50_ms": 3306.3883999998325,
+        "round_ratios": [
+          1.9672911618930318,
+          2.26819869853369,
+          1.739274927002442
+        ],
+        "ratio_range": [
+          1.739274927002442,
+          2.26819869853369
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1064.6378999808803,
+      1185.8259000000544,
+      1416.852599941194
+    ],
+    "database_bytes": [
+      69271552,
+      69271552,
+      69271552
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        84.36819992493838,
+        90.60290000024906,
+        94.37010006513447
+      ],
+      "1000": [
+        84.94699990842491,
+        85.37449999994351,
+        37.186000030487776
+      ],
+      "10000": [
+        85.60660004150122,
+        82.09500000020853,
+        100.66439991351217
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "fresh",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.16029994003474712,
+          0.11460005771368742,
+          0.11200003791600466
+        ],
+        "median_p50_ms": 0.11460005771368742,
+        "round_ratios": [
+          1.8858802018777092,
+          1.5916656426441769,
+          1.6470581185928823
+        ],
+        "ratio_range": [
+          1.5916656426441769,
+          1.8858802018777092
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.7829000242054462,
+          0.8008999284356833,
+          0.45119994319975376
+        ],
+        "median_p50_ms": 0.7829000242054462,
+        "round_ratios": [
+          0.9323568328599268,
+          1.847520339787783,
+          1.0358126824835807
+        ],
+        "ratio_range": [
+          0.9323568328599268,
+          1.847520339787783
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          131.36779994238168,
+          141.89129997976124,
+          143.69159995112568
+        ],
+        "median_p50_ms": 141.89129997976124,
+        "round_ratios": [
+          0.15694342623533708,
+          0.19609765234558096,
+          0.16567538104772905
+        ],
+        "ratio_range": [
+          0.15694342623533708,
+          0.19609765234558096
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          254.97870007529855,
+          283.22129999287426,
+          258.7233999511227
+        ],
+        "median_p50_ms": 258.7233999511227,
+        "round_ratios": [
+          0.15024909850414922,
+          0.19429120427620958,
+          0.1447778803114993
+        ],
+        "ratio_range": [
+          0.1447778803114993,
+          0.19429120427620958
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      849.5515999384224,
+      829.1879000607878,
+      879.3834999669343
+    ],
+    "database_bytes": [
+      55504896,
+      55504896,
+      55504896
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        80.72599989827722,
+        67.127599962987,
+        71.11540006007999
+      ],
+      "1000": [
+        79.9786999123171,
+        67.90869997348636,
+        56.08349991962314
+      ],
+      "10000": [
+        76.74460008274764,
+        65.58809999842197,
+        70.29820000752807
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "fresh",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          53.59859997406602,
+          55.030600051395595,
+          58.362800045870245
+        ],
+        "median_p50_ms": 55.030600051395595,
+        "round_ratios": [
+          630.5712810469154,
+          764.3130129544235,
+          858.2758133658383
+        ],
+        "ratio_range": [
+          630.5712810469154,
+          858.2758133658383
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          52.87090002093464,
+          50.682100001722574,
+          56.45240005105734
+        ],
+        "median_p50_ms": 52.87090002093464,
+        "round_ratios": [
+          62.96403547055803,
+          116.9137457650059,
+          129.59689559099624
+        ],
+        "ratio_range": [
+          62.96403547055803,
+          129.59689559099624
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          149.95390002150089,
+          135.36229997407645,
+          158.13460003118962
+        ],
+        "median_p50_ms": 149.95390002150089,
+        "round_ratios": [
+          0.1791480016948426,
+          0.18707439599750542,
+          0.18232805623925633
+        ],
+        "ratio_range": [
+          0.1791480016948426,
+          0.18707439599750542
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          242.24709998816252,
+          236.60179995931685,
+          237.11300001014024
+        ],
+        "median_p50_ms": 237.11300001014024,
+        "round_ratios": [
+          0.14274685837568896,
+          0.16230999804453647,
+          0.13268501241964933
+        ],
+        "ratio_range": [
+          0.13268501241964933,
+          0.16230999804453647
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      729.2249999009073,
+      931.1549999983981,
+      985.3869000216946
+    ],
+    "database_bytes": [
+      55504896,
+      55504896,
+      55504896
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        82.59170001838356,
+        31.160400016233325,
+        70.90519997291267
+      ],
+      "1000": [
+        66.83969998266548,
+        69.99540003016591,
+        68.25479993131012
+      ],
+      "10000": [
+        66.71569996979088,
+        30.991600011475384,
+        79.9355999333784
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "analyzed",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.21849999984624446,
+          0.16529997810721397,
+          0.1645000884309411
+        ],
+        "median_p50_ms": 0.16529997810721397,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.7339000001138629,
+          0.6506999488919973,
+          1.1517000384628773
+        ],
+        "median_p50_ms": 0.7339000001138629,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1591.4741999999933,
+          1750.4773999098688,
+          1879.9316000659019
+        ],
+        "median_p50_ms": 1750.4773999098688,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          3250.402099999974,
+          2997.7418000344187,
+          3788.811800070107
+        ],
+        "median_p50_ms": 3250.402099999974,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      678.2842000000073,
+      609.9697999889031,
+      753.5925999982283
+    ],
+    "database_bytes": [
+      49831936,
+      49831936,
+      49831936
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        80.29559999999947,
+        63.45349992625415,
+        65.44369994662702
+      ],
+      "1000": [
+        30.64530000006016,
+        92.64669998083264,
+        75.48779994249344
+      ],
+      "10000": [
+        25.711500000170417,
+        65.91180001851171,
+        68.75119998585433
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "analyzed",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          51.26069998368621,
+          55.31849999988481,
+          52.84480000000258
+        ],
+        "median_p50_ms": 52.84480000000258,
+        "round_ratios": [
+          234.6027460858475,
+          334.65521673575233,
+          321.2448121095533
+        ],
+        "ratio_range": [
+          234.6027460858475,
+          334.65521673575233
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          66.28190004266798,
+          57.109200000013516,
+          54.739299999710056
+        ],
+        "median_p50_ms": 57.109200000013516,
+        "round_ratios": [
+          90.31462056463346,
+          87.76579758037211,
+          47.52912926248415
+        ],
+        "ratio_range": [
+          47.52912926248415,
+          90.31462056463346
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1585.2997999172658,
+          1708.0003999999462,
+          1610.79269999982
+        ],
+        "median_p50_ms": 1610.79269999982,
+        "round_ratios": [
+          0.9961203266237507,
+          0.9757340483732554,
+          0.8568358018681917
+        ],
+        "ratio_range": [
+          0.8568358018681917,
+          0.9961203266237507
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          3522.827700013295,
+          3239.9047999997492,
+          3288.118899999972
+        ],
+        "median_p50_ms": 3288.118899999972,
+        "round_ratios": [
+          1.0838128919536827,
+          1.0807818071464828,
+          0.8678496250299711
+        ],
+        "ratio_range": [
+          0.8678496250299711,
+          1.0838128919536827
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1096.973300096579,
+      1379.201700000067,
+      2214.4335999996656
+    ],
+    "database_bytes": [
+      69275648,
+      69275648,
+      69275648
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        105.68769997917116,
+        86.01109999972323,
+        81.82010000018636
+      ],
+      "1000": [
+        102.02429990749806,
+        87.63249999992695,
+        74.32610000023487
+      ],
+      "10000": [
+        101.59099998418242,
+        85.11029999999664,
+        84.23210000000836
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "analyzed",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.11600006837397814,
+          0.14699995517730713,
+          0.13940001372247934
+        ],
+        "median_p50_ms": 0.13940001372247934,
+        "round_ratios": [
+          0.530892761810553,
+          0.8892920426278738,
+          0.8474160412442633
+        ],
+        "ratio_range": [
+          0.530892761810553,
+          0.8892920426278738
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.5067000165581703,
+          0.5297999596223235,
+          0.5632999818772078
+        ],
+        "median_p50_ms": 0.5297999596223235,
+        "round_ratios": [
+          0.6904210607433668,
+          0.8142000941055234,
+          0.4891030329642249
+        ],
+        "ratio_range": [
+          0.4891030329642249,
+          0.8142000941055234
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          124.20369999017566,
+          118.99409990292042,
+          131.32130005396903
+        ],
+        "median_p50_ms": 124.20369999017566,
+        "round_ratios": [
+          0.07804317530889045,
+          0.06797808409811368,
+          0.06985429685280331
+        ],
+        "ratio_range": [
+          0.06797808409811368,
+          0.07804317530889045
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          250.90260000433773,
+          241.72349995933473,
+          251.3580999802798
+        ],
+        "median_p50_ms": 250.90260000433773,
+        "round_ratios": [
+          0.07719124966241553,
+          0.0806351967859805,
+          0.06634219730196912
+        ],
+        "ratio_range": [
+          0.06634219730196912,
+          0.0806351967859805
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      816.9201000127941,
+      1143.7933000270277,
+      975.5607000552118
+    ],
+    "database_bytes": [
+      55508992,
+      55508992,
+      55508992
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        69.99240000732243,
+        61.70429999474436,
+        78.54790007695556
+      ],
+      "1000": [
+        64.18780004605651,
+        80.26209997478873,
+        79.44420003332198
+      ],
+      "10000": [
+        69.3270000629127,
+        76.70179998967797,
+        55.08750001899898
+      ]
+    }
+  },
+  {
+    "adapter": "sqlite",
+    "treatment": "analyzed",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          61.14590005017817,
+          92.67369995359331,
+          46.01140005979687
+        ],
+        "median_p50_ms": 61.14590005017817,
+        "round_ratios": [
+          279.8439363533443,
+          560.639517408072,
+          279.70440927217464
+        ],
+        "ratio_range": [
+          279.70440927217464,
+          560.639517408072
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          59.488800005055964,
+          92.43910002987832,
+          49.88750000484288
+        ],
+        "median_p50_ms": 59.488800005055964,
+        "round_ratios": [
+          81.0584548246715,
+          142.0610224225195,
+          43.31640039834114
+        ],
+        "ratio_range": [
+          43.31640039834114,
+          142.0610224225195
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          145.83569997921586,
+          249.0976001136005,
+          120.42839999776334
+        ],
+        "median_p50_ms": 145.83569997921586,
+        "round_ratios": [
+          0.0916356042587536,
+          0.1423026656193484,
+          0.06405999026429561
+        ],
+        "ratio_range": [
+          0.06405999026429561,
+          0.1423026656193484
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          280.56240000296384,
+          409.1472999425605,
+          240.51220004912466
+        ],
+        "median_p50_ms": 280.56240000296384,
+        "round_ratios": [
+          0.0863162130011441,
+          0.13648517024977364,
+          0.06347958482516189
+        ],
+        "ratio_range": [
+          0.06347958482516189,
+          0.13648517024977364
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      935.9393999911845,
+      1652.4401999777183,
+      867.7424000343308
+    ],
+    "database_bytes": [
+      55508992,
+      55508992,
+      55508992
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        77.58599997032434,
+        126.64499995298684,
+        60.881200013682246
+      ],
+      "1000": [
+        87.87489996757358,
+        134.70940000843257,
+        59.413200011476874
+      ],
+      "10000": [
+        63.809000072069466,
+        129.92390000727028,
+        60.8302999753505
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "fresh",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.3470999654382467,
+          0.10640011169016361,
+          0.08040003012865782
+        ],
+        "median_p50_ms": 0.10640011169016361,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          1.6940999776124954,
+          0.4363000625744462,
+          0.8699999889358878
+        ],
+        "median_p50_ms": 0.8699999889358878,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          2997.515199938789,
+          720.5672999843955,
+          1275.6269000237808
+        ],
+        "median_p50_ms": 1275.6269000237808,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          5887.390000047162,
+          1470.4779000021517,
+          2625.505500007421
+        ],
+        "median_p50_ms": 2625.505500007421,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1075.4897999577224,
+      330.2691000280902,
+      291.1531999707222
+    ],
+    "database_bytes": [
+      49827840,
+      49827840,
+      49827840
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        127.67700001131743,
+        36.609699949622154,
+        56.60800007171929
+      ],
+      "1000": [
+        124.20169997494668,
+        32.27570001035929,
+        48.9036999642849
+      ],
+      "10000": [
+        118.27899992931634,
+        26.744800037704408,
+        28.542500105686486
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "fresh",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          58.13909997232258,
+          52.41899995598942,
+          65.70999999530613
+        ],
+        "median_p50_ms": 58.13909997232258,
+        "round_ratios": [
+          167.49958444656264,
+          492.6592568683874,
+          817.288250889404
+        ],
+        "ratio_range": [
+          167.49958444656264,
+          817.288250889404
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          49.78769994340837,
+          41.315400041639805,
+          63.8162000104785
+        ],
+        "median_p50_ms": 49.78769994340837,
+        "round_ratios": [
+          29.38887940579189,
+          94.69492119220159,
+          73.35195496787674
+        ],
+        "ratio_range": [
+          29.38887940579189,
+          94.69492119220159
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1691.370000015013,
+          1711.9033000199124,
+          2070.109899970703
+        ],
+        "median_p50_ms": 1711.9033000199124,
+        "round_ratios": [
+          0.5642573555755619,
+          2.3757715622912463,
+          1.6228176906053886
+        ],
+        "ratio_range": [
+          0.5642573555755619,
+          2.3757715622912463
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          3211.474400013685,
+          3280.505699920468,
+          3949.1333999903873
+        ],
+        "median_p50_ms": 3280.505699920468,
+        "round_ratios": [
+          0.5454835504337167,
+          2.230911256752426,
+          1.5041421166244844
+        ],
+        "ratio_range": [
+          0.5454835504337167,
+          2.230911256752426
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 205, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1268.0517999688163,
+      1348.6172000411898,
+      1764.793899958022
+    ],
+    "database_bytes": [
+      69271552,
+      69271552,
+      69271552
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        88.27360009308904,
+        85.8098000753671,
+        40.83179996814579
+      ],
+      "1000": [
+        85.60640003997833,
+        87.17399998567998,
+        45.93440005555749
+      ],
+      "10000": [
+        85.63069999217987,
+        91.68259997386485,
+        38.33039989694953
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "fresh",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.1626999583095312,
+          0.2951999194920063,
+          0.1778000732883811
+        ],
+        "median_p50_ms": 0.1778000732883811,
+        "round_ratios": [
+          0.468740923393948,
+          2.774432421195444,
+          2.211442868912632
+        ],
+        "ratio_range": [
+          0.468740923393948,
+          2.774432421195444
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.5715000443160534,
+          0.45039993710815907,
+          0.6121000042185187
+        ],
+        "median_p50_ms": 0.5715000443160534,
+        "round_ratios": [
+          0.3373472946510935,
+          1.032316920723125,
+          0.7035632321871509
+        ],
+        "ratio_range": [
+          0.3373472946510935,
+          1.032316920723125
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          119.89219998940825,
+          153.33690005354583,
+          120.31260004732758
+        ],
+        "median_p50_ms": 120.31260004732758,
+        "round_ratios": [
+          0.039997195007336915,
+          0.21280024788366952,
+          0.09431644946111176
+        ],
+        "ratio_range": [
+          0.039997195007336915,
+          0.21280024788366952
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          259.7051999764517,
+          298.7631999421865,
+          248.69979999493808
+        ],
+        "median_p50_ms": 259.7051999764517,
+        "round_ratios": [
+          0.04411211079516921,
+          0.20317421971574637,
+          0.09472453971025205
+        ],
+        "ratio_range": [
+          0.04411211079516921,
+          0.20317421971574637
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 17, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 21, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      973.1281000422314,
+      1067.1609001001343,
+      830.5209999671206
+    ],
+    "database_bytes": [
+      55504896,
+      55504896,
+      55504896
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        88.55459990445524,
+        100.04609997849911,
+        78.60769995022565
+      ],
+      "1000": [
+        65.4897999484092,
+        84.92260007187724,
+        85.24130005389452
+      ],
+      "10000": [
+        62.3286000918597,
+        83.20889994502068,
+        78.51510006003082
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "fresh",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          52.449599956162274,
+          49.27770001813769,
+          52.752999938093126
+        ],
+        "median_p50_ms": 52.449599956162274,
+        "round_ratios": [
+          151.10805294935614,
+          463.13579220324516,
+          656.1315941508562
+        ],
+        "ratio_range": [
+          151.10805294935614,
+          656.1315941508562
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          50.47669995110482,
+          62.44250002782792,
+          53.775700042024255
+        ],
+        "median_p50_ms": 53.775700042024255,
+        "round_ratios": [
+          29.79558504111541,
+          143.1182467849711,
+          61.811150259666384
+        ],
+        "ratio_range": [
+          29.79558504111541,
+          143.1182467849711
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          148.6893999390304,
+          149.4099999545142,
+          143.70190002955496
+        ],
+        "median_p50_ms": 148.6893999390304,
+        "round_ratios": [
+          0.049604218835009324,
+          0.20735051390446085,
+          0.11265198313619446
+        ],
+        "ratio_range": [
+          0.049604218835009324,
+          0.20735051390446085
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          237.27480007801205,
+          256.445899954997,
+          235.45330006163567
+        ],
+        "median_p50_ms": 237.27480007801205,
+        "round_ratios": [
+          0.04030220523459654,
+          0.1743962965744822,
+          0.0896792256047341
+        ],
+        "ratio_range": [
+          0.04030220523459654,
+          0.1743962965744822
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 195, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 16, \"notused\": 45, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 20, \"notused\": 45, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      664.3684000009671,
+      854.8009999794886,
+      930.4829000029713
+    ],
+    "database_bytes": [
+      55504896,
+      55504896,
+      55504896
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        77.34079996589571,
+        80.75339999049902,
+        66.35579990688711
+      ],
+      "1000": [
+        67.64419993851334,
+        61.78180000279099,
+        82.42769993375987
+      ],
+      "10000": [
+        72.8392000310123,
+        55.242099915631115,
+        77.96270004473627
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "analyzed",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.3349999897181988,
+          0.10580010712146759,
+          0.07730000652372837
+        ],
+        "median_p50_ms": 0.10580010712146759,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          1.5675000613555312,
+          0.610999995842576,
+          0.4339000442996621
+        ],
+        "median_p50_ms": 0.610999995842576,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          2912.8057999769226,
+          934.6365999663249,
+          684.6825000829995
+        ],
+        "median_p50_ms": 934.6365999663249,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          5793.31199999433,
+          1549.3725000414997,
+          1426.7840000102296
+        ],
+        "median_p50_ms": 1549.3725000414997,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_start (start_time<?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 19, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 23, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 27, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1203.5516999894753,
+      302.80710000079125,
+      300.26679998263717
+    ],
+    "database_bytes": [
+      49831936,
+      49831936,
+      49831936
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        137.1764000505209,
+        37.792099989019334,
+        31.57419990748167
+      ],
+      "1000": [
+        122.92609992437065,
+        38.13889995217323,
+        32.19830000307411
+      ],
+      "10000": [
+        118.72059991583228,
+        37.486899993382394,
+        32.324799918569624
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "analyzed",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          52.44609992951155,
+          24.39889998640865,
+          23.79900007508695
+        ],
+        "median_p50_ms": 24.39889998640865,
+        "round_ratios": [
+          156.55552698263986,
+          230.61318792802945,
+          307.87837084828055
+        ],
+        "ratio_range": [
+          156.55552698263986,
+          307.87837084828055
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          54.05460007023066,
+          26.793000055477023,
+          79.81540006585419
+        ],
+        "median_p50_ms": 54.05460007023066,
+        "round_ratios": [
+          34.48459199643394,
+          43.851064218959884,
+          183.94881750860506
+        ],
+        "ratio_range": [
+          34.48459199643394,
+          183.94881750860506
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          1587.199499947019,
+          1083.0978999147192,
+          812.2205999679863
+        ],
+        "median_p50_ms": 1083.0978999147192,
+        "round_ratios": [
+          0.5449039891226507,
+          1.1588438757413773,
+          1.1862733454842591
+        ],
+        "ratio_range": [
+          0.5449039891226507,
+          1.1862733454842591
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          3466.2080999696627,
+          1554.0131999878213,
+          1431.7383000161499
+        ],
+        "median_p50_ms": 1554.0131999878213,
+        "round_ratios": [
+          0.5983120018347113,
+          1.0029952125432697,
+          1.0034723546142126
+        ],
+        "ratio_range": [
+          0.5983120018347113,
+          1.0034723546142126
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING INDEX app_interval_end (end_time>?)\", \"id\": 10, \"notused\": 187, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 18, \"notused\": 20, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 22, \"notused\": 31, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 26, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1358.8115000166,
+      576.2970000505447,
+      1444.1478999797255
+    ],
+    "database_bytes": [
+      69275648,
+      69275648,
+      69275648
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        84.25489999353886,
+        88.38100009597838,
+        42.85960004199296
+      ],
+      "1000": [
+        105.0006999867037,
+        84.72079993225634,
+        122.96330009121448
+      ],
+      "10000": [
+        75.12609998229891,
+        108.44630002975464,
+        99.97369989287108
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "analyzed",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.2321999054402113,
+          0.21349999587982893,
+          0.1818999880924821
+        ],
+        "median_p50_ms": 0.21349999587982893,
+        "round_ratios": [
+          0.6931340673638149,
+          2.01795632999419,
+          2.353169116960491
+        ],
+        "ratio_range": [
+          0.6931340673638149,
+          2.353169116960491
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          0.5284999497234821,
+          0.618400052189827,
+          0.6023000460118055
+        ],
+        "median_p50_ms": 0.6023000460118055,
+        "round_ratios": [
+          0.3371610392579186,
+          1.012111385266126,
+          1.388107823275174
+        ],
+        "ratio_range": [
+          0.3371610392579186,
+          1.388107823275174
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          153.24260003399104,
+          150.8521999930963,
+          123.3073000330478
+        ],
+        "median_p50_ms": 150.8521999930963,
+        "round_ratios": [
+          0.0526099611704993,
+          0.16140198233038544,
+          0.18009413124784127
+        ],
+        "ratio_range": [
+          0.0526099611704993,
+          0.18009413124784127
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          282.7981999143958,
+          311.2109999638051,
+          248.6654999665916
+        ],
+        "median_p50_ms": 282.7981999143958,
+        "round_ratios": [
+          0.04881459861210178,
+          0.20086260725259378,
+          0.17428391400857365
+        ],
+        "ratio_range": [
+          0.04881459861210178,
+          0.20086260725259378
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_start (start_time<?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 17, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 21, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 25, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      969.155800063163,
+      975.1055999659002,
+      836.6841999813914
+    ],
+    "database_bytes": [
+      55508992,
+      55508992,
+      55508992
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        79.37389996368438,
+        62.71440000273287,
+        72.58829998318106
+      ],
+      "1000": [
+        83.5742000490427,
+        65.14290010090917,
+        70.82470005843788
+      ],
+      "10000": [
+        80.51610004622489,
+        90.72689991444349,
+        65.42709993664175
+      ]
+    }
+  },
+  {
+    "adapter": "melddb",
+    "treatment": "analyzed",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          67.33130000066012,
+          52.83960001543164,
+          23.68970005773008
+        ],
+        "median_p50_ms": 52.83960001543164,
+        "round_ratios": [
+          200.98896139459305,
+          499.42860601045754,
+          306.46439920361684
+        ],
+        "ratio_range": [
+          200.98896139459305,
+          499.42860601045754
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          61.95729994215071,
+          51.31350003648549,
+          50.65439990721643
+        ],
+        "median_p50_ms": 51.31350003648549,
+        "round_ratios": [
+          39.52618661371645,
+          83.98281568844135,
+          116.74209434335353
+        ],
+        "ratio_range": [
+          39.52618661371645,
+          116.74209434335353
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          151.65120002347976,
+          145.25169995613396,
+          70.0783000793308
+        ],
+        "median_p50_ms": 145.25169995613396,
+        "round_ratios": [
+          0.05206361509740239,
+          0.1554098137836325,
+          0.10235152800142501
+        ],
+        "ratio_range": [
+          0.05206361509740239,
+          0.1554098137836325
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          301.4680999331176,
+          247.74530006106943,
+          116.32730008568615
+        ],
+        "median_p50_ms": 247.74530006106943,
+        "round_ratios": [
+          0.052037262956563135,
+          0.1599004113306733,
+          0.08153112179899137
+        ],
+        "ratio_range": [
+          0.052037262956563135,
+          0.1599004113306733
+        ],
+        "plans": [
+          "[{\"detail\": \"SEARCH a USING COVERING INDEX app_interval_cover_end (end_time>?)\", \"id\": 9, \"notused\": 177, \"parent\": 0}, {\"detail\": \"SEARCH b USING COVERING INDEX sqlite_autoindex_ms_blobs_1 (id=?)\", \"id\": 16, \"notused\": 31, \"parent\": 0}, {\"detail\": \"SEARCH c USING COVERING INDEX sqlite_autoindex_app_configs_1 (id=?)\", \"id\": 20, \"notused\": 20, \"parent\": 0}, {\"detail\": \"USE TEMP B-TREE FOR GROUP BY\", \"id\": 24, \"notused\": 0, \"parent\": 0}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      1146.6851000441238,
+      992.1564999967813,
+      803.595699951984
+    ],
+    "database_bytes": [
+      55508992,
+      55508992,
+      55508992
+    ],
+    "index_bytes": [
+      null,
+      null,
+      null
+    ],
+    "write_p50_ms": {
+      "100": [
+        97.07080002408475,
+        72.5150000071153,
+        96.12490003928542
+      ],
+      "1000": [
+        77.34509999863803,
+        69.73049999214709,
+        83.86949996929616
+      ],
+      "10000": [
+        85.2986000245437,
+        71.93860004190356,
+        97.08549990318716
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "fresh",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.259599907323718,
+          2.547200070694089,
+          3.1546000000162167
+        ],
+        "median_p50_ms": 3.1546000000162167,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.4326999448239803,
+          2.8317999094724655,
+          3.1946999999945547
+        ],
+        "median_p50_ms": 3.1946999999945547,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          44.19439996127039,
+          42.142300051636994,
+          42.41670000010345
+        ],
+        "median_p50_ms": 42.41670000010345,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          84.9831000668928,
+          80.14780003577471,
+          78.4900999999536
+        ],
+        "median_p50_ms": 80.14780003577471,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      451.14849996753037,
+      461.3456999650225,
+      429.0813000000071
+    ],
+    "database_bytes": [
+      53073587,
+      53073587,
+      53073587
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1307.4843999929726,
+        701.946199988015,
+        1215.0179999998727
+      ],
+      "1000": [
+        995.4364000586793,
+        441.2390999495983,
+        1054.5113000000583
+      ],
+      "10000": [
+        1026.489399955608,
+        427.86079994402826,
+        1172.9821999999785
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "fresh",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          6.02880003862083,
+          4.64350008405745,
+          5.611900007352233
+        ],
+        "median_p50_ms": 5.611900007352233,
+        "round_ratios": [
+          1.849552156715685,
+          1.8229820803954904,
+          1.778957714868251
+        ],
+        "ratio_range": [
+          1.778957714868251,
+          1.849552156715685
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_end  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          6.26259995624423,
+          4.741300013847649,
+          6.272600032389164
+        ],
+        "median_p50_ms": 6.26259995624423,
+        "round_ratios": [
+          1.8243948078501104,
+          1.674306153477808,
+          1.9634394567251559
+        ],
+        "ratio_range": [
+          1.674306153477808,
+          1.9634394567251559
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:02:00.000000Z'::text) AND (start_time < '2026-01-01T00:02:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_end  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:02:00.000000Z'::text) AND (start_time < '2026-01-01T00:02:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          43.01659995689988,
+          42.82380000222474,
+          45.99319992121309
+        ],
+        "median_p50_ms": 43.01659995689988,
+        "round_ratios": [
+          0.9733495645284771,
+          1.0161713990397465,
+          1.0843182029978975
+        ],
+        "ratio_range": [
+          0.9733495645284771,
+          1.0843182029978975
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:30.000000Z'::text) AND (start_time < '2026-01-01T00:50:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_end  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:30.000000Z'::text) AND (start_time < '2026-01-01T00:50:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          80.83620003890246,
+          84.60709999781102,
+          82.44070003274828
+        ],
+        "median_p50_ms": 82.44070003274828,
+        "round_ratios": [
+          0.9512032389413166,
+          1.0556384574504336,
+          1.0503324627283825
+        ],
+        "ratio_range": [
+          0.9512032389413166,
+          1.0556384574504336
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6608.62..6609.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6598.97..6600.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1470.28..6432.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1446.56..6320.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1416.76..6202.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T01:42:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_end  (cost=0.00..1408.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T01:42:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      951.1840000050142,
+      973.1065999949351,
+      1102.1973000606522
+    ],
+    "database_bytes": [
+      55580339,
+      55580339,
+      55580339
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1155.8263999177143,
+        1374.4683000259101,
+        1367.2787999967113
+      ],
+      "1000": [
+        985.5088000185788,
+        1121.8684000195935,
+        1019.4454999873415
+      ],
+      "10000": [
+        980.8230999624357,
+        1095.9087000228465,
+        1099.8675000155345
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "fresh",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.034300054423511,
+          2.5910999393090606,
+          2.849700045771897
+        ],
+        "median_p50_ms": 2.849700045771897,
+        "round_ratios": [
+          0.9308811328672577,
+          1.0172345584942644,
+          0.9033475070554896
+        ],
+        "ratio_range": [
+          0.9033475070554896,
+          1.0172345584942644
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.2930999295786023,
+          2.7560999151319265,
+          3.3723999513313174
+        ],
+        "median_p50_ms": 3.2930999295786023,
+        "round_ratios": [
+          0.9593322989223468,
+          0.9732678872941128,
+          1.0556233609844636
+        ],
+        "ratio_range": [
+          0.9593322989223468,
+          1.0556233609844636
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          42.875600047409534,
+          45.07520003244281,
+          46.43800004851073
+        ],
+        "median_p50_ms": 45.07520003244281,
+        "round_ratios": [
+          0.9701591171049594,
+          1.0695951568189712,
+          1.0948046417660373
+        ],
+        "ratio_range": [
+          0.9701591171049594,
+          1.0948046417660373
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          78.5154999466613,
+          85.00590000767261,
+          84.108000039123
+        ],
+        "median_p50_ms": 84.108000039123,
+        "round_ratios": [
+          0.9238954555065576,
+          1.0606142647674601,
+          1.0715746322042234
+        ],
+        "ratio_range": [
+          0.9238954555065576,
+          1.0715746322042234
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      568.3707999996841,
+      615.2261000825092,
+      578.2126999692991
+    ],
+    "database_bytes": [
+      53892787,
+      53892787,
+      53892787
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1125.4293998936191,
+        589.9914000183344,
+        1178.9048000937328
+      ],
+      "1000": [
+        1005.9368999209255,
+        419.4267999846488,
+        1008.6652999743819
+      ],
+      "10000": [
+        1023.4189999755472,
+        455.94290003646165,
+        993.3395000407472
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "fresh",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          7.6336999190971255,
+          6.80350000038743,
+          7.328999927267432
+        ],
+        "median_p50_ms": 7.328999927267432,
+        "round_ratios": [
+          2.3419131599389282,
+          2.6709719737615814,
+          2.3232739260856388
+        ],
+        "ratio_range": [
+          2.3232739260856388,
+          2.6709719737615814
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_end  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          8.086200105026364,
+          5.63289993442595,
+          8.14139994326979
+        ],
+        "median_p50_ms": 8.086200105026364,
+        "round_ratios": [
+          2.3556384871969938,
+          1.9891588793345572,
+          2.5484082834956854
+        ],
+        "ratio_range": [
+          1.9891588793345572,
+          2.5484082834956854
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:02:00.000000Z'::text) AND (start_time < '2026-01-01T00:02:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_end  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:02:00.000000Z'::text) AND (start_time < '2026-01-01T00:02:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          50.61899998690933,
+          44.0647000214085,
+          49.37270004302263
+        ],
+        "median_p50_ms": 49.37270004302263,
+        "round_ratios": [
+          1.1453713599747732,
+          1.0456168734837914,
+          1.1639920135913973
+        ],
+        "ratio_range": [
+          1.0456168734837914,
+          1.1639920135913973
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:30.000000Z'::text) AND (start_time < '2026-01-01T00:50:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_end  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:30.000000Z'::text) AND (start_time < '2026-01-01T00:50:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          92.47339994180948,
+          82.50870008487254,
+          87.80039998237044
+        ],
+        "median_p50_ms": 87.80039998237044,
+        "round_ratios": [
+          1.088138698976865,
+          1.0294568291087718,
+          1.1186175069521167
+        ],
+        "ratio_range": [
+          1.0294568291087718,
+          1.1186175069521167
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=6744.62..6745.12 rows=200 width=40)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=6734.97..6736.97 rows=200 width=40)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=1606.28..6568.31 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=1582.56..6456.47 rows=33333 width=32)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=1552.76..6338.75 rows=33333 width=64)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T01:42:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_end  (cost=0.00..1544.42 rows=33333 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T01:42:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=18.80..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..18.80 rows=880 width=32)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=16.10..16.10 rows=610 width=32)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..16.10 rows=610 width=32)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      694.2997999722138,
+      538.4904999518767,
+      573.4472000040114
+    ],
+    "database_bytes": [
+      53892787,
+      53892787,
+      53892787
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        658.829899970442,
+        1070.604500011541,
+        1213.5926999617368
+      ],
+      "1000": [
+        531.6383000463247,
+        1050.4461000673473,
+        1006.926600006409
+      ],
+      "10000": [
+        486.01310001686215,
+        912.6440000254661,
+        956.7080999258906
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "analyzed",
+    "layout": "start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.291300032287836,
+          2.9001000000334898,
+          2.4237000616267323
+        ],
+        "median_p50_ms": 2.9001000000334898,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"GroupAggregate  (cost=12.92..12.94 rows=1 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Sort  (cost=12.92..12.92 rows=1 width=10)\"}, {\"QUERY PLAN\": \"        Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Nested Loop  (cost=8.45..12.91 rows=1 width=10)\"}, {\"QUERY PLAN\": \"              Join Filter: (c.id = a.config_id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=8.45..11.84 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (b.id = (a.blob_id)::text)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=8.44..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                          ->  Index Scan using app_interval_start on app_intervals a  (cost=0.42..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"              ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.7582999793812633,
+          2.8995000000122673,
+          3.232400049455464
+        ],
+        "median_p50_ms": 3.232400049455464,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=4775.50..4775.75 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4771.17..4772.17 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=89.76..4742.46 rows=5743 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=85.51..4722.50 rows=5743 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=84.44..4685.06 rows=5743 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..83.00 rows=5743 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Sort  (cost=4780.65..4780.90 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4776.33..4777.33 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=94.22..4747.40 rows=5786 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=89.97..4727.31 rows=5786 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=88.90..4689.60 rows=5786 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..87.45 rows=5786 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          46.330299926921725,
+          47.20739999993384,
+          42.24810004234314
+        ],
+        "median_p50_ms": 46.330299926921725,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8049.08..8074.41 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8049.08..8072.41 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7049.05..7049.30 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7044.73..7045.73 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6732.56 rows=62434 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.48 rows=62434 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62434 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8051.31..8076.64 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8051.31..8074.64 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7051.28..7051.53 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7046.96..7047.96 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6734.00 rows=62592 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6558.48 rows=62592 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62592 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          67.4166000680998,
+          86.77080000006754,
+          76.93730003666133
+        ],
+        "median_p50_ms": 76.93730003666133,
+        "round_ratios": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "ratio_range": [
+          1.0,
+          1.0
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8929.20..8954.53 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8929.20..8952.53 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7929.17..7929.42 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7924.85..7925.85 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..7299.91 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6953.66 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=124988 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      407.931900001131,
+      481.73659999997653,
+      442.93629995081574
+    ],
+    "database_bytes": [
+      53142031,
+      53142031,
+      53142031
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1228.9711000630632,
+        1261.9721000000936,
+        1072.7188000455499
+      ],
+      "1000": [
+        993.8881000271067,
+        989.8783999999523,
+        915.7529999502003
+      ],
+      "10000": [
+        1004.8612999962643,
+        1039.1568000000007,
+        1031.3782000448555
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "analyzed",
+    "layout": "start-plus-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          8.298999979160726,
+          5.459400000063397,
+          4.521300084888935
+        ],
+        "median_p50_ms": 5.459400000063397,
+        "round_ratios": [
+          2.521496034316858,
+          1.8824868107997492,
+          1.8654536328452875
+        ],
+        "ratio_range": [
+          1.8654536328452875,
+          2.521496034316858
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"GroupAggregate  (cost=12.92..12.94 rows=1 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Sort  (cost=12.92..12.92 rows=1 width=10)\"}, {\"QUERY PLAN\": \"        Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Nested Loop  (cost=8.45..12.91 rows=1 width=10)\"}, {\"QUERY PLAN\": \"              Join Filter: (c.id = a.config_id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=8.45..11.84 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (b.id = (a.blob_id)::text)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=8.44..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                          ->  Index Scan using app_interval_start on app_intervals a  (cost=0.42..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"              ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          8.221599971875548,
+          5.898099999967599,
+          4.864000016823411
+        ],
+        "median_p50_ms": 5.898099999967599,
+        "round_ratios": [
+          2.1875848168003578,
+          2.034178306584806,
+          1.5047642440306266
+        ],
+        "ratio_range": [
+          1.5047642440306266,
+          2.1875848168003578
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=4775.10..4775.35 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4770.78..4771.78 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=89.61..4742.13 rows=5730 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=85.36..4722.20 rows=5730 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=84.30..4684.84 rows=5730 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..82.86 rows=5730 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Sort  (cost=4780.52..4780.77 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4776.20..4777.20 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=94.16..4747.29 rows=5781 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=89.91..4727.22 rows=5781 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=88.84..4689.54 rows=5781 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..87.39 rows=5781 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Sort  (cost=4782.33..4782.58 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4778.00..4779.00 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=94.98..4748.71 rows=5858 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=90.73..4728.43 rows=5858 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=89.67..4690.26 rows=5858 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_start  (cost=0.00..88.20 rows=5858 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          88.43080000951886,
+          46.66709999992236,
+          47.455199994146824
+        ],
+        "median_p50_ms": 47.455199994146824,
+        "round_ratios": [
+          1.9087033787608458,
+          0.9885547604822074,
+          1.1232505117765028
+        ],
+        "ratio_range": [
+          0.9885547604822074,
+          1.9087033787608458
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8042.70..8068.03 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8042.70..8066.03 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7042.67..7042.92 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7038.35..7039.35 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6728.45 rows=61980 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6554.61 rows=61980 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=61980 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8046.97..8072.31 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8046.97..8070.31 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7046.95..7047.20 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7042.63..7043.63 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6731.21 rows=62284 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6556.53 rows=62284 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62284 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8050.20..8075.53 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8050.20..8073.53 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7050.17..7050.42 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7045.85..7046.85 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6733.29 rows=62513 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.99 rows=62513 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62513 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          122.14430002495646,
+          78.0277000001206,
+          80.09890001267195
+        ],
+        "median_p50_ms": 80.09890001267195,
+        "round_ratios": [
+          1.811783743196399,
+          0.899239144966508,
+          1.0410932015355892
+        ],
+        "ratio_range": [
+          0.899239144966508,
+          1.811783743196399
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8929.36..8954.70 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8929.36..8952.70 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7929.34..7929.59 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7925.02..7926.02 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..7300.02 rows=125000 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6953.74 rows=125000 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=125000 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      4546.937100007199,
+      875.3140999999687,
+      926.4220999320969
+    ],
+    "database_bytes": [
+      55648783,
+      55648783,
+      55648783
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_end",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_interval_start",
+          "bytes": 2506752
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1244.3410999840125,
+        1215.0323000000753,
+        612.4675000319257
+      ],
+      "1000": [
+        1069.7569999611005,
+        1056.611200000134,
+        444.115599966608
+      ],
+      "10000": [
+        938.8636000221595,
+        1016.4847999999438,
+        483.5548000410199
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "analyzed",
+    "layout": "covering-start",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          2.8597000055015087,
+          3.9880999829620123,
+          2.7936999686062336
+        ],
+        "median_p50_ms": 2.8597000055015087,
+        "round_ratios": [
+          0.8688663985196405,
+          1.375159471368559,
+          1.1526591152253245
+        ],
+        "ratio_range": [
+          0.8688663985196405,
+          1.375159471368559
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"GroupAggregate  (cost=12.92..12.94 rows=1 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Sort  (cost=12.92..12.92 rows=1 width=10)\"}, {\"QUERY PLAN\": \"        Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Nested Loop  (cost=8.45..12.91 rows=1 width=10)\"}, {\"QUERY PLAN\": \"              Join Filter: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=8.45..11.84 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (b.id = (a.blob_id)::text)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=8.44..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                          ->  Index Only Scan using app_interval_cover_start on app_intervals a  (cost=0.42..8.44 rows=1 width=19)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:00:01.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"              ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          3.647299949079752,
+          3.7284999853000045,
+          3.276500036008656
+        ],
+        "median_p50_ms": 3.647299949079752,
+        "round_ratios": [
+          0.9704653617565181,
+          1.2859113589530022,
+          1.013643109107309
+        ],
+        "ratio_range": [
+          0.9704653617565181,
+          1.2859113589530022
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Sort  (cost=4783.14..4783.39 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4778.82..4779.82 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=97.63..4750.17 rows=5731 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=93.38..4730.24 rows=5731 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=92.32..4692.88 rows=5731 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..90.88 rows=5731 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Sort  (cost=4783.55..4783.80 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4779.23..4780.23 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=97.79..4750.50 rows=5746 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=93.54..4730.53 rows=5746 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=92.47..4693.08 rows=5746 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..91.03 rows=5746 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Sort  (cost=4784.52..4784.77 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  HashAggregate  (cost=4780.20..4781.20 rows=100 width=18)\"}, {\"QUERY PLAN\": \"        Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Hash Join  (cost=98.16..4751.29 rows=5781 width=10)\"}, {\"QUERY PLAN\": \"              Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"              ->  Hash Join  (cost=93.91..4731.22 rows=5781 width=10)\"}, {\"QUERY PLAN\": \"                    Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                    ->  Bitmap Heap Scan on app_intervals a  (cost=92.84..4693.54 rows=5781 width=19)\"}, {\"QUERY PLAN\": \"                          Recheck Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Bitmap Index Scan on app_interval_cover_start  (cost=0.00..91.39 rows=5781 width=0)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                    ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"              ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          44.885799987241626,
+          47.74750000797212,
+          50.8453999646008
+        ],
+        "median_p50_ms": 47.74750000797212,
+        "round_ratios": [
+          0.9688217010906781,
+          1.011441003063906,
+          1.2034955397672564
+        ],
+        "ratio_range": [
+          0.9688217010906781,
+          1.2034955397672564
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8032.39..8057.73 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8032.39..8055.73 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7032.37..7032.62 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7028.05..7029.05 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6721.81 rows=61248 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6549.97 rows=61248 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=61248 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8049.33..8074.66 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8049.33..8072.66 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7049.30..7049.55 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7044.98..7045.98 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6732.73 rows=62451 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.59 rows=62451 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62451 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8049.44..8074.78 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8049.44..8072.78 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7049.42..7049.67 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7045.10..7046.10 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6732.80 rows=62459 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.64 rows=62459 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62459 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          64.5116000669077,
+          70.09079994168133,
+          78.78849992994219
+        ],
+        "median_p50_ms": 70.09079994168133,
+        "round_ratios": [
+          0.9569097225570905,
+          0.8077694332843165,
+          1.0240611496946053
+        ],
+        "ratio_range": [
+          0.8077694332843165,
+          1.0240611496946053
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8929.20..8954.53 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8929.20..8952.53 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7929.17..7929.42 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7924.85..7925.85 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..7299.91 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6953.66 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=124988 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      517.8046999499202,
+      596.0915999021381,
+      552.4001999292523
+    ],
+    "database_bytes": [
+      53961231,
+      53961231,
+      53961231
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_start",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1083.5768999531865,
+        1292.722399928607,
+        1216.9354999205098
+      ],
+      "1000": [
+        924.8965999577194,
+        1003.8360999897122,
+        964.9295000126585
+      ],
+      "10000": [
+        908.2781999604777,
+        988.6289000278339,
+        1012.8236000891775
+      ]
+    }
+  },
+  {
+    "adapter": "postgres",
+    "treatment": "analyzed",
+    "layout": "covering-end",
+    "queries": [
+      {
+        "case": 0,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T00:00:01.000000Z"
+        ],
+        "round_p50_ms": [
+          7.65229994431138,
+          13.829300063662231,
+          7.475099992007017
+        ],
+        "median_p50_ms": 7.65229994431138,
+        "round_ratios": [
+          2.3250083156326964,
+          4.768559726734434,
+          3.0841687510582063
+        ],
+        "ratio_range": [
+          2.3250083156326964,
+          4.768559726734434
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"GroupAggregate  (cost=4795.69..4796.18 rows=26 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Sort  (cost=4795.69..4795.77 rows=30 width=10)\"}, {\"QUERY PLAN\": \"        Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Nested Loop  (cost=0.42..4794.96 rows=30 width=10)\"}, {\"QUERY PLAN\": \"              Join Filter: (b.id = (a.blob_id)::text)\"}, {\"QUERY PLAN\": \"              ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"              ->  Materialize  (cost=0.42..4747.03 rows=30 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Nested Loop  (cost=0.42..4746.88 rows=30 width=10)\"}, {\"QUERY PLAN\": \"                          Join Filter: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                          ->  Index Only Scan using app_interval_cover_end on app_intervals a  (cost=0.42..4744.72 rows=30 width=19)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Materialize  (cost=0.00..1.04 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}]",
+          "[{\"QUERY PLAN\": \"GroupAggregate  (cost=4795.70..4796.18 rows=26 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Sort  (cost=4795.70..4795.77 rows=30 width=10)\"}, {\"QUERY PLAN\": \"        Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"        ->  Nested Loop  (cost=0.42..4794.96 rows=30 width=10)\"}, {\"QUERY PLAN\": \"              Join Filter: (b.id = (a.blob_id)::text)\"}, {\"QUERY PLAN\": \"              ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"              ->  Materialize  (cost=0.42..4747.03 rows=30 width=10)\"}, {\"QUERY PLAN\": \"                    ->  Nested Loop  (cost=0.42..4746.88 rows=30 width=10)\"}, {\"QUERY PLAN\": \"                          Join Filter: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                          ->  Index Only Scan using app_interval_cover_end on app_intervals a  (cost=0.42..4744.72 rows=30 width=19)\"}, {\"QUERY PLAN\": \"                                Index Cond: ((end_time > '2026-01-01T00:00:00.000000Z'::text) AND (start_time < '2026-01-01T00:00:01.000000Z'::text))\"}, {\"QUERY PLAN\": \"                          ->  Materialize  (cost=0.00..1.04 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}]"
+        ]
+      },
+      {
+        "case": 1,
+        "bounds": [
+          "2026-01-01T00:02:00.000000Z",
+          "2026-01-01T00:02:01.000000Z"
+        ],
+        "round_p50_ms": [
+          6.592500023543835,
+          14.10810009110719,
+          28.096399968490005
+        ],
+        "median_p50_ms": 14.10810009110719,
+        "round_ratios": [
+          1.7541175690369377,
+          4.865701014329195,
+          8.692117169476958
+        ],
+        "ratio_range": [
+          1.7541175690369377,
+          8.692117169476958
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=7204.25..7229.59 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=7204.25..7227.59 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=6204.23..6204.48 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=6199.91..6200.91 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6187.97 rows=2387 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6177.19 rows=2387 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=2387 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=7204.47..7229.81 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=7204.47..7227.81 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=6204.45..6204.70 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=6200.13..6201.13 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6188.11 rows=2403 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6177.29 rows=2403 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=2403 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=7204.57..7229.90 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=7204.57..7227.90 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=6204.54..6204.79 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=6200.22..6201.22 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6188.17 rows=2410 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6177.33 rows=2410 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=2410 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:02:01.000000Z'::text) AND (end_time > '2026-01-01T00:02:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 2,
+        "bounds": [
+          "2026-01-01T00:00:30.000000Z",
+          "2026-01-01T00:50:00.000000Z"
+        ],
+        "round_p50_ms": [
+          49.08400005660951,
+          89.24040000420064,
+          47.02940001152456
+        ],
+        "median_p50_ms": 49.08400005660951,
+        "round_ratios": [
+          1.0594362681448488,
+          1.8903900660558663,
+          1.1131719524520478
+        ],
+        "ratio_range": [
+          1.0594362681448488,
+          1.8903900660558663
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8048.94..8074.28 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8048.94..8072.28 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7048.92..7049.17 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7044.59..7045.59 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6732.47 rows=62424 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.42 rows=62424 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62424 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8049.41..8074.75 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8049.41..8072.75 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7049.39..7049.64 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7045.07..7046.07 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6732.78 rows=62457 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6557.63 rows=62457 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62457 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]",
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8051.07..8076.40 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8051.07..8074.40 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7051.04..7051.29 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7046.72..7047.72 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..6733.85 rows=62575 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6558.37 rows=62575 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=62575 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T00:50:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:30.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      },
+      {
+        "case": 3,
+        "bounds": [
+          "2026-01-01T00:00:00.000000Z",
+          "2026-01-01T01:42:00.000000Z"
+        ],
+        "round_p50_ms": [
+          83.8384999660775,
+          165.49079993274063,
+          86.71129995491356
+        ],
+        "median_p50_ms": 86.71129995491356,
+        "round_ratios": [
+          1.2435883726172692,
+          1.9072176346491194,
+          1.1270385094563342
+        ],
+        "ratio_range": [
+          1.1270385094563342,
+          1.9072176346491194
+        ],
+        "plans": [
+          "[{\"QUERY PLAN\": \"Finalize GroupAggregate  (cost=8929.20..8954.53 rows=100 width=18)\"}, {\"QUERY PLAN\": \"  Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"  ->  Gather Merge  (cost=8929.20..8952.53 rows=200 width=18)\"}, {\"QUERY PLAN\": \"        Workers Planned: 2\"}, {\"QUERY PLAN\": \"        ->  Sort  (cost=7929.17..7929.42 rows=100 width=18)\"}, {\"QUERY PLAN\": \"              Sort Key: a.blob_id\"}, {\"QUERY PLAN\": \"              ->  Partial HashAggregate  (cost=7924.85..7925.85 rows=100 width=18)\"}, {\"QUERY PLAN\": \"                    Group Key: a.blob_id\"}, {\"QUERY PLAN\": \"                    ->  Hash Join  (cost=5.32..7299.91 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                          Hash Cond: ((a.blob_id)::text = b.id)\"}, {\"QUERY PLAN\": \"                          ->  Hash Join  (cost=1.07..6953.66 rows=124988 width=10)\"}, {\"QUERY PLAN\": \"                                Hash Cond: (a.config_id = c.id)\"}, {\"QUERY PLAN\": \"                                ->  Parallel Seq Scan on app_intervals a  (cost=0.00..6161.00 rows=124988 width=19)\"}, {\"QUERY PLAN\": \"                                      Filter: ((start_time < '2026-01-01T01:42:00.000000Z'::text) AND (end_time > '2026-01-01T00:00:00.000000Z'::text))\"}, {\"QUERY PLAN\": \"                                ->  Hash  (cost=1.03..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                                      ->  Seq Scan on app_configs c  (cost=0.00..1.03 rows=3 width=9)\"}, {\"QUERY PLAN\": \"                          ->  Hash  (cost=3.00..3.00 rows=100 width=10)\"}, {\"QUERY PLAN\": \"                                ->  Seq Scan on ms_blobs b  (cost=0.00..3.00 rows=100 width=10)\"}]"
+        ]
+      }
+    ],
+    "build_ms": [
+      555.8573000598699,
+      1209.1879999497905,
+      538.0337999667972
+    ],
+    "database_bytes": [
+      53961231,
+      53961231,
+      53961231
+    ],
+    "index_bytes": [
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ],
+      [
+        {
+          "name": "app_interval_cover_end",
+          "bytes": 3325952
+        },
+        {
+          "name": "app_intervals_pkey",
+          "bytes": 6758400
+        }
+      ]
+    ],
+    "write_p50_ms": {
+      "100": [
+        1218.5819000005722,
+        1864.6770000923425,
+        1258.391399984248
+      ],
+      "1000": [
+        1037.8911000443622,
+        1629.123399965465,
+        1058.9173999615014
+      ],
+      "10000": [
+        985.7499999925494,
+        1523.1516000349075,
+        1034.0125999646261
+      ]
+    }
+  }
+]
