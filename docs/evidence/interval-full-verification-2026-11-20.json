@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "scope": "metadata-only",
+  "cells": 72,
+  "measured_reads": 11520,
+  "write_trials": 648,
+  "retained_prefix": 65,
+  "sessions": 3,
+  "source_reports_unchanged": true,
+  "original_21_cell_prefix_unchanged": true,
+  "recovery_audit_preserved": true,
+  "current_measured_provenance_matches": true,
+  "owned_resources_absent": true,
+  "report_xxh3_128": "0068977bd658f9e73d69f8f96e7cd701"
+}

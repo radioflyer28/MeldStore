@@ -249,3 +249,15 @@ The corrected runner passed the three-adapter smoke and its targeted failure
 regressions. The 20.04 GB report records the earlier runner and its original
 source fingerprints. Repeating all strengthened correctness checks at 20 GB
 remains pending.
+
+
+## Separate interval metadata follow-up
+
+The full interval metadata matrix passed on November 20, 2026: 72 treatments across
+all three adapters, 100 synthetic references, 300,000 relationship rows, 11,520
+measured reads and 648 insertion/rollback trials. See the
+[verification](interval-query-verification.md) and [measured guidance](interval-query-results.md).
+The three-session report includes explicit interrupted-prefix recovery and later
+owned cleanup; cross-session timing limitations are disclosed. No payload data was
+used, and no storage or provider contract changed. The corrected 20.04 GB payload
+rerun described above remains pending; metadata evidence does not satisfy it.

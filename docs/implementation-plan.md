@@ -350,13 +350,23 @@ no material latency or memory regression was found. See the
 This is implemented work, not a package release; the MeldDB pin and shared
 contract remain unchanged.
 
+Completed November 20, 2026: **application-owned interval query tuning**. The full
+72-treatment metadata matrix passed across all three adapters, with 11,520 measured
+reads and 648 rollback trials. Verified interrupted-prefix recovery preserved 65
+completed treatments; all sessions and later cleanup are audited. Start-first
+covering is a promising broad-read SQLite candidate with space/write costs;
+PostgreSQL gains were mixed. See [measured guidance](interval-query-results.md)
+and [verification](interval-query-verification.md). No core index defaults,
+provider pin or shared-contract changes were introduced. This does not complete
+the corrected full-payload 20.04 GB rerun, which remains pending.
+
 Remaining follow-ups from the measured workload:
 
-1. **Application-owned interval query tuning.** Record controlled experiments
-   with covering indexes, statistics and cache budgets. Current plans show that
-   an additional end-first index can worsen narrow SQLite queries while broad
-   PostgreSQL joins use parallel scans. Do not impose fixture-specific indexes
-   or global tuning defaults on library users.
+1. **Application-specific interval follow-ups.** Recheck measured index tradeoffs
+   against real selection distributions; confirm smaller effects in a single
+   session. Cache-budget sweeps and PostgreSQL range/GiST or INCLUDE experiments
+   remain unevaluated and need a demonstrated workload. Do not impose fixture
+   indexes or global tuning defaults on library users.
 2. **Deployment budgets and additional topologies.** Keep explicit large-file
    request timeouts and finite transfer row allowances in operator guidance.
    The measured deployment uses 300-second whole-response S3 requests with zero
