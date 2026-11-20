@@ -29,6 +29,62 @@ def timestamp(value):
     return stamp
 
 
+def validate_recoveries(report):
+    """Keep recovery attestations bound to the sessions whose cleanup they establish."""
+    sessions = report['sessions']
+    recovered = {s['id']: (number, s) for number, s in enumerate(sessions)
+                 if 'end_reason' in s or 'cleanup_verified_at' in s}
+    audits = report.get('recoveries', [])
+    require(isinstance(audits, list) and len(audits) == len(recovered), 'Recovery audit coverage')
+    seen = set()
+    for audit in audits:
+        require(isinstance(audit, dict), 'Recovery audit shape')
+        identifier = audit.get('session_id')
+        require(isinstance(identifier, str) and identifier in recovered and identifier not in seen,
+                'Recovery audit session')
+        seen.add(identifier)
+        number, session = recovered[identifier]
+        require(audit.get('version') == 1 and audit.get('kind') == 'verified-interrupted-prefix'
+                and audit.get('tool') == 'tools/recover_intervals.py', 'Recovery audit protocol')
+        for field in ('source_report_xxh3_128', 'source_ownership_xxh3_128', 'tool_xxh3_128'):
+            require(isinstance(audit.get(field), str)
+                    and re.fullmatch('[0-9a-f]{32}', audit[field]), 'Recovery audit digest')
+        require(session.get('end_reason') == 'recovered-at-last-verified-checkpoint'
+                and session['ended_at'] == session['checkpoint_at']
+                and audit.get('measurement_ended_at') == session['checkpoint_at']
+                and type(audit.get('accepted_treatments')) is int
+                and audit['accepted_treatments'] == session['end_cell']
+                and session['start_cell'] < session['end_cell'], 'Recovery measurement boundary')
+        require(session.get('cleanup') is True and audit.get('owned_cleanup_verified') is True
+                and session.get('cleanup_verified_at') == audit.get('recovered_at'),
+                'Recovery cleanup attestation')
+        boundary = timestamp(session['checkpoint_at'])
+        recovered_at = timestamp(audit['recovered_at'])
+        require(recovered_at >= boundary, 'Recovery cleanup chronology')
+        if number + 1 < len(sessions):
+            require(timestamp(sessions[number + 1]['started_at']) >= recovered_at,
+                    'Next session started before recovery cleanup')
+        require(audit.get('original_status') == 'incomplete'
+                and 'original_ended_at' in audit and audit['original_ended_at'] is None
+                and audit.get('original_cleanup') is False
+                and audit.get('original_resume_eligible') is False
+                and type(audit.get('original_report_continuity')) is bool,
+                'Recovery original interruption state')
+        require(audit.get('continuity_after_checkpoint') == 'unknown; excluded from measurement'
+                and audit.get('incomplete_treatment_samples_retained') is False,
+                'Recovery continuity scope')
+        checks = audit.get('process_checks')
+        require(isinstance(checks, list) and len(checks) == 2, 'Recovery process checks')
+        previous = boundary
+        for check in checks:
+            require(isinstance(check, dict)
+                    and check.get('method') == 'windows-cim-python-uv-inventory'
+                    and check.get('runner_and_workers_absent') is True, 'Recovery process evidence')
+            checked_at = timestamp(check['checked_at'])
+            require(previous <= checked_at <= recovered_at, 'Recovery process chronology')
+            previous = checked_at
+
+
 def validate_sessions(report, *, closed):
     require(report.get('continuity_scope') == 'within-sessions', 'Continuity scope')
     sessions = report.get('sessions', [])
@@ -74,6 +130,7 @@ def validate_sessions(report, *, closed):
                     'Checkpoint checksum')
         cursor = end
     require(cursor == len(report['cells']), 'Session coverage')
+    validate_recoveries(report)
 
 
 def load_checkpoint(path, current_provenance):

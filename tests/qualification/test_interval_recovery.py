@@ -243,3 +243,55 @@ def test_final_validation_failure_removes_eligible_staging_file(interrupted, mon
         recovery.recover(source, output)
     assert source.read_bytes() == before
     assert not (output / 'report.json').exists() and not (output / 'recovered.json').exists()
+
+
+@pytest.mark.parametrize('damage', ['missing', 'duplicate', 'cleanup_time', 'digest', 'boundary',
+                                    'session', 'process_missing', 'process_active', 'process_time',
+                                    'original_state', 'continuity', 'partial_samples', 'end_reason'])
+def test_resume_rejects_damaged_recovery_attestation(interrupted, damage):
+    source, output, original = interrupted
+    report = recovery.recover(source, output)
+    audit = report['recoveries'][0]
+    if damage == 'missing':
+        report.pop('recoveries')
+    elif damage == 'duplicate':
+        report['recoveries'].append(copy.deepcopy(audit))
+    elif damage == 'cleanup_time':
+        report['sessions'][-1]['cleanup_verified_at'] = 'not a timestamp'
+    elif damage == 'digest':
+        audit['source_report_xxh3_128'] = 'damaged'
+    elif damage == 'boundary':
+        audit['accepted_treatments'] -= 1
+    elif damage == 'session':
+        audit['session_id'] = 'f' * 32
+    elif damage == 'process_missing':
+        audit['process_checks'].pop()
+    elif damage == 'process_active':
+        audit['process_checks'][0]['runner_and_workers_absent'] = False
+    elif damage == 'process_time':
+        audit['process_checks'][0]['checked_at'] = '2020-01-01T00:00:00+00:00'
+    elif damage == 'original_state':
+        audit['original_cleanup'] = True
+    elif damage == 'continuity':
+        audit['continuity_after_checkpoint'] = 'continuous'
+    elif damage == 'partial_samples':
+        audit['incomplete_treatment_samples_retained'] = True
+    else:
+        report['sessions'][-1].pop('end_reason')
+    path = output / 'report.json'
+    write_report(path, report)
+    before = path.read_bytes()
+    with pytest.raises((ValueError, KeyError, TypeError)):
+        load_checkpoint(path, original['provenance'])
+    assert path.read_bytes() == before
+
+
+
+def test_full_completion_rejects_missing_recovery_audit():
+    from tools.qualification.interval_evidence import complete
+    path = Path(__file__).resolve().parents[2] / 'docs/evidence/interval-full-2026-11-20.json'
+    report = json.loads(path.read_bytes())
+    report.pop('recoveries')
+    with pytest.raises(ValueError, match='Recovery audit coverage'):
+        complete(report)
+    assert report['status'] == 'incomplete' and not report['full_metadata_qualified']

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "qualification_report": "interval-full-2026-11-20.json",
+  "qualification_report_xxh3_128": "0068977bd658f9e73d69f8f96e7cd701",
+  "review_base_commit": "725c47c813d0479fed59970e6dbbd7ecd0da84be",
+  "changes": {
+    "tools/qualification/interval_checkpoint.py": "Validate recovery audit/session binding and cleanup chronology outside measured worker calls",
+    "tools/qualification/interval_service.py": "Probe TCP readiness instead of temporary initialization socket before starting treatments"
+  },
+  "files": {
+    "tools/qualification/interval_checkpoint.py": {
+      "qualified_xxh3_128": "1f0c50dfebade903828e3f887401798e",
+      "review_fixed_xxh3_128": "e1afe06067127496f6367b417315f779"
+    },
+    "tools/qualification/interval_service.py": {
+      "qualified_xxh3_128": "619bfad13455c8e0cfc3cdf70f956eba",
+      "review_fixed_xxh3_128": "0e1ffd964e8e71c336e6352b505bc972"
+    }
+  },
+  "other_attested_source_files_unchanged": true,
+  "full_report_passes_strengthened_validator": true,
+  "full_matrix_rerun_after_review": false,
+  "scope": "Historical full measurements retain their original source hashes; review fixes require separate regression and live-smoke evidence",
+  "validation": {
+    "full_regressions": {
+      "passed": 974,
+      "skipped": 359,
+      "seconds": 254.21
+    },
+    "ruff": "passed",
+    "live_forced_stop_recover_resume": "24/24 passed",
+    "live_report": "interval-review-smoke-2026-11-20.json",
+    "standards_review": "resolved",
+    "spec_review": "resolved"
+  }
+}

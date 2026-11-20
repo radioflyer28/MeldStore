@@ -2,7 +2,8 @@
 
 Change: `tune-application-interval-queries`, based on merged MeldStore main
 `a50824b2ab799dff9b1f711b59aee307f41160f8`. Exact runner/helper/package fingerprints
-are retained in the evidence because these implementation changes are not committed.
+are retained in the evidence because the implementation was uncommitted during
+those measurements.
 
 ## Scope and ownership
 
@@ -80,8 +81,9 @@ resumed resources, completed). Session 2 ends at checkpoint 65, not at process e
 continuity after that checkpoint is unknown. Actual recovery cleanup has its own
 later audit timestamp. Cross-session comparisons are disclosed, not treated as
 uninterrupted paired measurements. Original 21/65 reports and the accepted 65-cell
-prefix/checksums remain unchanged. Current measured provenance matches the report;
-all three runs' owned containers, volumes and worker scratch were confirmed absent.
+prefix/checksums remain unchanged. Measured provenance matched the report at
+full-run closeout; later PR fixes are recorded below. All three runs' owned
+containers, volumes and worker scratch were confirmed absent.
 No legacy v1 measurements were reused. No private Parquet files were used.
 
 Recovery and final resume used:
@@ -211,4 +213,43 @@ Verified every synced requirement against its delta and archived the completed
 [change](../openspec/changes/archive/2026-11-20-tune-application-interval-queries/proposal.md)
 with all 17 tasks complete and every artifact, including `.openspec.yaml`, preserved
 unchanged. No implementation or measured-source edits were needed for closeout.
-Changes remain uncommitted; no push or release was performed.
+At spec archival, changes were uncommitted; subsequent PR review is recorded below.
+No package release is implied.
+
+
+## PR #4 review fixes and revalidation
+
+[PR #4](https://github.com/radioflyer28/MeldStore/pull/4) review found two issues:
+PostgreSQL startup could report socket readiness before TCP was accepting
+connections, and resume/completion did not validate the recovery audit fields.
+The service now probes `127.0.0.1` explicitly. Validation binds each audit to its
+recovered session, checks digest formats, original interruption state, process
+checks, measurement boundary and later cleanup chronology, and rejects missing,
+duplicate or malformed attestations. Fourteen regressions reproduced the issues
+before the fixes; a further test covers rejection at full completion.
+
+- Focused interval/recovery suite: 131 passed, 1 host-permission skip.
+- `uv run --frozen --extra test --extra arrow --extra postgres --group postgres-test pytest`:
+  **974 passed, 359 skipped** in 254.21 seconds. The locked Arrow extra is now
+  installed for the upcoming payload rerun; remaining skips include optional
+  formats, separately gated live deployments and the symlink-permission test.
+- `uv run --frozen --extra test ruff check .`: passed.
+- A fresh real forced stop after two treatments, audited recovery and resumed
+  all-adapter smoke passed **24/24**, preserving the original report and prefix
+  and confirming all owned resources absent. See the
+  [review smoke report](evidence/interval-review-smoke-2026-11-20.json).
+- Both independent standards/spec reviewers confirmed their findings resolved
+  and found no new actionable issues in the fixes.
+
+The initial push-triggered CI failed on the first PostgreSQL treatment after
+resume; its parallel PR-triggered run passed. The fixed head must pass CI before
+merge. Readiness is now checked over the same TCP transport used by treatments.
+
+The original 72-treatment report remains byte-for-byte unchanged and passes the
+strengthened validator. It describes the pre-review code, not a rerun of the
+fixed head. The [source closeout record](evidence/interval-source-closeout-2026-11-20.json)
+records the two changed helper hashes and new verification. Changes are confined
+to startup before treatments and audit validation outside measured worker calls;
+all other attested source files, including query/fixture/worker code, are unchanged.
+No full metadata matrix was rerun after these review fixes. Historical measured
+results retain their original provenance and cross-session limitations.

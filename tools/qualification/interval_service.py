@@ -64,7 +64,8 @@ class IntervalService(Services):
                 user='meldstore_lab', password=self.password, dbname='postgres', connect_timeout=2)
             until = min(time.monotonic() + 60, self.deadline)
             while time.monotonic() < until:
-                result = docker_run('exec', self.pg, 'pg_isready', '-U', 'meldstore_lab', '-t', '1',
+                result = docker_run('exec', self.pg, 'pg_isready', '-h', '127.0.0.1',
+                                    '-U', 'meldstore_lab', '-t', '1',
                                     check=False, timeout=self.startup_timeout())
                 if result.returncode == 0:
                     break

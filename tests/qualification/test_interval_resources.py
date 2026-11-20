@@ -193,3 +193,41 @@ while True:
     finally:
         if process.poll() is None:
             terminate_worker(process)
+
+
+def test_service_waits_for_tcp_after_temporary_socket_server(tmp_path, monkeypatch):
+    import sys
+
+    from tools.qualification.interval_service import MEMORY
+    from tools.qualification.services import OWNER_LABEL
+
+    root, token = fresh_root(tmp_path / 'owned')
+    service = IntervalService(root, token, time.monotonic() + 30)
+    details = {'Config': {'Labels': {OWNER_LABEL: token}},
+               'NetworkSettings': {'Ports': {'5432/tcp': [{'HostIp': '127.0.0.1', 'HostPort': '54321'}]}},
+               'HostConfig': {'Memory': MEMORY, 'MemorySwap': MEMORY}, 'Image': 'qualified-image'}
+    resources = iter([None, None, {'Labels': {OWNER_LABEL: token}}, details])
+    monkeypatch.setattr('tools.qualification.interval_service.inspect_resource', lambda *a, **k: next(resources))
+    monkeypatch.setattr('tools.qualification.interval_service.docker', lambda *a, **k: '')
+    monkeypatch.setitem(sys.modules, 'psycopg', SimpleNamespace(
+        conninfo=SimpleNamespace(make_conninfo=lambda **kwargs: 'synthetic-dsn')))
+    state = {'tcp_ready': False, 'probes': 0}
+    def command(*args, **kwargs):
+        if args[0] == 'run':
+            return SimpleNamespace(returncode=0)
+        assert 'pg_isready' in args
+        state['probes'] += 1
+        # The temporary initializer answers socket probes before TCP is available.
+        ready = '-h' not in args or state['tcp_ready']
+        if '-h' in args:
+            assert args[args.index('-h') + 1] == '127.0.0.1'
+        return SimpleNamespace(returncode=0 if ready else 1)
+    monkeypatch.setattr('tools.qualification.interval_service.docker_run', command)
+    monkeypatch.setattr('tools.qualification.interval_service.time.sleep',
+                        lambda _: state.update(tcp_ready=True))
+    monkeypatch.setattr(service, 'close', lambda: None)
+    def reserve(*args):
+        assert state['tcp_ready'], 'Service returned while only its temporary socket was ready'
+    monkeypatch.setattr(service, 'check_reserve', reserve)
+    with service:
+        assert state['tcp_ready'] and state['probes'] == 2
